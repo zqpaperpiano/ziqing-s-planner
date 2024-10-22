@@ -1,0 +1,51 @@
+html, body, #app, #app>div {
+  height: 100%
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #FFFCF5;
+  flex-direction: column;
+  background-image: url("background.png")
+}
+
+.cover{
+  width: 100vw;
+  height: 30vh;
+}
+
+.cover-image{
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.frame{
+  display: flex;
+  width: 85vw;
+  height: 100vh;
+  background-color: #fdebf1;
+  flex-direction: column;
+}
+
+
+.player-details{
+  border-bottom: 10px solid red;
+  height: 57%;
+  display: flex;
+  flex-direction: row;
+}
+
+.player-frame{
+  height: 100%;
+  width: 25%;
+  border: 2px solid blue;
+}
+
+.player-stats{
+  height: 100%;
+  width: 100%;
+  border: 2px solid green;
+}
