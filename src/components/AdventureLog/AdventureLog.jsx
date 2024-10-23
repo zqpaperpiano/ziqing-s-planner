@@ -4,17 +4,19 @@ import OverviewIcon from '../../images/overview-icon.png';
 import QuestIcon from '../../images/quest-icon.png';
 import AdventureIcon from '../../images/adventure-icon.png';
 import ShopIcon from '../../images/shop.png';
+import InnIcon from '../../images/inn.png';
+import { Link } from "react-router-dom";
 
 const AdventureLog = () => {
     return(
         <div className="navbar-container">
-            <div className="item">
+            <Link to={"/"} className="item">
                 <div className="navbar-icon">
                     <img src={OverviewIcon} className="icon"    />
                 </div>
                 
-                <a>Overview</a>
-            </div>
+                <p>Overview</p>
+            </Link>
                 
             <div className="item">
                 <div className="navbar-icon">
@@ -34,9 +36,14 @@ const AdventureLog = () => {
                 <div className="navbar-icon">
                     <img src={ShopIcon} className="icon"/>
                 </div>
-                
                 <a>Store</a>
             </div>
+            <Link to={"/inn"} className="item">
+                <div className="navbar-icon">
+                    <img src={InnIcon} className="icon"/>
+                </div>
+                <p>Inn</p>
+            </Link>
         </div>
     )
 }

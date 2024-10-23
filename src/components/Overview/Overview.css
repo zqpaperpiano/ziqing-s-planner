@@ -1,0 +1,106 @@
+p{
+  line-height: 1;
+  margin: 5px;
+}
+
+.player-details{
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.player-frame{
+  height: 100%;
+  width: 20%;
+}
+
+.player-stats{
+  height: 100%;
+  width: 80%;
+  border: 1px solid blue;
+  display: flex;
+  flex-direction: row;
+}
+
+.player-picture{
+  height: 40%;
+  width: 70%;
+  margin: 20% 0% 0% 15%;
+}
+
+.player-summary{
+  height: 30%;
+  width: 70%;
+  background-color: #faebee;
+  margin: 2% 0% 0% 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+}
+
+.pfp{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.stats-tracker{
+  height: 100%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-bars{
+  height: 35%;
+  border: 1px solid pink;
+}
+
+.damage-log{
+  height: 65%;
+  background-color: white;
+  overflow: scroll;
+}
+
+.third-box{
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-tracker{
+  height: 50%;
+}
+
+.damage-counter{
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+}
+
+.dmg-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.physical-dmg{
+  height: 100%;
+  width: 50%;
+  background-color: crimson;
+}
+
+.san-dmg{
+  height: 100%;
+  width: 50%;
+  background-color: blue
+}
+
+.dmg-btn{
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}

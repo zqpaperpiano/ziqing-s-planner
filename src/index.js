@@ -1,24 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import './index.css';
-import Overview from './Overview';
 import reportWebVitals from './reportWebVitals';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Overview />,
-  },
-]);
-
+import LandingPage from "./LandingPage";
 
 const root = ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <LandingPage />
   </React.StrictMode>
 );
 
