@@ -14,9 +14,17 @@ const Overview = () => {
   const handleHPDmg = () => {
     setHP((prevVal) => prevVal - 10)
   }
+
+  const handleHPHeal = () => {
+    setHP((prevVal) => prevVal + 10)
+  }
   
   const handleSPDmg = () => {
     setSP((prevVal) => prevVal - 10)
+  }
+
+  const handleSPHeal = () => {
+    setSP((prevVal) => prevVal + 10)
   }
 
   return(
@@ -45,12 +53,36 @@ const Overview = () => {
                   <div className="day-tracker">
                     <FlipClock />
                   </div>
-                  <div className="damage-counter">
-                    <div className="physical-dmg dmg-box">
-                      {/* <button className="dmg-btn" onClick={handleHPDmg} /> */}
+                  <div className="split-bottom">
+                    <div className="damage-counter">
+                      <div className="dmg-box">
+                        <p>HP Damage</p>
+                        <div className="change-bar">
+                          <div onClick={handleHPDmg} className="specific-change">
+                            <p>-</p>
+                          </div>
+                          <div onClick={handleHPHeal} className="specific-change">
+                            <p>+</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="dmg-box">
+                        <p>SP Damage</p>
+                        <div className="change-bar">
+                          <div onClick={handleSPDmg} className="specific-change">
+                            <p>-</p>
+                          </div>
+                          <div onClick={handleSPHeal} className="specific-change">
+                            <p>+</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="san-dmg dmg-box">
-                    {/* <button className="dmg-btn" onClick={handleSPDmg} /> */}
+                    <div className="monster-selection">
+                        <p>Anxiety</p>
+                        <p>Failure</p>
+                        <p>Rejection</p>
+                        <p>Overwhelmed</p>
                     </div>
                   </div>
                 </div>
