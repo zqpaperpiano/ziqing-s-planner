@@ -3,8 +3,16 @@ p{
   margin: 5px;
 }
 
+.overview-frame{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
 .player-details{
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
@@ -46,7 +54,7 @@ p{
 
 .stats-tracker{
   height: 100%;
-  width: 70%;
+  width: 60%;
   display: flex;
   flex-direction: column;
 }
@@ -64,85 +72,61 @@ p{
 
 .third-box{
   height: 100%;
-  width: 50%;
+  width: 40%;
   display: flex;
   flex-direction: column;
 }
 
 .day-tracker{
-  height: 50%;
-}
-
-.split-bottom{
-  height: 70%;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-
-.damage-counter{
-  height: 100%;
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-
-  font-weight: 500;
-  border-right: 1px solid black;
-}
-
-.dmg-box{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.physical-dmg{
-  height: 100%;
-  width: 50%;
-}
-
-.san-dmg{
-  height: 100%;
-  width: 50%;
-}
-
-.change-bar{
-  width: 100%;
-  height: 60%;
-  border-radius: 3%;
-  background-color: #F8BDD1;
-  margin-top: 5%;
-  display: flex;
-  flex-direction: row;
-
-}
-
-.specific-change{
-  width: 50%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-
-  font-weight: 500;
-}
-
-.specific-change:hover{
-  background-color: #BDF8E4;
-  cursor: pointer;
+  height: 45%;
 }
 
 .monster-selection{
-  width: 70%;
-  height: 100%;
+  width: 100%;
+  height: 55%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
   justify-content: center;
-  align-items: center
-
+  align-items: center;
+  grid-gap: 0;
 }
+
+.monster-container{
+  height: 100%; 
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.monster{
+  height: 100%;
+  width: 100%;
+  object-fit: scale-down;
+}
+
+.monster:hover{
+  cursor: pointer;
+}
+
+.stat-bar{
+  background-color: white;
+  margin: 2%; 
+  border-radius: 5px;
+}
+
+.hp-bar-fill{
+  background-color: crimson;
+  border-radius: 5px;
+}
+
+.sp-bar-fill{
+  background-color: blue;
+  border-radius: 5px;
+}
+
+
 
