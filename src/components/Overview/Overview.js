@@ -59,7 +59,7 @@ const Overview = () => {
                 </div>
                 <div className="player-summary">
                     <p><b>Name: </b>Ziqing</p>
-                    <p><b>Status: </b>Looking forward to Bali</p>
+                    <p><b>Status: </b>Sprained ankle @.@</p>
                 </div>
             </div>
             <div className="player-stats">

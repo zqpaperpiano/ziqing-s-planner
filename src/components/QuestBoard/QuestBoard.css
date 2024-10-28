@@ -1,0 +1,27 @@
+.QB-Frame{
+    height: 100%;
+    width: 100%;
+}
+
+.add-quest{
+    height: 10%;
+    width: 100%;
+    /* border: 1px solid blue; */
+    display: flex;
+    justify-content: center;
+}
+
+.add-quest-button{
+    margin-left: auto;  
+}
+
+.QBs{
+    height: 90%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-gap: 2px;
+}
+
+.QB{
+    /* background-color: white; */
+}

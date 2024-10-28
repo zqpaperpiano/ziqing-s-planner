@@ -18,13 +18,13 @@ const AdventureLog = () => {
                 <p>Overview</p>
             </Link>
                 
-            <div className="item">
+            <Link to={"/quest-board"} className="item">
                 <div className="navbar-icon">
                     <img src={QuestIcon} className="icon"/>
                 </div> 
                 
                 <a>Quest Board</a>
-            </div>
+            </Link>
             <div className="item">
                 <div className="navbar-icon">
                     <img src={AdventureIcon} className="icon"/>

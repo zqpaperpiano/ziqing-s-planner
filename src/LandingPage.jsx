@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Overview from "./components/Overview/Overview";
 import Inn from "./components/Inn/Inn";
 import cover from './images/cover2.png'
+import QuestBoard from "./components/QuestBoard/QuestBoard";
 
 const LandingPage = () => {
     return(
@@ -17,6 +18,7 @@ const LandingPage = () => {
                 <div className="frame">
                     <Routes>
                         <Route path="/" element={<Overview />} />
+                        <Route path="/quest-board" element={<QuestBoard />} />
                         <Route path="/inn" element={<Inn />} />
                     </Routes>
                 </div>
