@@ -16,12 +16,11 @@
 }
 
 .QBs{
-    height: 90%;
+    height: 85%;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-gap: 2px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-gap: 5px;
+    width: 95%;
+    margin: auto;
 }
 
-.QB{
-    /* background-color: white; */
-}
