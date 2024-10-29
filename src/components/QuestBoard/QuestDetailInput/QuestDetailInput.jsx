@@ -13,8 +13,14 @@ const QuestDetailInput = () => {
                                                 questCheckpoint: []
                                             });
 
-    // console.log(questDetails);
+    console.log(questDetails);
 
+    useEffect(() => {
+        setQuestDetails((prevDeets) => ({
+            ...prevDeets, questCheckpoint : [checkpointList]
+        }))
+    }, [checkpointList]);
+    
     const handleAddCheckpoints = () => {
         const arrLen = checkpointList.length;
         const checkpoint = "Checkpoint " + (arrLen + 1);
@@ -28,8 +34,6 @@ const QuestDetailInput = () => {
     }
 
     const handleCheckpointNameChange = (value, index) => {
-        console.log('hello');
-        console.log(checkpointList);
         setCheckpointList((prevList) => {
             const newCheckpointList = prevList.map((checkpoint, i) => {
                 console.log(i);
@@ -41,6 +45,17 @@ const QuestDetailInput = () => {
             console.log(newCheckpointList);
             return newCheckpointList;
         });
+    }
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if(file){
+            const imageURL = URL.createObjectURL(file);
+            
+            setQuestDetails((prevDeets) => ({
+                ...prevDeets, questImage: [imageURL]
+            }))
+        }
     }
 
     
@@ -65,7 +80,7 @@ const QuestDetailInput = () => {
                                 required 
                             />
                             <p>Quest Poster Image:</p>
-                            <div className="flex flex-row justify-space-evenly">
+                            <div className="flex flex-row justify-center items-center">
                             <input
                                 onChange={(e) => {handleQuestDetailsChange(e, "questImage")}}
                                 className="border border-gray-300 rounded p-2"
@@ -73,7 +88,11 @@ const QuestDetailInput = () => {
                                 placeholder="Insert a URL"
                             />
                             <p>or</p>
-                            <Button> Choose a picture from your device</Button>
+                            <input
+                                onChange={(e) => {handleImageUpload(e)}}
+                                type="file"
+                                accept="image/*"
+                            />
                             </div>
                             <p>Quest Details:</p>
                             <textarea
