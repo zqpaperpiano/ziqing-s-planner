@@ -33,9 +33,22 @@ const QuestBoard = () => {
         setOnAddQuest(false);
     }
 
+    const handleCompletedCheckpoint = (obj, i) => {
+        setQuestList((prevList) => {
+            const newList = prevList.map((checkpoint, index) => {
+                if(index === i){
+                    return obj;
+                }
+                return checkpoint;
+            })
+
+            return newList;
+        })
+    }
+
     return(
         <div className="h-full w-full ">
-            <div className="relative h-10p w-full">
+            <div className="relative h-10p w-95p mx-auto">
                 <Button 
                 className="absolute  w-auto left-0"
                 onClick={handleOnClickAddQuest}>Add Quest</Button>

@@ -5,43 +5,66 @@ import Checkpoints from "./Checkpoints";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests}) => {
+const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests }) => {
     const [checkpointList, setCheckpointList] = useState([]);
     const [questDetails, setQuestDetails] = useState({
                                                 questName: '',
-                                                questImage: '../../../images/def-quest-image.jpg',
+                                                questImage: '',
                                                 questDescription: '',
-                                                questCheckpoint: []
+                                                questCheckpoint: [],
+                                                completionPercentage: 0
                                             });
 
+    
+    //when there is a change in the checkpoint list, change quest details as well
     useEffect(() => {
+        const completedCount = checkpointList.reduce((count, checkpoint) => {
+            const value = Object.values(checkpoint)[0];
+            if(value){
+                return count + 1;
+            }   
+            return count;
+        }, 0);
+
+        const completionPercentage = (completedCount / checkpointList.length).toFixed(2);
+
         setQuestDetails((prevDeets) => ({
-            ...prevDeets, questCheckpoint : [checkpointList]
+            ...prevDeets, 
+            questCheckpoint : [checkpointList],
+            completionPercentage: [completionPercentage]
         }))
     }, [checkpointList]);
+
+    useEffect(() => {
+        console.log(questDetails);
+    }, [questDetails]);
     
+    //initializes a new checkpoint object:false into the checkpoint list
     const handleAddCheckpoints = () => {
         const arrLen = checkpointList.length;
         const checkpoint = "Checkpoint " + (arrLen + 1);
         setCheckpointList((prevList) => [...prevList, { [checkpoint]: false }])
     }
 
+    //takes care of all other aspects when quest details are changed
     const handleQuestDetailsChange = (e, parameterName) => {
         setQuestDetails((prevDeets) => ({
             ...prevDeets, [parameterName]: e.target.value
         }))
     }
 
+    //changes name of the checkpoint
     const handleCheckpointNameChange = (value, index) => {
         setCheckpointList((prevList) => {
+            const val = Object.values(checkpointList[index]);
             const newCheckpointList = prevList.map((checkpoint, i) => {
-                console.log(i);
+                // console.log(i);
                 if (i===index){
-                    return {[value]: false};
+                    return {[value]: [val]};
                 }
                 return checkpoint;
             });
-            console.log(newCheckpointList);
+            // console.log(newCheckpointList);
             return newCheckpointList;
         });
     }
@@ -69,6 +92,21 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests}) => {
             handleIncreaseQuests(questDetails);
             handleExitAddQuest();
         }
+    }
+
+    const handleCompleteCheckpoints = (i, checked) => {
+        const checkpointName = Object.keys(questDetails.questCheckpoint[0][i]);
+        const temp = {[checkpointName]: [checked][0]};
+
+        setCheckpointList((prevList) => {
+            const newList = prevList.map((checkpoint, index) => {
+                if(index === i){
+                    return temp;
+                }
+                return checkpoint;
+            })
+            return newList;
+        })
     }
 
     const notifyEmptyName = () => toast.error("Please fill in a quest name!");
@@ -131,7 +169,7 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests}) => {
                                 <Button onClick={() => {handleAddCheckpoints()}} size="small"><Plus /> Add Checkpoints</Button>
                             </div>
                             <div className="flex flex-col justify-center items-center w-full">
-                                <Checkpoints checkpoints={checkpointList} handleCheckpointChange={handleCheckpointNameChange} />  
+                                <Checkpoints checkpoints={checkpointList} handleCheckpointChange={handleCheckpointNameChange} handleCheckboxChange={handleCompleteCheckpoints}/>  
                             </div>  
                             <Button 
                             onClick={() => {
