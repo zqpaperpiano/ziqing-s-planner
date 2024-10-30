@@ -9,13 +9,17 @@ import QuestBoard from "./components/QuestBoard/QuestBoard";
 
 const LandingPage = () => {
     return(
-        <div className="container">
-            <div className= "cover"> 
-                <img src={cover} className="cover-image" />
+        //container
+        <div className="container flex flex-col h-screen items-center"> 
+            {/*cover*/}
+            <div className= "w-85vw h-30vh p-0 m-0"> 
+                <img src={cover} className="h-full w-full object-fill" />
             </div>
             <Router>
-                <AdventureLog />
-                <div className="frame">
+                <div className="w-85vw h-7vh">
+                    <AdventureLog />
+                </div> 
+                <div className="w-85vw h-63vh bg-bgPink flex flex-col">
                     <Routes>
                         <Route path="/" element={<Overview />} />
                         <Route path="/quest-board" element={<QuestBoard />} />

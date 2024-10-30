@@ -1,19 +1,18 @@
 import React, {useEffect, useState} from "react";
-import { Check, X } from 'lucide-react';
-import { Plus } from "lucide-react";
+import { X, Plus } from 'lucide-react'; 
 import { Button } from "@mui/material";
 import Checkpoints from "./Checkpoints";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const QuestDetailInput = () => {
+const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests}) => {
     const [checkpointList, setCheckpointList] = useState([]);
     const [questDetails, setQuestDetails] = useState({
                                                 questName: '',
-                                                questImage: '',
+                                                questImage: '../../../images/def-quest-image.jpg',
                                                 questDescription: '',
                                                 questCheckpoint: []
                                             });
-
-    console.log(questDetails);
 
     useEffect(() => {
         setQuestDetails((prevDeets) => ({
@@ -51,25 +50,47 @@ const QuestDetailInput = () => {
         const file = e.target.files[0];
         if(file){
             const imageURL = URL.createObjectURL(file);
-            
+
             setQuestDetails((prevDeets) => ({
                 ...prevDeets, questImage: [imageURL]
             }))
         }
     }
 
-    
+    const handlePostQuest = () => {
+        // do necessary verification of all inputs first
+        if (questDetails.questName === ''){
+            notifyEmptyName();
+        }else if(questDetails.questDescription === ''){
+            notifyEmptyDescription();
+        }else if(questDetails.questCheckpoint[0].length === 0){
+            notifyEmptyCheckpoint();
+        }else{
+            handleIncreaseQuests(questDetails);
+            handleExitAddQuest();
+        }
+    }
+
+    const notifyEmptyName = () => toast.error("Please fill in a quest name!");
+    const notifyEmptyDescription = () => toast.error("Please fill in a description!");
+    const notifyEmptyCheckpoint = () => toast.error("Please have at least one checkpoint for your progress!");
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
             <div className="relative bg-white w-3/4 h-5/6 flex items-center justify-center">
-                <button className="absolute top-6 right-6 "><X /></button>
+                <button onClick={() => {handleExitAddQuest()}} className="absolute top-6 right-6 "><X /></button>
                 <div className="overflow-scroll overflow-x-hidden w-full h-full flex items-center justify-evenly flex-col">
                     <div className="h-1/6 flex flex-col justify-around">
                         <h1 className="text-5xl">Posting a New Quest?</h1>
                         <h3>Please fill in the details below!</h3>
                     </div>
                     <form className="mt-4 h-5/6 w-full flex flex-col items-center">
+                        <ToastContainer 
+                            autoClose={5000}
+                            closeOnClick
+                            pauseOnHover
+                            pauseOnFocusLoss
+                        />
                         <div className="h-5/6 flex flex-col items-center w-5/6 ">
                             <p>Quest Name:</p>
                             <input 
@@ -112,10 +133,12 @@ const QuestDetailInput = () => {
                             <div className="flex flex-col justify-center items-center w-full">
                                 <Checkpoints checkpoints={checkpointList} handleCheckpointChange={handleCheckpointNameChange} />  
                             </div>  
-                            <Button>Post Quest</Button>
+                            <Button 
+                            onClick={() => {
+                                handlePostQuest()}}>
+                                Post Quest
+                            </Button>
                         </div>
-                        
-
                     </form>
                 </div>
                 

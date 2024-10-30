@@ -8,9 +8,15 @@ const QuestBoard = () => {
     const [currPage, setCurrpage] = useState(1);
     const [totalQuests, setTotalQuests] = useState(0);
     const [onAddQuest, setOnAddQuest] = useState(false);
+    const [questList, setQuestList] = useState([]);
+
+    console.log(totalQuests);
 
     //when a new quest is added
-    const handleIncreaseQuests = () => {
+    const handleIncreaseQuests = (newQuest) => {
+        setQuestList((prevList) => [
+            ...prevList, [newQuest]
+        ])
         setTotalQuests((prevVal) => prevVal + 1);
     }
 
@@ -21,22 +27,31 @@ const QuestBoard = () => {
 
     const handleOnClickAddQuest = () => {
         setOnAddQuest(true);
-        
+    }
+
+    const handleExitAddQuest = () => {
+        setOnAddQuest(false);
     }
 
     return(
-        <div className="QB-Frame">
-            <div className="add-quest">
-                
+        <div className="h-full w-full ">
+            <div className="relative h-10p w-full">
+                <Button 
+                className="absolute  w-auto left-0"
+                onClick={handleOnClickAddQuest}>Add Quest</Button>
             </div>
-            <div className="QBs">
-                <QuestCard questName={"AWS Certification"} />
+            <div className="h-85p w-95p mx-auto grid grid-cols-3 gap-4">
+                {questList.map((quest, index) => (
+                    <QuestCard key={index} quest={quest[0]} />
+                ))}
 
             </div>
             <div className="page-tracker">
 
             </div>
-            <QuestDetailInput />
+            { onAddQuest &&
+                <QuestDetailInput handleExitAddQuest={handleExitAddQuest} handleIncreaseQuests={handleIncreaseQuests}/>
+            }
         </div>
     );
 }

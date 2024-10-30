@@ -1,26 +1,21 @@
-.QB-Frame{
-    height: 100%;
-    width: 100%;
-}
-
-.add-quest{
+/* .add-quest{
     height: 10%;
     width: 100%;
     /* border: 1px solid blue; */
-    display: flex;
+    /* display: flex;
     justify-content: center;
-}
+}  */
 
-.add-quest-button{
+/* .add-quest-button{
     margin-left: auto;  
-}
+} */
 
-.QBs{
+/* .QBs{
     height: 85%;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-gap: 5px;
     width: 95%;
     margin: auto;
-}
+} */
 

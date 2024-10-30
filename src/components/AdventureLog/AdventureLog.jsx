@@ -9,7 +9,8 @@ import { Link } from "react-router-dom";
 
 const AdventureLog = () => {
     return(
-        <div className="navbar-container">
+        //navbar container
+        <div className="h-7vh w-85vw bg-darkPink flex justify-around items-center font-bold ">
             <Link to={"/"} className="item">
                 <div className="navbar-icon">
                     <img src={OverviewIcon} className="icon"    />

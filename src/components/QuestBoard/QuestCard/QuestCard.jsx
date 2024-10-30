@@ -3,31 +3,14 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Button, CardActions, CardMedia } from "@mui/material";
 
-const QuestCard = ({questName}) => {
-
-    const [pictureLink, setPictureLink] = useState("");
-
-    const handleNewPictureLink = ({newPictureLink}) => {
-        setPictureLink(newPictureLink);
-    }
+const QuestCard = ({quest}) => {
+    console.log('quest card;', {quest});
 
     return(
-        <Card>
-            <CardMedia
-                component="img"
-                height="140"
-                image={pictureLink}
-                alt="insert picture here"
-            />
-            <CardContent>
-                <h3>Complete {questName}!</h3>
-                <p>Progress: </p>
-            </CardContent>
-            <CardActions>
-                <Button size="small">Details</Button>
-                <Button size="small">Delete</Button>
-            </CardActions>
-        </Card>
+            <div className="bg-white border border-black-200 rounded">
+                <div className="h-1/2 w-full border-b border-black-700">
+                </div>
+            </div>
     );
 }
 
