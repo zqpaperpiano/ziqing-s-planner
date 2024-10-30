@@ -1,12 +1,11 @@
 import React, {useState} from "react";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { Button, CardActions, CardMedia } from "@mui/material";
 import defImage from '../../../images/def-quest-image.jpg';
 
 const QuestCard = ({quest}) => {
-    const imageSrc = quest.questImage || defImage
-    console.log('quest card;', {quest});    
+    // console.log({quest});
+    const imageSrc = quest.questImage || defImage;
+    // console.log('quest card;', {quest});    
 
     return(
             <div className="h-full bg-white border border-black-200 rounded overflow-hidden">

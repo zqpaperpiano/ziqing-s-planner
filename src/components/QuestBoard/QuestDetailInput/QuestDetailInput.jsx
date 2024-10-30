@@ -5,14 +5,18 @@ import Checkpoints from "./Checkpoints";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests }) => {
+const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) => {
+
+    // console.log('quest id received:', questID);
+
     const [checkpointList, setCheckpointList] = useState([]);
     const [questDetails, setQuestDetails] = useState({
+                                                questID: questID,
                                                 questName: '',
                                                 questImage: '',
                                                 questDescription: '',
                                                 questCheckpoint: [],
-                                                completionPercentage: 0
+                                                completionPercentage: 0,
                                             });
 
     
@@ -34,10 +38,6 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests }) => {
             completionPercentage: [completionPercentage]
         }))
     }, [checkpointList]);
-
-    useEffect(() => {
-        console.log(questDetails);
-    }, [questDetails]);
     
     //initializes a new checkpoint object:false into the checkpoint list
     const handleAddCheckpoints = () => {

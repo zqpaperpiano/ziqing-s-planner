@@ -6,6 +6,7 @@ import Overview from "./components/Overview/Overview";
 import Inn from "./components/Inn/Inn";
 import cover from './images/cover2.png'
 import QuestBoard from "./components/QuestBoard/QuestBoard";
+import { QuestProvider } from "./components/QuestBoard/QuestContext/QuestContext";
 
 const LandingPage = () => {
     return(
@@ -20,11 +21,13 @@ const LandingPage = () => {
                     <AdventureLog />
                 </div> 
                 <div className="w-85vw h-63vh bg-bgPink flex flex-col">
+                <QuestProvider>
                     <Routes>
-                        <Route path="/" element={<Overview />} />
-                        <Route path="/quest-board" element={<QuestBoard />} />
-                        <Route path="/inn" element={<Inn />} />
+                            <Route path="/" element={<Overview />} />
+                            <Route path="/quest-board/quest-page/:page-number" element={<QuestBoard />} />
+                            <Route path="/inn" element={<Inn />} />
                     </Routes>
+                    </QuestProvider>
                 </div>
             </Router>
             

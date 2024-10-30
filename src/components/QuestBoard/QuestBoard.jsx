@@ -1,16 +1,29 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import './QuestBoard.css';
 import Button from '@mui/material/Button';
-import QuestCard from "./QuestCard/QuestCard";
 import QuestDetailInput from "./QuestDetailInput/QuestDetailInput";
+import { QuestContext } from "./QuestContext/QuestContext";
+import QuestPage from "./QuestPage/QuestPage";
+import { StepBack, StepForward } from "lucide-react";
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate, useParams } from "react-router";
 
 const QuestBoard = () => {
-    const [currPage, setCurrpage] = useState(1);
+    const {'page-number': page} = useParams();
     const [totalQuests, setTotalQuests] = useState(0);
     const [onAddQuest, setOnAddQuest] = useState(false);
-    const [questList, setQuestList] = useState([]);
+    const {questList, setQuestList} = useContext(QuestContext);
+    const [shownQuests, setShownQuests] = useState([]);
+    const [nextQuestID, setNextQuestID] = useState(questList.length);
+    const questPerPage = 3;
 
-    console.log(totalQuests);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log('questlist:', questList);
+        setNextQuestID((prevID) => {return prevID + 1});
+        console.log('total quests', totalQuests);
+    }, [questList]);
 
     //when a new quest is added
     const handleIncreaseQuests = (newQuest) => {
@@ -46,24 +59,60 @@ const QuestBoard = () => {
         })
     }
 
+    const handleClickNext = () => {
+        const maxPage = Math.ceil(totalQuests / 3);
+        const newPage = parseInt(page) + 1
+        console.log(maxPage);
+        if(newPage <= maxPage){
+            navigate(`/quest-board/quest-page/${newPage}`);
+        }else{
+            toast.error('There is no next page!');
+        }
+    }
+
+    const handleClickBack = () => {
+        const newPage = page - 1;
+        if(newPage >= 1){
+            navigate(`/quest-board/quest-page/${newPage}`)
+        }else{
+            toast.error('There is no previous page!');
+        }
+    }
+
+
     return(
-        <div className="h-full w-full ">
-            <div className="relative h-10p w-95p mx-auto">
-                <Button 
-                className="absolute  w-auto left-0"
-                onClick={handleOnClickAddQuest}>Add Quest</Button>
+        <div className="h-full w-full flex">
+            <div className="flex items-center justify-center mx-auto">
+                <Button
+                onClick={() => {handleClickBack()}}
+                ><StepBack /></Button>
             </div>
-            <div className="h-85p w-95p mx-auto grid grid-cols-3 gap-4">
-                {questList.map((quest, index) => (
-                    <QuestCard key={index} quest={quest[0]} />
-                ))}
+            <div className="h-full w-85p mx-auto flex flex-col">
+                <div className="relative h-10p w-full mx-auto">
+                    <Button 
+                    className="absolute  w-auto left-0"
+                    onClick={handleOnClickAddQuest}>Add Quest</Button>
+                </div>
+                <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
+                    <QuestPage questList={questList} page={page}/>
 
-            </div>
-            <div className="page-tracker">
+                </div>
+                <div className="page-tracker">
 
+                </div>
             </div>
+            <div className="flex items-center justify-center mx-auto">
+                <Button
+                onClick={() => {handleClickNext()}}
+                ><StepForward /></Button>
+            </div>
+            <ToastContainer />
             { onAddQuest &&
-                <QuestDetailInput handleExitAddQuest={handleExitAddQuest} handleIncreaseQuests={handleIncreaseQuests}/>
+                <QuestDetailInput 
+                    handleExitAddQuest={handleExitAddQuest} 
+                    handleIncreaseQuests={handleIncreaseQuests} 
+                    questID={nextQuestID}
+                />
             }
         </div>
     );

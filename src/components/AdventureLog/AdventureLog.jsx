@@ -19,7 +19,7 @@ const AdventureLog = () => {
                 <p>Overview</p>
             </Link>
                 
-            <Link to={"/quest-board"} className="item">
+            <Link to={"/quest-board/quest-page/1"} className="item">
                 <div className="navbar-icon">
                     <img src={QuestIcon} className="icon"/>
                 </div> 

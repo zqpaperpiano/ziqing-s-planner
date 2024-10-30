@@ -14,6 +14,7 @@ module.exports = {
       width:{
         '85vw': '85vw',
         '95p': '95%',
+        '85p' : '85%',
       },
       colors:{
         bgPink: '#fdebf1',
