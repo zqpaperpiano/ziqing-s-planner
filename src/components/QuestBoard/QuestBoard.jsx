@@ -7,6 +7,7 @@ import QuestPage from "./QuestPage/QuestPage";
 import { StepBack, StepForward } from "lucide-react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate, useParams } from "react-router";
+import PageTracker from "./PageTracker/PageTracker";
 
 const QuestBoard = () => {
     const {'page-number': page} = useParams();
@@ -15,15 +16,22 @@ const QuestBoard = () => {
     const {questList, setQuestList} = useContext(QuestContext);
     const [shownQuests, setShownQuests] = useState([]);
     const [nextQuestID, setNextQuestID] = useState(questList.length);
+    const [maxPages, setMaxPages] = useState(1);
     const questPerPage = 3;
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('questlist:', questList);
         setNextQuestID((prevID) => {return prevID + 1});
-        console.log('total quests', totalQuests);
     }, [questList]);
+
+    useEffect(() => {
+        const newMax = Math.ceil(totalQuests / 3);
+        if(newMax !== maxPages){
+            //ensure that there is always a minimum maxPage value of 1
+            setMaxPages(Math.max(newMax, 1));
+        }
+    }, [totalQuests])
 
     //when a new quest is added
     const handleIncreaseQuests = (newQuest) => {
@@ -97,8 +105,8 @@ const QuestBoard = () => {
                     <QuestPage questList={questList} page={page}/>
 
                 </div>
-                <div className="page-tracker">
-
+                <div className="h-5p w-full mb-0.5">
+                    <PageTracker maxPages={maxPages} currPage={page}/>
                 </div>
             </div>
             <div className="flex items-center justify-center mx-auto">
