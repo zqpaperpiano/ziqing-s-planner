@@ -1,10 +1,14 @@
-import AdventureLog from '../AdventureLog/AdventureLog';
-import './Inn.css'
 import React from 'react'
+import SignUp from './SignUp/SignUp';
 
-const Inn = () => {
+const Inn = ({player}) => {
+
     return(
-        <div className="login-box">
+        <div className="relative h-full w-full">
+            {
+                player.playerID === -1 &&
+                <SignUp />
+            }
             
         </div>
     );

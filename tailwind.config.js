@@ -11,6 +11,9 @@ module.exports = {
         '85p' : '85%',
         '90p' : '90%',
         '5p' : '5%',
+        '70p':'70%',
+        '50p':'50%',
+        '30p':'30%',
       },
       width:{
         '85vw': '85vw',
@@ -18,11 +21,16 @@ module.exports = {
         '85p' : '85%',
         '30p' : '30%',
         '10p':'10%',
+        '70p': '70%',
+        '40p': '40%',
+        '60p': '60%',
+        '50p':'50%',
       },
       colors:{
         bgPink: '#fdebf1',
         darkPink: '#F8BDD1',
-        contrastGree: '#BDF8E4',
+        turqoiseGreen: '#BDF8E4',
+        deepPink: '#D48BA3'
       }
     },
   },

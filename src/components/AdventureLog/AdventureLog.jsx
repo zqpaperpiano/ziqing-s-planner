@@ -8,6 +8,7 @@ import InnIcon from '../../images/inn.png';
 import { Link } from "react-router-dom";
 
 const AdventureLog = () => {
+
     return(
         //navbar container
         <div className="h-7vh w-85vw bg-darkPink flex justify-around items-center font-bold ">

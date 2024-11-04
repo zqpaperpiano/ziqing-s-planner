@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useContext} from "react";
-import './QuestBoard.css';
 import Button from '@mui/material/Button';
 import QuestDetailInput from "./QuestDetailInput/QuestDetailInput";
 import { QuestContext } from "./QuestContext/QuestContext";

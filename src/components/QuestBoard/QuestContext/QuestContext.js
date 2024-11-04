@@ -5,8 +5,6 @@ export const QuestContext = createContext();
 export const QuestProvider = ({children}) => {
     const [questList, setQuestList] = useState([]);
 
-    console.log('from context', questList);
-
     return (
         <QuestContext.Provider 
             value={{questList, setQuestList}}>

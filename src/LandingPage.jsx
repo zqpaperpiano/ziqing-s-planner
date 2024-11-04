@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import './landingPage.css';
 import AdventureLog from "./components/AdventureLog/AdventureLog";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
@@ -9,6 +9,14 @@ import QuestBoard from "./components/QuestBoard/QuestBoard";
 import { QuestProvider } from "./components/QuestBoard/QuestContext/QuestContext";
 
 const LandingPage = () => {
+    const defPlayer = {
+        "playerID": -1,
+        "playerEmail": "",
+        "playerName": "",
+    }
+
+    const [player, setPlayer] = useState(defPlayer);
+
     return(
         //container
         <div className="container flex flex-col h-screen items-center"> 
@@ -24,8 +32,8 @@ const LandingPage = () => {
                 <QuestProvider>
                     <Routes>
                             <Route path="/" element={<Overview />} />
-                            <Route path="/quest-board/quest-page/:page-number" element={<QuestBoard />} />
-                            <Route path="/inn" element={<Inn />} />
+                            <Route path="/quest-board/quest-page/:page-number" element={<QuestBoard />} />  
+                            <Route path="/inn" element={<Inn player={player}/>} />
                     </Routes>
                     </QuestProvider>
                 </div>
