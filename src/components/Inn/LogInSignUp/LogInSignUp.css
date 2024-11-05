@@ -1,0 +1,35 @@
+@keyframes rainbow {
+    0% {color: #FF000000;}
+    20% {color: orange}
+    40% {color: yellow}
+    60% {color: green}
+    80% {color: blue}
+    100% {color: violet}
+  }
+
+.shiny-text:hover{
+    animation: rainbow 3s infinite;
+}
+
+@keyframes leftOverlayTransition{
+  0% {transform: translateX(0); z-index: 50;}
+  50% {transform: translateX(16.67%); z-index: 10; }
+  100% {transform: translateX(33.33%); z-index: 10;}
+}
+
+@keyframes rightOverlayTransition{
+  0% {transform: translateX(-33.33%); z-index: 10;}
+  50%{transform: translateX(-16.67%); z-index: 50;}
+  100% {transform: translateX(0%); z-index: 50;}
+}
+
+
+
+.leftOverlayShiftMiddle{
+  animation: leftOverlayTransition 5s forwards;
+}
+
+.middleOverlayShiftRight{
+  animation: rightOverlayTransition
+}
+

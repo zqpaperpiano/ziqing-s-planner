@@ -17,6 +17,10 @@ const LandingPage = () => {
 
     const [player, setPlayer] = useState(defPlayer);
 
+    const handleUserLogIn = (player) => {
+        
+    }
+
     return(
         //container
         <div className="container flex flex-col h-screen items-center"> 

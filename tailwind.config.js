@@ -30,8 +30,9 @@ module.exports = {
         bgPink: '#fdebf1',
         darkPink: '#F8BDD1',
         turqoiseGreen: '#BDF8E4',
-        deepPink: '#D48BA3'
-      }
+        deepPink: '#D48BA3',
+        mediumGray: '#9B9B9B',
+      },
     },
   },
   plugins: [],
