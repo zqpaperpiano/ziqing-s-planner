@@ -1,6 +1,6 @@
 import React from "react";
 
-const PlayerStats = () => {
+const AccountSettings = () => {
     return(
         <div>
             
@@ -8,4 +8,4 @@ const PlayerStats = () => {
     );
 }
 
-export default PlayerStats;
+export default AccountSettings;

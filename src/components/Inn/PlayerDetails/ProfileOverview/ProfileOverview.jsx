@@ -1,7 +1,21 @@
 import { InputAdornment, InputLabel, TextField } from "@mui/material"; 
-import React from "react"; 
+import React, { useState } from "react"; 
  
 const ProfileOverview = () => { 
+    const [selectedDisplay, setSelectedDisplay] = useState("Longest Dungeons");
+
+    const onClickLD = () => {
+        setSelectedDisplay("Longest Dungeons");
+    }
+
+    const onClickRC = () => {
+        setSelectedDisplay("Recent Clears");
+    }
+
+    const onClickFC = () => {
+        setSelectedDisplay("Fastest Clears");   
+    }
+
     return( 
         <div className="h-full w-full flex flex-col sm:flex-row"> {/* Change flex direction based on screen size */}
             {/* pfp, displayName, status */} 
@@ -28,9 +42,21 @@ const ProfileOverview = () => {
             <div className="h-full w-full sm:w-1/3 flex flex-col border-l-2 border-darkPink"> 
                 <div className="w-full h-12 border-b-2 border-darkPink flex"> 
                     <div className="w-full h-full grid grid-cols-3 text-center">
-                        <p className="hover:underline hover:decoration-deepPink hover:cursor-pointer">Longest Dungeons</p>
-                        <p className="hover:underline hover:decoration-deepPink hover:cursor-pointer">Recent Clears</p>
-                        <p className="hover:underline hover:decoration-deepPink hover:cursor-pointer">Fastest Clears</p>
+                        <p 
+                        onClick={() => {onClickLD()}}
+                        className={`hover:underline decoration-deepPink hover:cursor-pointer
+                        ${selectedDisplay === "Longest Dungeons" ? "underline" : null}
+                        `}>Longest Dungeons</p>
+                        <p 
+                        onClick={() => {onClickRC()}}
+                        className={`hover:underline decoration-deepPink hover:cursor-pointer
+                        ${selectedDisplay === "Recent Clears" ? "underline" : null}
+                        `}>Recent Clears</p>
+                        <p 
+                        onClick={() => {onClickFC()}}
+                        className={`hover:underline decoration-deepPink hover:cursor-pointer
+                        ${selectedDisplay === "Fastest Clears" ? "underline" : null}
+                        `}>Fastest Clears</p>
                     </div>
                 </div> 
             </div> 
