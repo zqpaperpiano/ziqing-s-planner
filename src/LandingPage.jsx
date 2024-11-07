@@ -32,7 +32,7 @@ const LandingPage = () => {
                 <div className="w-85vw h-7vh">
                     <AdventureLog />
                 </div> 
-                <div className="w-85vw h-63vh bg-bgPink flex flex-col overflow-hidden">
+                <div className="w-85vw h-63vh bg-bgPink flex flex-col">
                 <QuestProvider>
                     <Routes>
                             <Route path="/" element={<Overview />} />

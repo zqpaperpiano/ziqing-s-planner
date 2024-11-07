@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import LogInSignUp from './LogInSignUp/LogInSignUp';
+import PlayerDetails from './PlayerDetails/PlayerDetails';
 
 const Inn = ({player}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,7 +18,9 @@ const Inn = ({player}) => {
         <div className="relative h-full w-full">
             {
                 player.playerID === -1 &&
-                <LogInSignUp />
+                // <LogInSignUp />
+                // :
+                 <PlayerDetails />
             }
             
         </div>

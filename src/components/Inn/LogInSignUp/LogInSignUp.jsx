@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import './LogInSignUp.css';
 import { Button } from "@mui/material";
 import SignUp from "./SignUp/SignUp";
+import LogIn from "./LogIn/LogIn";
 
 const LogInSignUp = () => {
     const [onSignup, toggleOnSignUp] = useState(false);
@@ -25,16 +26,15 @@ const LogInSignUp = () => {
 
     return(
         <div className="relative h-full w-full">
-            <Button className="absolute z-50"onClick={() => {onClickToLogIn()}}>hello</Button>
             <div id="LogInForm"
-                className={`h-full w-50p absolute top-0 left-0 z-20 transition-transform duration-500
+                className={`bg-bgPink   h-full w-50p absolute top-0 left-0 z-20 transition-transform duration-500
                     ${onSignup ? 'translate-x-full' : null}`}
             >
-                <p>Log In</p>
+                <LogIn />
             </div>
 
             <div id="SignUpForm"
-                className={`h-full w-50p absolute bg-bgPink top-0 left-0 transition-transform duration-500
+                className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 transition-transform duration-500
                     ${onSignup  ? "translate-x-full opacity-100 z-30" : "opacity-0 z-10"}`}
             >
                 <SignUp />
@@ -45,18 +45,30 @@ const LogInSignUp = () => {
                         transition-transform duration-500 ${onSignup ? '-translate-x-full' : 'translate-x-0'}`}
             >
                 <div id="ovelay-bg"
-                    className={`bg-deepPink relative -left-full h-full w-2x 
+                    className={`bg-gradient-to-r from-[#A0557A] to-[#D48BA3] relative -left-full h-full w-2x 
                     ${onSignup ? 'translate-x-1/2' : 'translate-x-0'}`}>
                             <div id="left-overlay"
-                            className={`absolute flex items-center justify-center h-full w-1/2 
-                                transition-transform duration-500 ${onSignup ? "-translate-x-20p" : "translate-x-0"}`}>
-                                    <Button onClick={() => {onClickToLogIn()}}> Go to log in! </Button>
+                            className={`absolute flex flex-col items-center justify-center h-full w-1/2 
+                                transition-transform duration-500 ${onSignup ? "-translate-x-0" : "-translate-x-20"}`}>
+                                    <h1 className="font-bold text-3xl">Have we met before?</h1>
+                                    <p className="text-s">Not your first time in the guild?</p>
+                                    <Button 
+                                    sx={{color: 'lightPink', borderColor: 'lightPink'}}
+                                    variant="outlined"
+                                    onClick={() => {onClickToLogIn()}}> Go to log in! </Button>
                             </div>
                             <div id="right-overlay"
-                                className={`absolute right-0 flex items-center justify-center h-full w-1/2
-                                    transition-transform duration-500 ${onSignup ? "translate-x-20p" : null}
+                                className={`absolute right-0 flex flex-col items-center justify-center h-full w-1/2
+                                    transition-transform duration-500 ${onSignup ? "translate-x-20" : "translate-x-0"}
                                     `}>
-                                        <Button onClick={() => {onClickToLogIn()}}>Go to Register</Button>
+                                        <h1 className="font-bold text-3xl">First time here?</h1>
+                                        <p className="text-s text-center">Let's register you into our guild before you enter!</p>
+                                        <div className="mt-2">
+                                        <Button 
+                                    sx={{color: 'lightPink', borderColor: 'lightPink'}}
+                                    variant="outlined"
+                                    onClick={() => {onClickToLogIn()}}> Go to Sign Up! </Button>
+                                        </div>
                             </div>
                         </div>
             </div>

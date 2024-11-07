@@ -14,6 +14,7 @@ module.exports = {
         '70p':'70%',
         '50p':'50%',
         '30p':'30%',
+        '180px': "180px"
       },
       width:{
         '85vw': '85vw',
@@ -25,7 +26,9 @@ module.exports = {
         '40p': '40%',
         '60p': '60%',
         '50p':'50%',
-        '2x': '200%'
+        '2x': '200%',
+        '15p': '15%',
+        '180px': '180px',
       },
       translate: {
         '20p': '20%'
@@ -36,6 +39,7 @@ module.exports = {
         turqoiseGreen: '#BDF8E4',
         deepPink: '#D48BA3',
         mediumGray: '#9B9B9B',
+        lightPink: '#F2AFC3'
       },
     },
   },
