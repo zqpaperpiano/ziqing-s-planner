@@ -25,6 +25,10 @@ module.exports = {
         '40p': '40%',
         '60p': '60%',
         '50p':'50%',
+        '2x': '200%'
+      },
+      translate: {
+        '20p': '20%'
       },
       colors:{
         bgPink: '#fdebf1',
