@@ -1,6 +1,4 @@
 import './Overview.css';
-import AdventureLog from '../AdventureLog/AdventureLog';
-import cover from '../../images/cover2.png'
 import React, {useEffect, useState} from 'react';
 import profilePic from '../../images/profile-pic.jpg';
 import FlipClock from '../FlipClock/FlipClock';

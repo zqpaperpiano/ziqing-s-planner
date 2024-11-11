@@ -37,7 +37,7 @@ const LandingPage = () => {
         <div className="h-screen w-screen bg-gradient-to-b from-gradientStart via-gradientMid to-gradientEnd">
             
             <Router>
-                <div className="relative h-screen w-screen flex md:flex-col justify-center md:items-center">
+                <div className="relative h-screen w-screen flex md:flex-col justify-center md:items-center  ">
                     <div className="md:w-85vw md:h-7vh hidden md:block">
                         <FullNavBar />
                     </div>

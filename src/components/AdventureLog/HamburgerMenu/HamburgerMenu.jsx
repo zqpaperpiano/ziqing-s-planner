@@ -34,17 +34,17 @@ const HamburgerMenu = () => {
                         fontSize="medium"/>
                     </div>
                     <div className="h-85vh w-full flex flex-col">
-                        <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                        <Link to={'/'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center"> 
                                 <p>Overview</p>
                             </div>
-                        </div>
+                        </Link>
 
-                        <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                        <Link to={'/dungeon-board/1'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
                                 <p>Dungeons</p>
                             </div>
-                        </div>
+                        </Link>
 
                         <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
@@ -58,11 +58,11 @@ const HamburgerMenu = () => {
                             </div>
                         </div>
 
-                        <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                        <Link to={'/inn'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
                                 <p>Inn</p>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                 </div>
                 : <div 
