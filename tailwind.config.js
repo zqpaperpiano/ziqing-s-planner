@@ -14,7 +14,8 @@ module.exports = {
         '70p':'70%',
         '50p':'50%',
         '30p':'30%',
-        '180px': "180px"
+        '180px': "180px",
+        '85vh': '85vh',
       },
       width:{
         '85vw': '85vw',
@@ -32,6 +33,7 @@ module.exports = {
         '180px': '180px',
         '14vw': '14vw', 
         '15vw': '15vw',
+        '7.5vw': '7.5vw',
       },
       translate: {
         '20p': '20%'
@@ -42,7 +44,10 @@ module.exports = {
         turqoiseGreen: '#BDF8E4',
         deepPink: '#D48BA3',
         mediumGray: '#9B9B9B',
-        lightPink: '#F2AFC3'
+        lightPink: '#F2AFC3',
+        gradientStart: '#F8D6DF',
+        gradientMid: '#EA99B0',
+        gradientEnd: '#E18D9B'
       },
     },
   },
