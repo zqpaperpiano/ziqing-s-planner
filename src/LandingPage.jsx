@@ -5,8 +5,8 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Overview from "./components/Overview/Overview";
 import Inn from "./components/Inn/Inn";
 import cover from './images/cover2.png'
-import QuestBoard from "./components/QuestBoard/QuestBoard";
-import { QuestProvider } from "./components/QuestBoard/QuestContext/QuestContext";
+import DungeonBoard from "./components/QuestBoard/DungeonBoard";
+import { DungeonProvider } from "./components/QuestBoard/DungeonContext/DungeonContext";
 
 const LandingPage = () => {
     const defPlayer = {
@@ -33,13 +33,13 @@ const LandingPage = () => {
                     <AdventureLog />
                 </div> 
                 <div className="w-85vw h-63vh bg-bgPink flex flex-col">
-                <QuestProvider>
+                <DungeonProvider>
                     <Routes>
                             <Route path="/" element={<Overview />} />
-                            <Route path="/quest-board/quest-page/:page-number" element={<QuestBoard />} />  
+                            <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
                             <Route path="/inn" element={<Inn player={player}/>} />
                     </Routes>
-                    </QuestProvider>
+                    </DungeonProvider>
                 </div>
             </Router>
             

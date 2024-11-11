@@ -5,17 +5,17 @@ import Checkpoints from "./Checkpoints";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) => {
+const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dungeonID }) => {
 
     // console.log('quest id received:', questID);
 
     const [checkpointList, setCheckpointList] = useState([]);
-    const [questDetails, setQuestDetails] = useState({
-                                                questID: questID,
-                                                questName: '',
-                                                questImage: '',
-                                                questDescription: '',
-                                                questCheckpoint: [],
+    const [dungeonDetails, setDungeonDetails] = useState({
+                                                dungeonID: dungeonID,
+                                                dungeonName: '',
+                                                dungeonImage: '',
+                                                dungeonDescription: '',
+                                                dungeonCheckpoints: [],
                                                 completionPercentage: 0,
                                             });
 
@@ -32,9 +32,9 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
 
         const completionPercentage = (completedCount / checkpointList.length).toFixed(2);
 
-        setQuestDetails((prevDeets) => ({
+        setDungeonDetails((prevDeets) => ({
             ...prevDeets, 
-            questCheckpoint : [checkpointList],
+            dungeonCheckpoints : [checkpointList],
             completionPercentage: [completionPercentage]
         }))
     }, [checkpointList]);
@@ -47,8 +47,8 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
     }
 
     //takes care of all other aspects when quest details are changed
-    const handleQuestDetailsChange = (e, parameterName) => {
-        setQuestDetails((prevDeets) => ({
+    const handleDungeonDetailsChange = (e, parameterName) => {
+        setDungeonDetails((prevDeets) => ({
             ...prevDeets, [parameterName]: e.target.value
         }))
     }
@@ -74,28 +74,28 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
         if(file){
             const imageURL = URL.createObjectURL(file);
 
-            setQuestDetails((prevDeets) => ({
-                ...prevDeets, questImage: [imageURL]
+            setDungeonDetails((prevDeets) => ({
+                ...prevDeets, dungeonImage: [imageURL]
             }))
         }
     }
 
     const handlePostQuest = () => {
         // do necessary verification of all inputs first
-        if (questDetails.questName === ''){
+        if (dungeonDetails.dungeonName === ''){
             notifyEmptyName();
-        }else if(questDetails.questDescription === ''){
+        }else if(dungeonDetails.dungeonDescription === ''){
             notifyEmptyDescription();
-        }else if(questDetails.questCheckpoint[0].length === 0){
+        }else if(dungeonDetails.dungeonCheckpoints[0].length === 0){
             notifyEmptyCheckpoint();
         }else{
-            handleIncreaseQuests(questDetails);
-            handleExitAddQuest();
+            handleIncreaseDungeons(dungeonDetails);
+            handleExitAddDungeon();
         }
     }
 
     const handleCompleteCheckpoints = (i, checked) => {
-        const checkpointName = Object.keys(questDetails.questCheckpoint[0][i]);
+        const checkpointName = Object.keys(dungeonDetails.dungeonCheckpoints[0][i]);
         const temp = {[checkpointName]: [checked][0]};
 
         setCheckpointList((prevList) => {
@@ -109,18 +109,20 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
         })
     }
 
-    const notifyEmptyName = () => toast.error("Please fill in a quest name!");
+    const notifyEmptyName = () => toast.error("Please fill in a dungeon name!");
     const notifyEmptyDescription = () => toast.error("Please fill in a description!");
     const notifyEmptyCheckpoint = () => toast.error("Please have at least one checkpoint for your progress!");
+
+    // can just set number of checkpoints and it automatically creates``
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
             <div className="relative bg-white w-3/4 h-5/6 flex items-center justify-center">
-                <button onClick={() => {handleExitAddQuest()}} className="absolute top-6 right-6 "><X /></button>
+                <button onClick={() => {handleExitAddDungeon()}} className="absolute top-2 right-6 "><X /></button>
                 <div className="overflow-scroll overflow-x-hidden w-full h-full flex items-center justify-evenly flex-col">
                     <div className="h-1/6 flex flex-col justify-around">
-                        <h1 className="text-5xl">Posting a New Quest?</h1>
-                        <h3>Please fill in the details below!</h3>
+                        <h1 className="text-5xl text-center">Spotted a new Dungeon?</h1>
+                        <h3 className="text-center mt-2">Please fill in the details below so an adventurer can take on the quest!</h3>
                     </div>
                     <form className="mt-4 h-5/6 w-full flex flex-col items-center">
                         <ToastContainer 
@@ -132,16 +134,16 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
                         <div className="h-5/6 flex flex-col items-center w-5/6 ">
                             <p>Quest Name:</p>
                             <input 
-                                onChange={(e) => {handleQuestDetailsChange(e, "questName")}}
+                                onChange={(e) => {handleDungeonDetailsChange(e, "questName")}}
                                 className="border border-gray-300 rounded p-2"
                                 type="text" 
-                                placeholder="Name of Quest here!" 
+                                placeholder="Name of Dungeon here!" 
                                 required 
                             />
-                            <p>Quest Poster Image:</p>
+                            <p>Quest Poster Image</p>
                             <div className="flex flex-row justify-center items-center">
                             <input
-                                onChange={(e) => {handleQuestDetailsChange(e, "questImage")}}
+                                onChange={(e) => {handleDungeonDetailsChange(e, "questImage")}}
                                 className="border border-gray-300 rounded p-2"
                                 type="url"
                                 placeholder="Insert a URL"
@@ -153,13 +155,13 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
                                 accept="image/*"
                             />
                             </div>
-                            <p>Quest Details:</p>
+                            <p>Dungeon Details:</p>
                             <textarea
-                                value={questDetails.questDescription}
-                                onChange={(e) => handleQuestDetailsChange(e, "questDescription")}
+                                value={dungeonDetails.dungeonDescription}
+                                onChange={(e) => handleDungeonDetailsChange(e, "questDescription")}
                                 rows="5"
                                 className="border border-gray-300 rounded p-2 w-1/2 h-2/3"
-                                placeholder="A short description..."
+                                placeholder="A short description of the dungeon to better aid our adventurers..."
                                 required
                             />
                         </div>
@@ -174,7 +176,7 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
                             <Button 
                             onClick={() => {
                                 handlePostQuest()}}>
-                                Post Quest
+                                Post Dungeon
                             </Button>
                         </div>
                     </form>
@@ -185,4 +187,4 @@ const QuestDetailInput = ({handleExitAddQuest, handleIncreaseQuests, questID }) 
     );
 }
 
-export default QuestDetailInput;
+export default DungeonDetailInput;

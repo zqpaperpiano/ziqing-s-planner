@@ -1,60 +1,58 @@
 import React, {useState, useEffect, useContext} from "react";
 import Button from '@mui/material/Button';
-import QuestDetailInput from "./QuestDetailInput/QuestDetailInput";
-import { QuestContext } from "./QuestContext/QuestContext";
-import QuestPage from "./QuestPage/QuestPage";
+import DungeonDetailInput from "./DungeonDetail/DungeonDetailInput";
+import { DungeonContext } from "./DungeonContext/DungeonContext";
+import DungeonPage from "./DungeonPage/DungeonPage";
 import { StepBack, StepForward } from "lucide-react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate, useParams } from "react-router";
 import PageTracker from "./PageTracker/PageTracker";
 
-const QuestBoard = () => {
+const DungeonBoard = () => {
     const {'page-number': page} = useParams();
-    const [totalQuests, setTotalQuests] = useState(0);
-    const [onAddQuest, setOnAddQuest] = useState(false);
-    const {questList, setQuestList} = useContext(QuestContext);
-    const [shownQuests, setShownQuests] = useState([]);
-    const [nextQuestID, setNextQuestID] = useState(questList.length);
+    const [totalDungeons, setTotalDungeons] = useState(0);
+    const [onAddDungeon, setOnAddDungeon] = useState(false);
+    const {dungeonList, setDungeonList} = useContext(DungeonContext);
+    const [nextDungeonID, setNextDungeonID] = useState(dungeonList.length);
     const [maxPages, setMaxPages] = useState(1);
-    const questPerPage = 3;
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        setNextQuestID((prevID) => {return prevID + 1});
-    }, [questList]);
+        setNextDungeonID((prevID) => {return prevID + 1});
+    }, [dungeonList]);
 
     useEffect(() => {
-        const newMax = Math.ceil(totalQuests / 3);
+        const newMax = Math.ceil(totalDungeons / 3);
         if(newMax !== maxPages){
             //ensure that there is always a minimum maxPage value of 1
             setMaxPages(Math.max(newMax, 1));
         }
-    }, [totalQuests])
+    }, [totalDungeons])
 
     //when a new quest is added
-    const handleIncreaseQuests = (newQuest) => {
-        setQuestList((prevList) => [
-            ...prevList, [newQuest]
+    const handleIncreaseDungeons = (newDungeon) => {
+        setDungeonList((prevList) => [
+            ...prevList, [newDungeon]
         ])
-        setTotalQuests((prevVal) => prevVal + 1);
+        setTotalDungeons((prevVal) => prevVal + 1);
     }
 
     //when a quest is completed or deleted
-    const handleDecreaseQuests = () => {
-        setTotalQuests((prevVal) => Math.max(0, prevVal - 1))
+    const handleDecreaseDungeons = () => {
+        setTotalDungeons((prevVal) => Math.max(0, prevVal - 1))
     }
 
-    const handleOnClickAddQuest = () => {
-        setOnAddQuest(true);
+    const handleOnClickAddDungeons = () => {
+        setOnAddDungeon(true);
     }
 
-    const handleExitAddQuest = () => {
-        setOnAddQuest(false);
+    const handleExitAddDungeon = () => {
+        setOnAddDungeon(false);
     }
 
     const handleCompletedCheckpoint = (obj, i) => {
-        setQuestList((prevList) => {
+        setDungeonList((prevList) => {
             const newList = prevList.map((checkpoint, index) => {
                 if(index === i){
                     return obj;
@@ -67,9 +65,8 @@ const QuestBoard = () => {
     }
 
     const handleClickNext = () => {
-        const maxPage = Math.ceil(totalQuests / 3);
+        const maxPage = Math.ceil(totalDungeons / 3);
         const newPage = parseInt(page) + 1
-        console.log(maxPage);
         if(newPage <= maxPage){
             navigate(`/quest-board/quest-page/${newPage}`);
         }else{
@@ -98,10 +95,10 @@ const QuestBoard = () => {
                 <div className="relative h-10p w-full mx-auto">
                     <Button 
                     className="absolute  w-auto left-0"
-                    onClick={handleOnClickAddQuest}>Add Quest</Button>
+                    onClick={handleOnClickAddDungeons}>Add Dungeon</Button>
                 </div>
                 <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
-                    <QuestPage questList={questList} page={page}/>
+                    <DungeonPage dungeonList={dungeonList} page={page}/>
 
                 </div>
                 <div className="h-5p w-full mb-0.5">
@@ -114,15 +111,15 @@ const QuestBoard = () => {
                 ><StepForward /></Button>
             </div>
             <ToastContainer />
-            { onAddQuest &&
-                <QuestDetailInput 
-                    handleExitAddQuest={handleExitAddQuest} 
-                    handleIncreaseQuests={handleIncreaseQuests} 
-                    questID={nextQuestID}
+            { onAddDungeon &&
+                <DungeonDetailInput
+                    handleExitAddDungeon={handleExitAddDungeon}
+                    handleIncreaseDungeons={handleIncreaseDungeons}
+                    dungeonID={nextDungeonID}
                 />
             }
         </div>
     );
 }
 
-export default QuestBoard;
+export default DungeonBoard;
