@@ -6,46 +6,66 @@ import AdventureIcon from '../../images/adventure-icon.png';
 import ShopIcon from '../../images/shop.png';
 import InnIcon from '../../images/inn.png';
 import { Link } from "react-router-dom";
+import { StoreIcon } from "lucide-react";
 
 const AdventureLog = () => {
 
     return(
-        //navbar container
-        <div className="h-7vh w-85vw bg-darkPink flex justify-around items-center font-bold ">
-            <Link to={"/"} className="item">
-                <div className="navbar-icon">
-                    <img src={OverviewIcon} className="icon"    />
+        <div className="
+        h-85p w-full flex flex-col font-bold mt-4
+        grid grid-rows-5
+        ">
+
+            <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                <div className="h-full w-full ml-2 flex items-center">
+                    <div className="w-15p h-70p ">
+                        <img src={OverviewIcon} className="h-full w-full object-contain"    />
+                    </div>
+                        
+                    <p>Overview</p>
                 </div>
-                
-                <p>Overview</p>
-            </Link>
-                
-            <Link to={"/dungeon-board/1"} className="item">
-                <div className="navbar-icon">
-                    <img src={QuestIcon} className="icon"/>
-                </div> 
-                
-                <a>Dungeon Board</a>
-            </Link>
-            <div className="item">
-                <div className="navbar-icon">
-                    <img src={AdventureIcon} className="icon"/>
-                </div>
-                
-                <a>Adventure!</a>
             </div>
-            <div className="item">
-                <div className="navbar-icon">
-                    <img src={ShopIcon} className="icon"/>
+
+            <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                <div className="h-full w-full ml-2 flex items-center">
+                    <div className="w-15p h-70p ">
+                        <img src={QuestIcon} className="h-full w-full object-contain"    />
+                    </div>
+                        
+                    <p>Dungeon Board</p>
                 </div>
-                <a>Store</a>
             </div>
-            <Link to={"/inn"} className="item">
-                <div className="navbar-icon">
-                    <img src={InnIcon} className="icon"/>
+
+            <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                <div className="h-full w-full ml-2 flex items-center">
+                    <div className="w-15p h-70p ">
+                        <img src={AdventureIcon} className="h-full w-full object-contain"    />
+                    </div>
+                        
+                    <p>Adventure</p>
                 </div>
-                <p>Inn</p>
-            </Link>
+            </div>
+
+            <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                <div className="h-full w-full ml-2 flex items-center">
+                    <div className="w-15p h-70p ">
+                        <img src={ShopIcon} className="h-full w-full object-contain"    />
+                    </div>
+                        
+                    <p>Shop</p>
+                </div>
+            </div>
+
+            <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                <div className="h-full w-full ml-2 flex items-center">
+                    <div className="w-15p h-70p ">
+                        <img src={InnIcon} className="h-full w-full object-contain"    />
+                    </div>
+                        
+                    <p>Inn</p>
+                </div>
+            </div>
+
         </div>
     )
 }
