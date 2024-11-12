@@ -13,9 +13,11 @@ module.exports = {
         '5p' : '5%',
         '70p':'70%',
         '50p':'50%',
+        '40p': '40%',
         '30p':'30%',
         '180px': "180px",
         '85vh': '85vh',
+        '60p': '60%',
       },
       width:{
         '85vw': '85vw',
@@ -33,7 +35,8 @@ module.exports = {
         '180px': '180px',
         '14vw': '14vw', 
         '15vw': '15vw',
-        '7.5vw': '7.5vw',
+        '7vw': '7vw',
+
       },
       translate: {
         '20p': '20%'
@@ -49,6 +52,18 @@ module.exports = {
         gradientMid: '#EA99B0',
         gradientEnd: '#E18D9B'
       },
+      screens: {
+        'po': '937px',
+        'qp': '900px',
+        'bs': '712px',
+        'hf': '550px',
+      },
+      maxHeight: {
+        '1/2': "50%"
+      },
+      maxWidth: {
+        '1/3': '33.33%'
+      }
     },
   },
   plugins: [],

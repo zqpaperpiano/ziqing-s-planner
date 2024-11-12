@@ -21,23 +21,23 @@ const PlayerDetails = () => {
     return(
         <div className="h-full w-full flex">
             <div className="relative h-full w-15p border-r-2 border-darkPink flex flex-col text-left">
-                <div className={`my-2 rounded w-85p h-auto mx-auto p-1 hover:cursor-pointer hover:bg-turqoiseGreen
+                <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
                     ${selectedPage === 'Profile Overview' ? "bg-darkPink" : null}`}
                     onClick={() => {handleClickedProfileOverview()}}
                     >
-                    <p>Profile overview</p>
+                    <p className="text-xs bs:text-m">Profile overview</p>
                 </div>
-                <div className={`my-2 rounded w-85p h-auto mx-auto p-1 hover:cursor-pointer hover:bg-turqoiseGreen
+                <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
                     ${selectedPage === 'Stats' ? "bg-darkPink" : null}`}
                     onClick={() => {handleClickedStats()}}
                     >
-                    <p>Stats</p>
+                    <p className="text-xs bs:text-m">Stats</p>
                 </div>
-                <div className={`my-2 rounded w-85p h-auto mx-auto p-1 hover:cursor-pointer hover:bg-turqoiseGreen
+                <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
                     ${selectedPage === 'Account Settings' ? "bg-darkPink" : null}`}
                     onClick={() => {handleClickedAccountSettings()}}
                     >
-                    <p>Account settings</p>
+                    <p className="text-xs bs:text-m">Account settings</p>
                 </div>
             </div>
             <div className="h-full w-85p">
