@@ -47,7 +47,7 @@ const SignUp  = () => {
         <div className="absolute h-full w-full flex right-0 rounded">
             <div className="h-full w-full flex flex-col items-center justify-center">
                 <ToastContainer />
-                <h1 className="header font-bold">Create Account</h1>
+                <h1 className="header font-bold text-center">Create Account</h1>
                 <div className="mt-2 h-10 w-60 flex justify-evenly">
                     <div 
                     className="relative h-8 w-8 flex items-center justify-center rounded-full 
@@ -67,7 +67,7 @@ const SignUp  = () => {
                     </div>
 
                 </div>
-                <p className="my-0 h-6"> Or use your email for registration </p>
+                <p className="my-0 h-6 text-center mb-2 bs:b-0"> Or use your email for registration </p>
                 <div className="h-50p w-85p flex flex-col items-center">
                     <form>
                         <div className="h-8 mt-2 relative flex flex-row items-center">
