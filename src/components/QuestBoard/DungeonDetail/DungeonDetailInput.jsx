@@ -132,18 +132,18 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
                             pauseOnFocusLoss
                         />
                         <div className="h-5/6 flex flex-col items-center w-5/6 ">
-                            <p>Quest Name:</p>
+                            <p>Dungeon Name:</p>
                             <input 
-                                onChange={(e) => {handleDungeonDetailsChange(e, "questName")}}
+                                onChange={(e) => {handleDungeonDetailsChange(e, "dungeonName")}}
                                 className="border border-gray-300 rounded p-2"
                                 type="text" 
                                 placeholder="Name of Dungeon here!" 
                                 required 
                             />
-                            <p>Quest Poster Image</p>
+                            <p>Dungeon Image</p>
                             <div className="flex flex-row justify-center items-center">
                             <input
-                                onChange={(e) => {handleDungeonDetailsChange(e, "questImage")}}
+                                onChange={(e) => {handleDungeonDetailsChange(e, "dungeonImage")}}
                                 className="border border-gray-300 rounded p-2"
                                 type="url"
                                 placeholder="Insert a URL"
@@ -158,7 +158,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
                             <p>Dungeon Details:</p>
                             <textarea
                                 value={dungeonDetails.dungeonDescription}
-                                onChange={(e) => handleDungeonDetailsChange(e, "questDescription")}
+                                onChange={(e) => handleDungeonDetailsChange(e, "dungeonDescription")}
                                 rows="5"
                                 className="border border-gray-300 rounded p-2 w-1/2 h-2/3"
                                 placeholder="A short description of the dungeon to better aid our adventurers..."

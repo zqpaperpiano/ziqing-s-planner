@@ -15,8 +15,23 @@ const DungeonBoard = () => {
     const {dungeonList, setDungeonList} = useContext(DungeonContext);
     const [nextDungeonID, setNextDungeonID] = useState(dungeonList.length);
     const [maxPages, setMaxPages] = useState(1);
+    const [dungeonPp, setDungeonPp] = useState(3);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const updateDungeonPp = () => {
+            if(window.innerWidth < 640){
+                setDungeonPp(3);
+            }else{
+                setDungeonPp(6);
+            }
+        };
+
+        updateDungeonPp();
+
+        window.addEventListener("resize", updateDungeonPp);
+    })
 
     useEffect(() => {
         setNextDungeonID((prevID) => {return prevID + 1});
@@ -86,6 +101,7 @@ const DungeonBoard = () => {
 
     return(
         <div className="h-full w-full flex">
+            <ToastContainer />
             <div className="flex items-center justify-center mx-auto">
                 <Button
                 onClick={() => {handleClickBack()}}
@@ -98,7 +114,7 @@ const DungeonBoard = () => {
                     onClick={handleOnClickAddDungeons}>Add Dungeon</Button>
                 </div>
                 <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
-                    <DungeonPage dungeonList={dungeonList} page={page}/>
+                    <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp}/>
 
                 </div>
                 <div className="h-5p w-full mb-0.5">
