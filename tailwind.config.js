@@ -18,6 +18,7 @@ module.exports = {
         '180px': "180px",
         '85vh': '85vh',
         '60p': '60%',
+        '15p': '15%',
       },
       width:{
         '85vw': '85vw',
@@ -71,7 +72,8 @@ module.exports = {
       fontFamily: {
         silkscreen: ['Silkscreen', 'cursive'],
         micro5: ['Micro 5 Charted', 'sans-serif'],
-      }
+        tiny5:  ['tiny5', 'sans-serif'],
+      },
     },
   },
   plugins: [],

@@ -16,3 +16,10 @@
     background-size: cover;
 }
 
+.number{
+    transition:transform 0.3s ease-in-out
+}
+
+.flip{
+    transform: rotateX(180deg);
+}

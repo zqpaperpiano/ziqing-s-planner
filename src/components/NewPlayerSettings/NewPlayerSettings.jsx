@@ -26,7 +26,7 @@ const NewPlayerSettings = () => {
                     `}>
                     <PageOne handleNextPage={handleNextPage}/>
                     <PageTwo currPage={currPage} handleNextPage={handleNextPage}/>
-                    <PageThree />
+                    <PageThree currPage={currPage} handleNextPage={handleNextPage}/>
                 </div>
 
                     
