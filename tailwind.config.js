@@ -31,6 +31,7 @@ module.exports = {
         '50p':'50%',
         '2x': '200%',
         '3x': '300%',
+        '5x': '500%',
         '15p': '15%',
         '180px': '180px',
         '14vw': '14vw', 
@@ -39,7 +40,10 @@ module.exports = {
 
       },
       translate: {
-        '20p': '20%'
+        '20p': '20%',
+        '40p': '40%', 
+        '60p': '60%', 
+        '80p': '80%',
       },
       colors:{
         bgPink: '#fdebf1',
@@ -63,6 +67,10 @@ module.exports = {
       },
       maxWidth: {
         '1/3': '33.33%'
+      },
+      fontFamily: {
+        silkscreen: ['Silkscreen', 'cursive'],
+        micro5: ['Micro 5 Charted', 'sans-serif'],
       }
     },
   },
