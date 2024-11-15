@@ -3,6 +3,7 @@ import './NewPlayerSettings.css';
 import PageOne from "./Pages/PageOne";
 import PageTwo from "./Pages/PageTwo";
 import PageThree from "./Pages/PageThree";
+import PageFour from "./Pages/PageFour";
 
 
 const NewPlayerSettings = () => {
@@ -27,6 +28,7 @@ const NewPlayerSettings = () => {
                     <PageOne handleNextPage={handleNextPage}/>
                     <PageTwo currPage={currPage} handleNextPage={handleNextPage}/>
                     <PageThree currPage={currPage} handleNextPage={handleNextPage}/>
+                    <PageFour />
                 </div>
 
                     

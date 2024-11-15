@@ -3,177 +3,221 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "@mui/material";
 
-const SetClock = ({selected}) => {
-    const [hourFirst, setHourFirst] = useState(0);
-    const [hourSecond, setHourSecond] = useState(0);
-    const [minuteFirst, setMinuteFirst] = useState(0);
-    const [minuteSecond, setMinuteSecond] = useState(0);
-    const [time, setTime] = useState("00:00");
-    const inputRefs = useRef([]);
+const SetClock = ({setSchedule,handleNextSlide}) => {
+    const [inputTracker, setInputTracker] = useState(1);
+
+    const [hour, setHour] = useState("00");
+    const [minute, setMinute] = useState("00");
+
+    const handleHourIncrease = () => {
+        let num = parseInt(hour);
+
+        if(num < 9){
+            num = num + 1;
+            const str = "0" + num;
+            setHour(str);
+        }else if(num < 23){
+            num = num + 1;
+            const str = "" + num;
+            setHour(str);
+        }else{
+            setHour("00");
+        }
+    }
+
+    const handleHourDecrease = () => {
+        let num = parseInt(hour);
+
+        if(num < 11 && num > 0){
+            num = num - 1
+            const str = "0" + num;
+            setHour(str);
+        }
+        else if(num > 10){
+            num = num - 1;
+            const str = "" + num
+            setHour(str);
+        }else{
+            setHour("23");
+        }
+    }
+
+    const handleMinIncrease = () => {
+        let num = parseInt(minute);
+
+        if(num < 9){
+            num = num + 1;
+            const str = "0" + num;
+            setMinute(str);
+        }else if(num < 59){
+            num = num + 1;
+            const str = "" + num;
+            setMinute(str);
+        }else{
+            setMinute("00");
+        }
+    }
+
+    const handleMinDecrease = () => {
+        let num = parseInt(minute);
+
+        if(num < 11 && num > 0){
+            num = num - 1;
+            const str = "0" + num;
+            setMinute(str);
+        }else if(num > 10){
+            num = num - 1;
+            const str = "" + num;
+            setMinute(str);
+        }else{
+            setMinute("59");
+        }
+    }
+
 
     useEffect(() => {
-        if(selected){
-            addEventListener
-        }
+
+
+            document.addEventListener("keydown", handleKeyDown, false);
+
+            return () => {
+                document.removeEventListener("keydown", handleKeyDown, false);
+            }
     })
-  
-    
 
-    const handleH1Increment = () => {
-        setHourFirst((prevVal) => {
-            return (prevVal + 1) % 3
-        })
-    }
+    const handleKeyDown = (e) => {
+        const val = parseInt(e.key);
 
-    const handleH1Decrement = () => {
-        setHourFirst((prevVal) => {
-            return (prevVal - 1) % 3;
-        })
-    }
+       if(!isNaN(val)){
+        switch(inputTracker){
+            case 1:
+                if(val === 1){
+                    const newHour = val + hour.charAt(1);
+                    setHour(newHour);
+                    cycleInput();
+                }else if(val === 2){
+                    const secondVal = hour.charAt(1);
+                    if(parseInt(secondVal) > 3){
+                        const newHour = val + "0";
+                        setHour(newHour);
+                        cycleInput();
+                    }else{
+                        const newHour = val + secondVal;
+                        setHour(newHour);
+                        cycleInput();
+                    }
+                }
+                break;
+            case 2:
+                const firstVal = hour.charAt(0);
+                if(parseInt(firstVal) === 2){
+                    if(val < 4){
+                        const newHour = firstVal + val;
+                        setHour(newHour);
+                        cycleInput();
+                    }
+                }else{
+                    if(val >=0 && val <= 9){
+                        const newHour = firstVal + val;
+                        setHour(newHour);
+                        cycleInput();
+                    }
+                }
+                break;
+            
+            case 3:
+                if(val >= 0 && val <= 5){
+                    const secondMin = minute.charAt(1);
+                    const newMin = val + secondMin;
+                    setMinute(newMin);
+                    cycleInput();
+                }
+                break;
 
-    const handleH2Increment = () => {
-        if(hourFirst === 2){
-            setHourSecond((prevVal) => {
-                return (prevVal + 1) % 5
-            })
-        }else{
-            setHourSecond((prevVal) => {
-                return (prevVal + 1) % 10
-            })
+            case 4:
+                if(val >=0 && val <= 9){
+                    const firstMin = minute.charAt(0);
+                    const newMin = firstMin + val;
+                    setMinute(newMin);
+                    cycleInput();
+                }
         }
+       }
     }
 
-    const handleH2Decrement = () => {
-        if(hourFirst === 2){
-            setHourSecond((prevVal) => {
-                return (prevVal - 1) % 5;
-            })
-        }else{
-            setHourSecond((prevVal) => {
-                return (prevVal - 1) % 10;
-            })
-        }
-    }
+    useEffect(() => {
+        console.log(inputTracker);
+    }, [inputTracker])
 
-    const handleM1Increment = () => {
-        setMinuteFirst((prevVal) => {
-            return (prevVal + 1) % 6;
+    const cycleInput = () => {
+        setInputTracker((prevVal) => {
+            if(prevVal === 4){
+                return 1;
+            }else{
+                return prevVal + 1;
+            }
         })
     }
 
-    const handleM1Decrement = () => {
-        setMinuteFirst((prevVal) => {
-            return (prevVal - 1) % 6;
-        })
+    const handleSetTime = () => {
+        setSchedule(hour, minute);
+        handleNextSlide();
     }
-
-    const handleM2Increment = () => {
-        setMinuteSecond((prevVal) => {
-            return (prevVal + 1) % 10
-        })
-    }
-
-    const handleM2Decrement = () => {
-        setMinuteSecond((prevVal) => {
-            return (prevVal - 1) % 10;
-        })
-    }
-
-    
 
     return(
-        <div className="h-full w-full flex flex-col justify-center items-center">
-                <div className="h-85p w-full grid grid-cols-5 bg-[#ffcdac]">
-                    <div className="h-full w-full flex flex-col ">
-                        <div 
-                        onClick={handleH1Increment}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowUp/>
+        <div className="h-full w-full flex flex-col justify-center items-center mt-2">
+                <div className="h-85p w-full flex flex-col bg-[#ffcdac]">
+                    <div className="h-4/5 w-full p-2 grid grid-cols-5 ">
+                        <div className="h-full w-full flex items-center justify-center font-tiny5 text-9xl">
+                            <p>{hour.charAt(0)}</p>
+                        </div>
+                        <div className="h-full w-full flex items-center justify-center font-tiny5 text-9xl">
+                            <p>{hour.charAt(1)}</p>
+                        </div>
+                        <div className="h-full w-full flex items-center justify-center font-tiny5 text-9xl">
+                            <p>:</p>
+                        </div>
+                        <div className="h-full w-full flex items-center justify-center font-tiny5 text-9xl">
+                            <p>{minute.charAt(0)}</p>
+                        </div>
+                        <div className="h-full w-full flex items-center justify-center font-tiny5 text-9xl">
+                            <p>{minute.charAt(1)}</p>
+                        </div>
+                    </div>
+                    <div className="h-1/5 w-full flex">
+                        <div className="h-full w-1/2 flex items-center">
+                            <div className="h-full w-85p flex items-center justify-evenly pr-8 pb-2">
+                                <div 
+                                onClick={handleHourIncrease}
+                                className="h-90p w-8 bg-slate-300 hover:cursor-pointer flex items-center justify-center">
+                                    <p className="font-silkscreen text-2xl">+</p>
+                                </div>
+                                <div 
+                                onClick={handleHourDecrease}
+                                className="h-90p w-8 bg-slate-300 hover:cursor-pointer flex items-center justify-center">
+                                    <p className="font-silkscreen text-2xl">-</p>
+                                </div>  
                             </div>
                         </div>
-                        <div className="h-70p w-full font-tiny5 text-8xl">
-                            <div className="h-full w-full my-auto flex justify-center items-center">
-                                <p>{hourFirst}</p>
+                        <div className="h-full w-1/2 flex items-center ">
+                            <div className="pl-12 pb-2 h-full w-85p flex items-center justify-evenly">
+                                <div 
+                                onClick={handleMinIncrease}
+                                className="h-90p w-8 bg-slate-300 hover:cursor-pointer flex items-center justify-center">
+                                    <p className="font-silkscreen text-2xl">+</p>
+                                </div>
+                                <div 
+                                onClick={handleMinDecrease}
+                                className="h-90p w-8 bg-slate-300 hover:cursor-pointer flex items-center justify-center">
+                                    <p className="font-silkscreen text-2xl">-</p>
+                                </div>
                             </div>
                         </div>
-                        <div 
-                        onClick={handleH1Decrement}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowDown />
-                            </div>
-                        </div>
+                    </div>
                 </div>
-                <div className="h-full w-full flex flex-col ">
-                        <div 
-                        onClick={handleH2Increment}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowUp/>
-                            </div>
-                        </div>
-                        <div className="h-70p w-full font-tiny5 text-8xl">
-                            <div className="h-full w-full my-auto flex justify-center items-center">
-                                <p>{hourSecond}</p>
-                            </div>
-                        </div>
-                        <div 
-                        onClick={handleH2Decrement}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowDown />
-                            </div>
-                        </div>
-                </div>
-                <div className="h-full w-full flex justify-center items-center">
-                        <p className="font-tiny5 text-8xl">:</p>
-                </div>
-                <div className="h-full w-full flex flex-col ">
-                        <div 
-                        onClick={handleM1Increment}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowUp/>
-                            </div>
-                        </div>
-                        <div className="h-70p w-full font-tiny5 text-8xl">
-                            <div className="h-full w-full my-auto flex justify-center items-center">
-                                <p>{minuteFirst}</p>
-                            </div>
-                        </div>
-                        <div 
-                        onClick={handleM1Decrement}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowDown />
-                            </div>
-                        </div>
-                </div>
-                <div className="h-full w-full flex flex-col ">
-                        <div 
-                        onClick={handleM2Increment}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowUp/>
-                            </div>
-                        </div>
-                        <div className="h-70p w-full font-tiny5 text-8xl">
-                            <div className="h-full w-full my-auto flex justify-center items-center">
-                                <p>{minuteSecond}</p>
-                            </div>
-                        </div>
-                        <div 
-                        onClick={handleM2Decrement}
-                        className="h-15p w-full hover:cursor-pointer">
-                            <div className="h-full w-full flex justify-center items-center">
-                                <ArrowDown />
-                            </div>
-                        </div>
-                </div>
-            </div>
             <div className="h-15p w-full m-4">
                 <Button
+                    onClick={handleSetTime}
                     variant="outlined"
                     size="large"
                     sx={{
