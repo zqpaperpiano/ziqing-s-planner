@@ -4,21 +4,15 @@ import { Button } from "@mui/material";
 import SignUp from "./SignUp/SignUp";
 import LogIn from "./LogIn/LogIn";
 
-const LogInSignUp = () => {
+const LogInSignUp = ({ setUser }) => {
     const [onSignup, toggleOnSignUp] = useState(false);
-
-    console.log(onSignup);  
 
     const onClickToSignup = () => {
         toggleOnSignUp(true);
     }
 
     const onClickToLogIn = () => {  
-        if(onSignup){
-            toggleOnSignUp(false);
-        }else{
-            toggleOnSignUp(true);
-        }
+        toggleOnSignUp(false)
     }
 
     
@@ -30,14 +24,14 @@ const LogInSignUp = () => {
                 className={`bg-bgPink   h-full w-50p absolute top-0 left-0 z-20 transition-transform duration-500
                     ${onSignup ? 'translate-x-full' : null}`}
             >
-                <LogIn />
+                <LogIn setUser={setUser}/>
             </div>
 
             <div id="SignUpForm"
                 className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 transition-transform duration-500
                     ${onSignup  ? "translate-x-full opacity-100 z-30" : "opacity-0 z-10"}`}
             >
-                <SignUp />
+                <SignUp setUser={setUser} />
             </div>
 
             <div id="overlay-container"
@@ -67,7 +61,7 @@ const LogInSignUp = () => {
                                         <Button 
                                     sx={{color: 'lightPink', borderColor: 'lightPink'}}
                                     variant="outlined"
-                                    onClick={() => {onClickToLogIn()}}> Go to Sign Up! </Button>
+                                    onClick={() => {onClickToSignup()}}> Go to Sign Up! </Button>
                                         </div>
                             </div>
                         </div>

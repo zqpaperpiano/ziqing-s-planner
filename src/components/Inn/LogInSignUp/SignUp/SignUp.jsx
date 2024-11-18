@@ -4,9 +4,9 @@ import { LockKeyhole, Mail, User } from 'lucide-react'
 import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
 import Github from '../../../../images/github.png';
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
-const SignUp  = () => {
+const SignUp  = ({ setUser }) => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
@@ -23,20 +23,45 @@ const SignUp  = () => {
         setUserPassword(e.target.value);
     }
 
+    const validateEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+
     const handleSubmitButton = () => {
         if(userName !== "" && userEmail !== "" && userPassword !== ""){
-            if(userPassword.length >= 6){
-                const userAcc = {
-                    //userID is sequential given by postgres
-                    "userEmail": userEmail,
-                    "userName": userName,
-                    "userPassword": userPassword
-                }
+            if(!validateEmail(userEmail)){
+                toast.error('Please key in a valid email');
+            }else if(userPassword.length >= 6){
                 //post to database
+
+                fetch('http://localhost:3001/users/new-user', {
+                    method: 'post',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: userEmail,
+                        name: userName,
+                        password: userPassword
+                    })
+                })
+                .then(resp => {
+                    if(resp.status === 400){
+                        throw new Error('An account associated with this email already exists');
+                    }
+                    return resp.json();
+                })
+                .then(data => {
+                    setUser(data);
+                    return data[0];
+                })
+                .catch(err => {
+                    console.log('error', err);
+                    toast.error(err.message);
+                })
 
                 //log user in by passing user information back to state
             }else{
-                console.log('insert toast error here');
+                toast.error('Your password needs a minimum of 6 letters')
             }
         }
     }
@@ -121,6 +146,7 @@ const SignUp  = () => {
                         </div>
                         <div className="flex items-center justify-center mt-4">
                             <Button
+                                onClick={() => {handleSubmitButton()}}
                                 className="hover:cursor-pointer"
                                 sx={{color: 'deepPink', borderColor: 'deepPink'}}
                                 variant="outlined"

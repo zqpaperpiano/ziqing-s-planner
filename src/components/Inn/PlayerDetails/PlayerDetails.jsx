@@ -3,7 +3,7 @@ import ProfileOverview from "./ProfileOverview/ProfileOverview";
 import PlayerStats from "./PlayerStats/PlayerStats";
 import AccountSettings from "./AccountSettings/AccountSettings";
 
-const PlayerDetails = () => {
+const PlayerDetails = ( {player, setUser} ) => {
     const [selectedPage, setSelectedPage] = useState("Profile Overview");
 
     const handleClickedProfileOverview = () => {
@@ -16,6 +16,17 @@ const PlayerDetails = () => {
 
     const handleClickedAccountSettings = () => {
         setSelectedPage("Account Settings");
+    }
+
+    const onClickLogOut = () => {
+        const user = {
+            "email": -1,
+            "name": "",
+            "displayName": "",
+            "pfp": "",
+            "status": ""
+        };
+        setUser(user);
     }
 
     return(
@@ -39,11 +50,17 @@ const PlayerDetails = () => {
                     >
                     <p>Account settings</p>
                 </div>
+                <div className={`my-2 rounded w-85p h-auto mx-auto p-1 hover:cursor-pointer hover:bg-turqoiseGreen
+                    `}
+                    onClick={() => {onClickLogOut()}}
+                    >
+                    <p>Log out</p>
+                </div>
             </div>
             <div className="h-full w-85p">
                 {
                     selectedPage === "Profile Overview" &&
-                    <ProfileOverview />
+                    <ProfileOverview player={player}/>
                 }
                 {
                     selectedPage === "Stats" &&

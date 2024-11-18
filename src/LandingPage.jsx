@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './landingPage.css';
 import AdventureLog from "./components/AdventureLog/AdventureLog";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
@@ -10,20 +10,26 @@ import { QuestProvider } from "./components/QuestBoard/QuestContext/QuestContext
 
 const LandingPage = () => {
     const defPlayer = {
-        "playerID": -1,
-        "playerEmail": "",
-        "playerName": "",
+        "email": -1,
+        "name": "",
+        "displayName": "",
+        "pfp": "",
+        "status": ""
     }
 
     const [player, setPlayer] = useState(defPlayer);
 
     const handleUserLogIn = (player) => {
-        
+        setPlayer(player);
     }
+
+    useEffect(() => {
+        console.log(player);
+    }, [player]);
 
     return(
         //container
-        <div className="container flex flex-col h-screen items-center"> 
+        <div className="container flex flex-col h-screen items-center overflow-hidden"> 
             {/*cover*/}
             <div className= "w-85vw h-30vh p-0 m-0"> 
                 <img src={cover} className="h-full w-full object-fill" />
@@ -32,12 +38,12 @@ const LandingPage = () => {
                 <div className="w-85vw h-7vh">
                     <AdventureLog />
                 </div> 
-                <div className="w-85vw h-63vh bg-bgPink flex flex-col">
+                <div className="w-85vw h-63vh bg-bgPink flex flex-col ">
                 <QuestProvider>
                     <Routes>
                             <Route path="/" element={<Overview />} />
                             <Route path="/quest-board/quest-page/:page-number" element={<QuestBoard />} />  
-                            <Route path="/inn" element={<Inn player={player}/>} />
+                            <Route path="/inn" element={<Inn player={player} setUser={handleUserLogIn}/>} />
                     </Routes>
                     </QuestProvider>
                 </div>
