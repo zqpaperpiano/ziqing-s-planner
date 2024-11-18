@@ -57,8 +57,6 @@ const PlayerDetails = () => {
                     }
                 </div>
             </div>
-
-            <NewPlayerSettings />
         </div>
     );
 }

@@ -8,6 +8,7 @@ import DungeonBoard from "./components/QuestBoard/DungeonBoard";
 import { DungeonProvider } from "./components/QuestBoard/DungeonContext/DungeonContext";
 import HamburgerMenu from "./components/AdventureLog/HamburgerMenu/HamburgerMenu";
 import FullNavBar from "./components/AdventureLog/FullNavBar/FullNavBar";
+import NewPlayerSettings from "./components/NewPlayerSettings/NewPlayerSettings";
 
 const LandingPage = () => {
     const defPlayer = {
@@ -52,6 +53,7 @@ const LandingPage = () => {
                                 <Route path="/" element={<Overview />} />
                                 <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
                                 <Route path="/inn" element={<Inn player={player}/>} />
+                                <Route path="/newPlayer" element={<NewPlayerSettings />} />
                             </Routes>   
                         </DungeonProvider>
                     </div>

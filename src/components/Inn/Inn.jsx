@@ -17,9 +17,9 @@ const Inn = ({player}) => {
     return(
         <div className="relative h-full w-full">
             {
-                player.playerID === -1 &&
-                // <LogInSignUp />
-                // :
+                player.playerID === -1 ?
+                <LogInSignUp />
+                :
                  <PlayerDetails />
             }
             

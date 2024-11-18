@@ -56,7 +56,25 @@ module.exports = {
         lightPink: '#F2AFC3',
         gradientStart: '#F8D6DF',
         gradientMid: '#EA99B0',
-        gradientEnd: '#E18D9B'
+        gradientEnd: '#E18D9B',
+        bgBrown: '#ffebde'
+      },
+      gridTemplateColumns: {
+        'grid-cols-26': 'repeat(26, minmax(0, 1fr))'
+      },
+      gridColumnStart: {
+        '14': '14',
+        '15': '15',
+        '16': '16',
+        '17': '17',
+        '18': '18',
+        '19': '19',
+        '20': '20',
+        '21': '21', 
+        '22': '22',
+        '23': '23',
+        '24': '24',
+        '25': '25',
       },
       screens: {
         'po': '937px',

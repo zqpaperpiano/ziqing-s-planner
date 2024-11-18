@@ -5,11 +5,15 @@ import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
 import Github from '../../../../images/github.png';
 import { ToastContainer } from "react-toastify";
+import NewPlayerSettings from "../../../NewPlayerSettings/NewPlayerSettings";
+import { useNavigate } from "react-router";
 
 const SignUp  = () => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
+
+    const navigate = useNavigate();
 
     const handleNameChange = (e) => {
         setUserName(e.target.value);
@@ -33,6 +37,8 @@ const SignUp  = () => {
                     "userPassword": userPassword
                 }
                 //post to database
+                //upon successful posting
+                navigate("/newPlayer");
 
                 //log user in by passing user information back to state
             }else{
@@ -121,17 +127,15 @@ const SignUp  = () => {
                         </div>
                         <div className="flex items-center justify-center mt-4">
                             <Button
+                                onClick={handleSubmitButton}
                                 className="hover:cursor-pointer"
                                 sx={{color: 'deepPink', borderColor: 'deepPink'}}
                                 variant="outlined"
-                            > Sign Up </Button>
+                            > Sign Up </Button> 
                         </div>
-
                     </form>
                 </div>
             </div>
-
-
         </div>
     );
 }
