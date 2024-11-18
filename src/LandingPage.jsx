@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './landingPage.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Overview from "./components/Overview/Overview";
@@ -12,9 +12,11 @@ import NewPlayerSettings from "./components/NewPlayerSettings/NewPlayerSettings"
 
 const LandingPage = () => {
     const defPlayer = {
-        "playerID": -1,
-        "playerEmail": "",
-        "playerName": "",
+        "email": -1,
+        "name": "",
+        "displayName": "",
+        "pfp": "",
+        "status": ""
     }
 
     const [player, setPlayer] = useState(defPlayer);
@@ -30,8 +32,12 @@ const LandingPage = () => {
     }
 
     const handleUserLogIn = (player) => {
-        
+        setPlayer(player);
     }
+
+    useEffect(() => {
+        console.log(player);
+    }, [player]);
 
     return(
         //container

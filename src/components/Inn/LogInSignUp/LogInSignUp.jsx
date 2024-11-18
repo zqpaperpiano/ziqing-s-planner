@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import SignUp from "./SignUp/SignUp";
 import LogIn from "./LogIn/LogIn";
 
-const LogInSignUp = () => {
+const LogInSignUp = ({ setUser }) => {
     const [onSignup, toggleOnSignUp] = useState(false);
 
     const onToggleLogIn = () => {  
@@ -24,14 +24,14 @@ const LogInSignUp = () => {
                 className={`h-full bg-bgPink  w-50p absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
                     ${onSignup ? 'translate-x-full' : null}`}
             >
-                <LogIn />
+                <LogIn setUser={setUser}/>
             </div>
 
             <div id="SignUpForm"
                 className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 bf:transition-transform duration-500
                     ${onSignup  ? "translate-x-full opacity-100 z-30" : "opacity-0 z-10"}`}
             >
-                <SignUp />
+                <SignUp setUser={setUser} />
             </div>
 
             <div id="overlay-container"

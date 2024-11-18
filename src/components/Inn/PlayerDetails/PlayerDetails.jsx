@@ -19,6 +19,17 @@ const PlayerDetails = () => {
         setSelectedPage("Account Settings");
     }
 
+    const onClickLogOut = () => {
+        const user = {
+            "email": -1,
+            "name": "",
+            "displayName": "",
+            "pfp": "",
+            "status": ""
+        };
+        setUser(user);
+    }
+
     return(
         <div className="h-full w-full">
             <div className="absolute h-full w-full flex">

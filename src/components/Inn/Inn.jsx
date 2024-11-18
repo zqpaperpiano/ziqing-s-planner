@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import LogInSignUp from './LogInSignUp/LogInSignUp';
 import PlayerDetails from './PlayerDetails/PlayerDetails';
 
-const Inn = ({player}) => {
+const Inn = ( {player, setUser}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [onSignUp, setOnSignUp] = useState(false);
 
@@ -17,10 +17,10 @@ const Inn = ({player}) => {
     return(
         <div className="relative h-full w-full">
             {
-                player.playerID === -1 ?
-                <LogInSignUp />
+                player.email === -1 ?
+                <LogInSignUp setUser={setUser}/>
                 :
-                 <PlayerDetails />
+                 <PlayerDetails player={player} setUser={setUser} />
             }
             
         </div>
