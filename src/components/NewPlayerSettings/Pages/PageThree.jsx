@@ -8,12 +8,10 @@ import SetClock from "../../SetClock/SetClock";
 import BackArrow from "../../BackArrow/BackArrow";
 import { TimerReset } from "lucide-react";
 
-const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
-    const [hasSchedule, setHasSchedule] = useState(false);
-    const [isScheduling, setIsScheduling] = useState(false);
-    const [schedule, setSchedule] = useState([]);
+const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule, setHasSchedule }) => {
     const [selectedTimes, setSelectedTimes] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
+    const [isScheduling, setIsScheduling] = useState(false);
     const blockRefs = useRef([]);
 
     const daysOfWeek = [
@@ -25,6 +23,14 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
         "1100", "1200", "1300", "1400", "1500", "1600", "1700", '1800', '1900', '2000', '2100',
         '2200', '2300'
     ]
+
+    useEffect(() => {
+        window.addEventListener("mouseup", handleMouseUp);
+        
+        return(() => {
+            window.removeEventListener("mouseup", handleMouseUp);
+        })
+    }, [])
 
     const toggleScheduling = () => {
         if(isScheduling){
@@ -38,6 +44,20 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
         if(isScheduling){
             setIsScheduling(false);
         }
+    }
+
+    const handleMouseDown = () => {
+        setIsDragging(true);
+    }
+
+    const handleMouseOver = (e) => {
+        if(isDragging){
+            handleClickedTime(e);
+        }
+    }
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
     }
 
     const handleClickedTime = (e) => {
@@ -55,76 +75,119 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
     }
 
     const convertTimeToMin = (time) => {
-        const val = toString(time);
-        if(val.length === 4){
-            const hours = parseInt(val.slice(0, 2), 10);
-            const mins = parseInt(val.slice(2), 10);
+        if(time){
+            const hours = parseInt(time.slice(0, 2), 10);
+            const mins = parseInt(time.slice(2), 10);
             return hours * 60 + mins;
-        }else{
-            console.log(time);
-            return time;
         }
         
-        
+    }
+
+    const next30Mins = (time) => {
+        console.log(time);
+        const min = time.charAt(2);
+        const hour = parseInt(time.charAt(0) + time.charAt(1), 10);
+
+        if(min === '3'){
+            const nextHour = parseInt(time.charAt(1)) + 1;
+            if(nextHour > 9){
+                const nextTime = nextHour + "00";
+                return nextTime;
+            }else{
+                const nextTime = "0" + nextHour + "00";
+                return nextTime
+            }
+        }else{
+            const nextTime = hour + "30";
+            return nextTime;
+        }
     }
 
     const findBreaks = (schedArr) => {
         const timeArr = schedArr.map(key => key.slice(3));
-        const inMins = timeArr.map(time => {
-            convertTimeToMin(time)});
-        const sortedArr = inMins.sort((a, b) => b-a);
+        const sortedArr = timeArr.sort((a, b) => a-b);
 
-        let breaks = {};
+        let breaks = [sortedArr[0]];
+        console.log(breaks);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 49f5cf6a018cf9effa6becde85453ac4ffa2ef0d
         for(let i = 0; i < sortedArr.length - 1; ++i){
-            const next = convertTimeToMin(sortedArr[i + 1]);
             const curr = convertTimeToMin(sortedArr[i]);
+            const next = convertTimeToMin(sortedArr[i + 1]);
 
             const diff = next - curr;
-            console.log(diff);
+            
 
             if(diff > 30){
-                breaks.push(sortedArr[i], sortedArr[i + 1]);
+                console.log(`curr is ${curr} and next is ${next} and gives us a difference of ${diff}`)
+                if(i === 0){
+                    breaks.push(sortedArr[i + 1]);
+                }else{
+                    breaks.push(next30Mins(sortedArr[i]));
+                    breaks.push(sortedArr[i + 1]);
+                }
             }
         }
 
         return breaks;
     }
 
-    const handleSubmitButton = () => {
-        const Mons = selectedTimes.filter(keys => keys.includes('Mon'));
-        const MonSched = {};
-        if(Mons.length > 0){
-            const breaks = findBreaks(Mons);
-            console.log(breaks);
+    const getDaySchedule = (day) =>{
+        const filteredDay = selectedTimes.filter(keys => keys.includes([day]));
+        const sched = [];
+        if(filteredDay.length > 0){
+            const breaks = findBreaks(filteredDay);
+            for(let i = 0; i < breaks.length; i = i + 2){
+                const newSet = {
+                    "start": breaks[i],
+                    "end": breaks[i + 1]
+                }
+                sched.push(newSet);
+            }
         }
 
-        const Tues = selectedTimes.filter(keys => keys.includes('Tue'));
+        return sched;
+    }
 
-        const Weds = selectedTimes.filter(keys => keys.includes('Wed'));
+    const handleSubmitButton = () => {
+        const monScd = getDaySchedule('Mon');
+        const tueScd = getDaySchedule('Tue');
+        const wedScd = getDaySchedule('Wed');
+        const thuScd = getDaySchedule('Thu');
+        const friScd = getDaySchedule('Fri');
+        const satScd = getDaySchedule('Sat');
+        const sunScd = getDaySchedule('Sun');
 
-        const Thus = selectedTimes.filter(keys => keys.includes('Thu'));
-
-        const Fris = selectedTimes.filter(keys => keys.includes('Fri'));
-
-        const Sats = selectedTimes.filter(keys => keys.includes('Sat'));
-
-        const Suns = selectedTimes.filter(keys => keys.includes('Sun'));
+        handleSetSchedule({
+            "Mon": monScd,
+            "Tue": tueScd,
+            "Wed": wedScd,
+            "Thu": thuScd,
+            "Fri": friScd,
+            "Sat": satScd,
+            "Sun": sunScd
+        })
+        setHasSchedule(true);
+        handleNextPage();
     }
 
     return(
         <div className="relative h-full w-1/5 backgrounds whitespace-pre-line text-center">
             {
                 currPage === 3 &&
-                <div className={`absolute h-full w-full flex flex-col text-2xl font-silkscreen items-center justify-center
+                <div className={`absolute h-full w-full flex flex-col text-2xl font-silkscreen items-center
                 ${isScheduling && "opacity-0 pointer-events-none"}`}>
                     <BackArrow handleClickedBack={handlePrevPage} />
                     <ReactTyped
+                        className="absolute top-24"
                         backSpeed={0}
                         typeSpeed={25}
                         cursorChar="|"
                         strings={[
-                            `Will you be having a regular routine with the guild?`
+                            `Nice to meet you, Name.\n Will you be having a regular routine with the guild?`
                         ]}
                     />
                     <div className="absolute bottom-12 h-1/4 flex flex-col w-2/3 bg-[#ffcdac] border border-yellow-900 border-2 font-silkscreen text-xl">
@@ -157,14 +220,14 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
                     <div className={`h-full w-full flex flex-col items-center justify-center transition-transform duration-700`}>
                         <div className="h-80p w-85p mt-4 bg-bgBrown overflow-x-scroll p-2">
                             
-                            <div className="h-full w-2x font-silkscreen text-m grid grid-cols-26">
-                                <div className="col-start-1 row-start-1 grid grid-rows-8">
+                            <div className="h-full w-2x font-silkscreen text-m grid grid-cols-26 gap-0">
+                                <div className="col-start-1 row-start-1 grid grid-rows-8 gap-0 m-0 p-0">
                                     <div className="col-start-1 row-start-1">
                                     </div>
                                     {
                                         daysOfWeek.map((day) => {
                                             return(
-                                                <div className={`col-start-1 flex justify-center items-center `}>
+                                                <div className={`h-full w-full col-start-1 flex justify-center items-center `}>
                                                     <p>{day}</p>
                                                 </div>
                                             )
@@ -174,7 +237,7 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
                                 {
                                     hoursOfDay.map((hour, index) => {
                                         return(
-                                            <div className={`row-start-1 grid grid-rows-8 flex justify-center items-center`}>
+                                            <div className={`h-full w-full row-start-1 grid grid-rows-8 flex items-center select-none`}>
                                                 <p>{hour}</p>
                                                 {
                                                     daysOfWeek.map((day) => {
@@ -183,14 +246,20 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
                                                         return(
                                                             <div 
                                                             className={`h-full w-full border border-yellow-900 border-1 border-r-0 
-                                                            ${day === "Sun" ? null : "border-b-0"} grid grid-cols-2`}>
+                                                            ${day === "Sun" ? null : "border-b-0"} flex`}>
                                                                 <div
+                                                                    onMouseDown={handleMouseDown}
+                                                                    onMouseUp={handleMouseUp}
+                                                                    onMouseOver={(e) => {handleMouseOver(e)}}
                                                                     onClick={handleClickedTime}
                                                                     id={id1}
-                                                                    className={`hover:cursor-pointer ${selectedTimes.includes(id1) ? "selected-time": null} border border-dashed border-r-yellow-900 border-l-0 border-t-0 boreder-b-0`}>
+                                                                    className={`h-full w-1/2 hover:cursor-pointer ${selectedTimes.includes(id1) ? "selected-time": null} border border-dashed border-r-yellow-900 border-l-0 border-t-0 boreder-b-0`}>
                                                                 </div>
                                                                 <div 
-                                                                className={`hover:cursor-pointer ${selectedTimes.includes(id2) ? "selected-time": null}`}
+                                                                className={`h-full w-1/2 hover:cursor-pointer ${selectedTimes.includes(id2) ? "selected-time": null}`}
+                                                                onMouseDown={handleMouseDown}
+                                                                onMouseUp={handleMouseUp}
+                                                                onMouseOver={(e) => {handleMouseOver(e)}}
                                                                 onClick={handleClickedTime}
                                                                 id={id2}>
                                                                 </div>

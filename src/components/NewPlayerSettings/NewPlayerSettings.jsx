@@ -8,8 +8,21 @@ import PageFive from "./Pages/PageFive";
 import { useNavigate } from "react-router";
 
 
-const NewPlayerSettings = () => {
+const NewPlayerSettings = ({ player }) => {
     const [currPage, setCurrPage] = useState(1);
+    const [schedule, setSchedule] = useState([]);
+    const [hasSchedule, setHasSchedule] = useState(false);
+    const [salary, setSalary] = useState(0);
+    const [hasSalary, setHasSalary] = useState(false);
+    const [displayName, setDisplayName] = useState(player.displayName);
+
+    const handleSetSchedule = (schedule) => {
+        setSchedule(schedule);
+    }
+
+    const handleSetHasSchedule = (val) => {
+        setHasSchedule(val);
+    }
 
     const navigate = useNavigate();
 
@@ -40,7 +53,7 @@ const NewPlayerSettings = () => {
                     `}>
                     <PageOne handleNextPage={handleNextPage}/>
                     <PageTwo currPage={currPage} handleNextPage={handleNextPage}/>
-                    <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}/>
+                    <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} setHasSchedule={handleSetHasSchedule} handleSetSchedule={handleSetSchedule}/>
                     <PageFour currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}/>
                     <PageFive handlePrevPage={handlePrevPage} handleNextPage={handleExitNPS}/>
                 </div>

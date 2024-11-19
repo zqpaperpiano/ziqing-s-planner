@@ -53,7 +53,7 @@ const LandingPage = () => {
                                 <Route path="/" element={<Overview />} />
                                 <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
                                 <Route path="/inn" element={<Inn player={player}/>} />
-                                <Route path="/newPlayer" element={<NewPlayerSettings />} />
+                                <Route path="/newPlayer" element={<NewPlayerSettings  player={player}/>}/>
                             </Routes>   
                         </DungeonProvider>
                     </div>
