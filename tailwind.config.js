@@ -90,8 +90,9 @@ module.exports = {
       },
       fontFamily: {
         silkscreen: ['Silkscreen', 'cursive'],
-        micro5: ['Micro 5 Charted', 'sans-serif'],
         tiny5:  ['tiny5', 'sans-serif'],
+        funnel: ['funnelsans', 'sans-serif'],
+
       },
     },
   },

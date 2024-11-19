@@ -27,7 +27,12 @@ code {
   font-family: 'tiny5';
   src: url('./../public/fonts/Tiny5-Regular.ttf')
   format('truetype');
-  
+}
+
+@font-face {
+  font-family: 'Funnelsans';
+  src: url('../public/fonts/FunnelSans-VariableFont_wght.ttf')
+  format('truetype');
 }
 
 
