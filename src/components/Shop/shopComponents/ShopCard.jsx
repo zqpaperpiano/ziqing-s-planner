@@ -4,7 +4,7 @@ import './ShopCard.css';
 import { Button } from "@mui/material";
 
 const ShopCard = ({categoryName, itemIcon, purchaseItem}) => {
-    const [isFlipped, setIsFlipped] = useState(false);
+    const [isFlipped, setIsFlipped] = useState(true);
     const [isAnimate, setIsAnimate] = useState(false);
     const [itemName, setItemName] = useState("");
     const [itemPrice, setItemPrice] = useState(0);
