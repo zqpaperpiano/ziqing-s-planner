@@ -8,6 +8,7 @@ import { Button } from "@mui/material";
 const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSalary, setSalaryFrequency}) => {
     const [onSalary, setOnSalary] = useState(false);
     const [selected, setOnSelected] = useState("none");
+    const [dateOfSalary, setDateOfSalary] = useState(null);
     const [salary, setSalaryAmt] = useState(0);
 
     const handleToggleSalary = () => {
@@ -18,6 +19,14 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
         }
     }
 
+    const handleSelectDay = (e) =>{
+        setDateOfSalary(e.target.textContent);
+    }
+
+    const handleSelectMonth = (e) => {
+        setDateOfSalary(e.target.value);
+    }
+
     const onChangeSalary = (e) => {
         setSalaryAmt(e.target.value);
     }
@@ -25,7 +34,34 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
     const handleSubmitButton = () => {
         setSalary(salary);
         setHasSalary(true);
-        setSalaryFrequency(selected);
+
+        let freq = {};
+        if(selected === "Weekly"){
+            if(!isNaN(parseInt(dateOfSalary))){
+                console.log('Please retry keying in the day of salary')
+                return;
+            }
+            freq = {
+                selected: dateOfSalary
+            }
+        }else if(selected === "Monthly"){
+            const date = parseInt(dateOfSalary)
+
+            if(isNaN(date)){
+                console.log('An error has occured. Please try again')
+                return;
+            }else if(date > 31 || date < 1){
+                console.log('Please key in a valid date');
+                return;
+            }
+
+            freq = {
+                selected: date
+            }
+        }else if(selected === "Daily"){
+            freq = selected;
+        }
+        setSalaryFrequency(freq);
         handleNextPage();
     }
 
@@ -83,8 +119,8 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
                     <div className={`h-full w-full ${onSalary ? "opacity-1 z-50" : "opacity-0 z-30"}`}>
                         <BackArrow handleClickedBack={handleToggleSalary} />
 
-                        <div className="relative h-full w-full flex items-center justify-center">
-                            <div className="h-full w-full flex flex-col items-center justify-center font-silkscreen text-2xl pb-8">
+                        <div className="relative h-full w-full flex ">
+                            <div className="h-full w-full flex flex-col items-center justify-center font-silkscreen text-2xl">
                                 <p>I will be receiving: </p>
 
                                 <div className="w-full h-10p flex justify-center items-center">
@@ -98,15 +134,15 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
                                             value={salary}
                                             onChange={onChangeSalary}
                                             type="number"
-                                            className="h-full w-full outline-none border-none bg-[#ffcdac] text-center text-3xl "
+                                            className="h-full w-full outline-none border-none bg-[#ffcdac] text-center text-3xl"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col h-1/5 items-center mt-2">
                                     <p>Every</p>
 
-                                    <div className="h-10p w-full grid grid-cols-3 pt-2">
+                                    <div className="h-10p w-full grid grid-cols-3">
                                         <div id="freq-day" 
                                         onClick={handleSelectionDaliy}
                                         className={`h-full w-full hover:cursor-pointer hover:border-yellow-400 hover:border-r-2 
@@ -128,6 +164,74 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
                                     </div>
                                 </div>
 
+                                <div className="flex flex-col items-center justify-center select-none">
+                                    <p>Every</p>
+                                    {
+                                        selected === "Weekly" &&
+                                        <div className="h-fit w-full grid grid-cols-7 bg-[#ffcdac]">
+                                            <div 
+                                            onClick={handleSelectDay}
+                                            className={`p-1 border-yellow-900 border-2 h-full w-full flex justify-center items-center 
+                                            hover:cursor-poiner hover:bg-[#ffebde]
+                                            ${dateOfSalary === "Mon" ? "bg-[#ffebde]" : null }`}>
+                                                Mon
+                                            </div>
+                                            <div 
+                                            onClick={handleSelectDay}
+                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                            hover:cursor-poiner hover:bg-[#ffebde]
+                                            ${dateOfSalary === "Tue" ? "bg-[#ffebde]" : null }`}>
+                                                Tue
+                                            </div>
+                                            <div 
+                                            onClick={handleSelectDay}
+                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                            hover:cursor-poiner hover:bg-[#ffebde]
+                                            ${dateOfSalary === "Wed" ? "bg-[#ffebde]" : null }`}>
+                                                Wed
+                                            </div>
+                                            <div 
+                                            onClick={handleSelectDay}
+                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                            hover:cursor-poiner hover:bg-[#ffebde]
+                                            ${dateOfSalary === "Thu" ? "bg-[#ffebde]" : null }`}>
+                                                Thu
+                                            </div>
+                                            <div 
+                                            onClick={handleSelectDay}
+                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                            hover:cursor-poiner hover:bg-[#ffebde]
+                                            ${dateOfSalary === "Fri" ? "bg-[#ffebde]" : null }`}>
+                                                Fri
+                                            </div>
+                                            <div 
+                                            onClick={handleSelectDay}
+                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                            hover:cursor-poiner hover:bg-[#ffebde]
+                                            ${dateOfSalary === "Sat" ? "bg-[#ffebde]" : null }`}>
+                                                Sat
+                                            </div>
+                                            <div 
+                                            onClick={handleSelectDay}
+                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                            hover:cursor-poiner hover:bg-[#ffebde]
+                                            ${dateOfSalary === "Sun" ? "bg-[#ffebde]" : null }`}>
+                                                Sun
+                                            </div>
+                                        </div>
+                                    }
+                                    {
+                                        selected === "Monthly" &&
+                                        <div className="h-full w-full bg-bgBrown flex items-center justify-center border-yellow-900 border-2">
+                                            <input 
+                                                onChange={handleSelectMonth}
+                                                className="h-full w-24 outline-none border-none bg-[#ffcdac] text-center text-3xl"
+                                                type="number"
+                                            />
+                                        </div>
+                                    }
+                                </div>
+
                                 <div className="absolute bottom-10 flex justify-center items-center">
                                     <Button
                                         onClick={handleSubmitButton}
@@ -137,7 +241,7 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
                                             color: "white"
                                         }}
                                         variant="outlined">
-                                        Confirm
+                                        Next
                                     </Button>
                                 </div>
                             </div>

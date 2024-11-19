@@ -33,12 +33,12 @@ const FullNavBar = () => {
                 
                 <a>Adventure!</a>
             </div>
-            <div className="item">
+            <Link to={'/shop'} className="item">
                 <div className="navbar-icon">
                     <img src={ShopIcon} className="icon"/>
                 </div>
                 <a>Shop</a>
-            </div>
+            </Link>
             <Link to={'/inn'} className="item">
                 <div className="navbar-icon">
                     <img src={InnIcon} className="icon"/>

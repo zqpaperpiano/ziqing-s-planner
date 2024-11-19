@@ -36,32 +36,47 @@ const ProfilePreferences = () => {
 
                 <div className="border border-darkPink border-1 w-full"></div>
                 <div
-                    className="absolute bottom-0 right-2 text-xs text-sky-500 underline hover:text-sky-200 hover:cursor-pointer"
+                    className="absolute top-2 right-2 text-xs text-sky-500 underline hover:text-sky-200 hover:cursor-pointer"
                 >Edit Details</div>
             </div>
-            <div className="h-1/3 w-1/2 p-2">
-                <div className="relative h-fit w-full flex items-center">
-                    <p className="text-sm font-bold p-0 m-0 pl-2">Schedule</p>
-                    <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Schedule</p>
-                </div>
-                 <div className="h-90p w-full rounded-lg border-darkPink border-2 flex">
-                    <div className="h-full w-fit grid grid-rows-7 border-r-darkPink border-r-2 text-start p-1 gap-2 items-center ">
-                            <p>Mon</p>
-                            <p>Tue</p>
-                            <p>Wed</p>
-                            <p>Thu</p>
-                            <p>Fri</p>
-                            <p>Sat</p>
-                            <p>Sun</p>
+            <div className="h-2/3 w-full flex">
+                <div className="h-2/3 w-2/3 p-2">
+                    <div className="relative h-fit w-full flex items-center">
+                        <p className="text-sm font-bold p-0 m-0 pl-2">Schedule</p>
+                        <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Schedule</p>
                     </div>
-                    <div className="h-full w-3/4 grid grid-rows-7 flex text-start p-1 gap-2 items-center">
-                        <p>0830 - 1730</p>
-                        <p>0830 - 1730</p>
-                        <p>0830 - 1730</p>
-                        <p>0830 - 1730</p>
-                        <p>0830 - 1730</p>
-                        <p>0830 - 1230; 1430 - 1730</p>
-                        <p> Rest </p>
+                    <div className="h-90p w-full rounded-lg border-darkPink border-2 flex">
+                        <div className="h-full w-fit grid grid-rows-7 border-r-darkPink border-r-2 text-start p-1 gap-2 items-center ">
+                                <p>Mon</p>
+                                <p>Tue</p>
+                                <p>Wed</p>
+                                <p>Thu</p>
+                                <p>Fri</p>
+                                <p>Sat</p>
+                                <p>Sun</p>
+                        </div>
+                        <div className="h-full w-3/4 grid grid-rows-7 flex text-start p-1 gap-2 items-center">
+                            <p>0830 - 1730</p>
+                            <p>0830 - 1730</p>
+                            <p>0830 - 1730</p>
+                            <p>0830 - 1730</p>
+                            <p>0830 - 1730</p>
+                            <p>0830 - 1230; 1430 - 1730</p>
+                            <p> Rest </p>
+                        </div>
+                    </div>
+                </div>
+                <div className="h-2/3 w-1/3 p-2">
+                    <div className="relative h-fit w-full flex items-center">
+                        <p className="text-sm font-bold p-0 m-0 pl-2">Salary</p>
+                        <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Salary</p>
+                    </div>
+                    <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-center items-center">
+                        <div className="h-1/2 w-1/2 rounded-full bg-black text-white flex justify-center items-center">
+                            <p>1000</p>
+                        </div>
+
+                        <p>Monthly</p>
                     </div>
                 </div>
             </div>

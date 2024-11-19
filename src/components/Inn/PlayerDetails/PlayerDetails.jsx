@@ -4,7 +4,7 @@ import AccountSettings from "./AccountSettings/AccountSettings";
 import ProfilePreferences from "./ProfilePreferences/ProfilePreferences";
 import NewPlayerSettings from "../../NewPlayerSettings/NewPlayerSettings";
 
-const PlayerDetails = () => {
+const PlayerDetails = ({ player }) => {
     const [selectedPage, setSelectedPage] = useState("Profile Preferences");
 
     const handleClickedProfilePreferences = () => {

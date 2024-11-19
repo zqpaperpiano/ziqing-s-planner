@@ -20,7 +20,7 @@ const Inn = ({player}) => {
                 player.playerID === -1 ?
                 <LogInSignUp />
                 :
-                 <PlayerDetails />
+                 <PlayerDetails player={player}/>
             }
             
         </div>

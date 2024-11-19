@@ -52,11 +52,11 @@ const HamburgerMenu = () => {
                             </div>
                         </div>
 
-                        <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                        <Link to={'/shop'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
                                 <p>Shop</p>
                             </div>
-                        </div>
+                        </Link>
 
                         <Link to={'/inn'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
