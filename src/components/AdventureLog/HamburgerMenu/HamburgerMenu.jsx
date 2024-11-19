@@ -22,7 +22,7 @@ const HamburgerMenu = () => {
     }
 
     return(
-        <div className={`inset-0 relative h-full ${isOpen ? "w-14vw" : "w-7vw"} overflow-hidden z-30`}>
+        <div className={`inset-0 relative h-full ${isOpen ? "w-14vw" : "w-7vw"} font-silkscreen text-l overflow-hidden z-30`}>
             {
                 isOpen ? 
                 <div className="h-screen w-full flex flex-col bg-bgPink bg-opacity-30 backdrop-blur-sm">
@@ -74,14 +74,6 @@ const HamburgerMenu = () => {
             }
 
         </div>
-        // <div className="
-        // h-85p w-full flex flex-col font-bold mt-4
-        // grid grid-rows-5
-        // ">
-
-            
-
-        // </div>
     )
 }
 

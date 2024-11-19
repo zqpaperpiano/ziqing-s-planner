@@ -6,10 +6,8 @@ const DungeonCard = ({dungeon}) => {
     const imageSrc = dungeon.dungeonImage || defImage;
 
     return(
-            <div className="h-full bg-white border border-black-200 rounded overflow-hidden">
-                <div className="h-1/2 w-full border-b border-black-700">
-                    <img className="h-full w-full object-cover" src={imageSrc}/>
-                </div>
+            <div className="h-full bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg overflow-hidden">
+                
                 <div className="relative h-1/2 w-full flex flex-col items-center mt-2">
                     <h1 className="text-xl font-bold">{dungeon.dungeonName}</h1>
                     <p>{dungeon.dungeonDescription}</p>

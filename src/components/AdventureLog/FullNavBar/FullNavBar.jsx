@@ -11,7 +11,7 @@ const FullNavBar = () => {
 
     return(
         //navbar container
-        <div className="h-full w-full bg-darkPink flex justify-around items-center font-bold ">
+        <div className="h-full w-full bg-darkPink font-silkscreen text-l flex justify-around items-center">
             <Link to={'/'} className="item">
                 <div className="navbar-icon">
                     <img src={OverviewIcon} className="icon"    />
