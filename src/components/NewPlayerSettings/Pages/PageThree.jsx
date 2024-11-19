@@ -76,13 +76,10 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
 
         let breaks = {};
 
-        console.log('received arr: ', sortedArr);
-
         for(let i = 0; i < sortedArr.length - 1; ++i){
             const next = convertTimeToMin(sortedArr[i + 1]);
             const curr = convertTimeToMin(sortedArr[i]);
 
-            console.log('comparing: ', next, ' to ', curr);
             const diff = next - curr;
             console.log(diff);
 
@@ -90,8 +87,6 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage }) => {
                 breaks.push(sortedArr[i], sortedArr[i + 1]);
             }
         }
-
-        console.log('here:', breaks);
 
         return breaks;
     }
