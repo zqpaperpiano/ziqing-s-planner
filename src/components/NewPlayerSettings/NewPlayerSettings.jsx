@@ -14,6 +14,7 @@ const NewPlayerSettings = ({ player }) => {
     const [hasSchedule, setHasSchedule] = useState(false);
     const [salary, setSalary] = useState(0);
     const [hasSalary, setHasSalary] = useState(false);
+    const [salaryFrequency, setSalaryFrequency] = useState(null);
     const [displayName, setDisplayName] = useState(player.displayName);
 
     const handleSetSchedule = (schedule) => {
@@ -22,6 +23,18 @@ const NewPlayerSettings = ({ player }) => {
 
     const handleSetHasSchedule = (val) => {
         setHasSchedule(val);
+    }
+
+    const handleSetSalary = (amt) => {
+        setSalary(amt);
+    }
+
+    const handleSetHasSalary = (val) => {
+        setHasSalary(val);
+    }
+
+    const handleSetSalaryFrequency = (freq) => {
+        setSalaryFrequency(freq);
     }
 
     const navigate = useNavigate();
@@ -54,7 +67,10 @@ const NewPlayerSettings = ({ player }) => {
                     <PageOne handleNextPage={handleNextPage}/>
                     <PageTwo currPage={currPage} handleNextPage={handleNextPage}/>
                     <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} setHasSchedule={handleSetHasSchedule} handleSetSchedule={handleSetSchedule}/>
-                    <PageFour currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}/>
+                    <PageFour 
+                        currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}
+                        setHasSalary={handleSetHasSalary} setSalary={handleSetSalary} setSalaryFrequency={handleSetSalaryFrequency}
+                        />
                     <PageFive handlePrevPage={handlePrevPage} handleNextPage={handleExitNPS}/>
                 </div>
 

@@ -14,7 +14,7 @@ const PageFive = ({handlePrevPage, handleNextPage}) => {
             />
             <div 
             onClick={handleNextPage}
-            className="absolute bottom-12 border border-yellow-900 border-2 hover:cursor-pointer hover:border-yellow-400 h-10p w-1/3 bg-[#ffcdac] flex items-center">
+            className="absolute h-1/3 w-2/3 bg-[#ffcdac] text-xl bottom-12 border border-yellow-900 border-2 hover:cursor-pointer hover:border-yellow-400 h-10p w-1/3 bg-[#ffcdac] flex items-center">
                 <p>Start my adventure!</p>
             </div>
         </div>

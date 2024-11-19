@@ -5,9 +5,10 @@ import BackArrow from "../../BackArrow/BackArrow";
 import Money from '../../../images/money.png';
 import { Button } from "@mui/material";
 
-const PageFour = ({currPage, handleNextPage, handlePrevPage}) => {
+const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSalary, setSalaryFrequency}) => {
     const [onSalary, setOnSalary] = useState(false);
     const [selected, setOnSelected] = useState("none");
+    const [salary, setSalaryAmt] = useState(0);
 
     const handleToggleSalary = () => {
         if(onSalary){
@@ -15,6 +16,17 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage}) => {
         }else{
             setOnSalary(true);
         }
+    }
+
+    const onChangeSalary = (e) => {
+        setSalaryAmt(e.target.value);
+    }
+
+    const handleSubmitButton = () => {
+        setSalary(salary);
+        setHasSalary(true);
+        setSalaryFrequency(selected);
+        handleNextPage();
     }
 
     const handleSelectionDaliy = () => {
@@ -54,12 +66,12 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage}) => {
                             <div className="flex flex-col h-full w-full items-center justify-center">
                                 <div 
                                 onClick={handleToggleSalary}
-                                className="h-1/2 w-full flex items-center hover:cursor-pointer hover:border-black hover:border-2">
+                                className="h-1/2 w-full flex items-center hover:cursor-pointer hover:bg-[#ffebde] hover:border-black hover:border-2">
                                     <p>Yes, let's talk about it. </p>
                                 </div>
                                 <div 
                                 onClick={handleNextPage}
-                                className="h-1/2 w-full flex items-center hover:cursor-pointer hover:border-black hover:border-2">
+                                className="h-1/2 w-full flex items-center hover:cursor-pointer hover:bg-[#ffebde] hover:border-black hover:border-2">
                                     <p>Not for now. We can discuss this another time.  </p>
                                 </div>
                             </div>
@@ -83,6 +95,8 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage}) => {
                                     </div>
                                     <div className="h-full w-1/5 border border-yellow-900 border-2 rounded bg-[#ffcdac]">
                                         <input 
+                                            value={salary}
+                                            onChange={onChangeSalary}
                                             type="number"
                                             className="h-full w-full outline-none border-none bg-[#ffcdac] text-center text-3xl "
                                         />
@@ -96,19 +110,19 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage}) => {
                                         <div id="freq-day" 
                                         onClick={handleSelectionDaliy}
                                         className={`h-full w-full hover:cursor-pointer hover:border-yellow-400 hover:border-r-2 
-                                        flex justify-center border border-yellow-900 border-2 border-r-0 bg-[#ffcdac] ${selected === "Daily" ? "border-yellow-400" : null}`}>
+                                        flex justify-center border border-yellow-900 border-2 border-r-0 bg-[#ffcdac] ${selected === "Daily" ? "border-yellow-600 bg-[#ffebde]" : null}`}>
                                             <p>Day</p>
                                         </div>
                                         <div 
                                         onClick={handleSelectionWeekly}
                                         className={`h-full w-full hover:cursor-pointer hover:border-yellow-400 hover:border-r-2 
-                                        flex justify-center border border-yellow-900 border-2 border-r-0 bg-[#ffcdac] ${selected === "Weekly" ? "border-yellow-400" : null}`}>
+                                        flex justify-center border border-yellow-900 border-2 border-r-0 bg-[#ffcdac] ${selected === "Weekly" ? "border-yellow-600 bg-[#ffebde]" : null}`}>
                                             <p>Week</p>
                                         </div>
                                         <div 
                                         onClick={handleSelectionMonthly}
                                         className={`h-full w-full hover:cursor-pointer hover:border-yellow-400 
-                                        flex justify-center border border-yellow-900 border-2 bg-[#ffcdac] ${selected === "Monthly" ? "border-yellow-400" : null}`}>
+                                        flex justify-center border border-yellow-900 border-2 bg-[#ffcdac] ${selected === "Monthly" ? "border-yellow-600 bg-[#ffebde]" : null}`}>
                                             <p>Month</p>
                                         </div>
                                     </div>
@@ -116,7 +130,7 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage}) => {
 
                                 <div className="absolute bottom-10 flex justify-center items-center">
                                     <Button
-                                        onClick={handleNextPage}
+                                        onClick={handleSubmitButton}
                                         sx={{
                                             fontFamily: "silkscreen",
                                             backgroundColor: "red",

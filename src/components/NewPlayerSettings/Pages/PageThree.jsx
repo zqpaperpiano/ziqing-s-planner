@@ -110,10 +110,7 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule
         let breaks = [sortedArr[0]];
         console.log(breaks);
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 49f5cf6a018cf9effa6becde85453ac4ffa2ef0d
         for(let i = 0; i < sortedArr.length - 1; ++i){
             const curr = convertTimeToMin(sortedArr[i]);
             const next = convertTimeToMin(sortedArr[i + 1]);
@@ -190,11 +187,11 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule
                             `Nice to meet you, Name.\n Will you be having a regular routine with the guild?`
                         ]}
                     />
-                    <div className="absolute bottom-12 h-1/4 flex flex-col w-2/3 bg-[#ffcdac] border border-yellow-900 border-2 font-silkscreen text-xl">
+                    <div className="absolute bottom-12 h-1/3 flex flex-col w-2/3 bg-[#ffcdac] p-4 gap-4 border border-yellow-900 border-2 font-silkscreen text-xl">
                         <div 
                         onClick={toggleScheduling}
-                        className="h-1/2 w-full text-start flex items-center hover:border-2 hover:border hover:cursor-pointer hover:border-yellow-900 hover:border-b-2 hover:border-t-0 hover:bg-[#ffebde]">
-                            <p>Yes, let's discuss a weekly schedule that I will be working in the guild. </p> 
+                        className="h-1/2 w-full text-start flex items-center hover:border-2 hover:border hover:cursor-pointer hover:border-yellow-900 hover:border-b-2 hover:bg-[#ffebde]">
+                            <p>Yes, let's discuss a weekly schedule </p> 
                         </div>
                         <div 
                         onClick={handleNextPage}

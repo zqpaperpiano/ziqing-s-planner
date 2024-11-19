@@ -40,18 +40,18 @@ const PageTwo = ({currPage, handleNextPage}) => {
                             typeSpeed={25}
                         />
                     </div>
-                    <div className={`absolute bottom-8 h-1/4 w-2/3 flex flex-col bg-[#ffcdac] border border-yellow-900 border-2
+                    <div className={`absolute bottom-8 p-4 h-1/3 w-2/3 flex flex-col bg-[#ffcdac] border border-yellow-900 border-2
                         ${changeName ? "opacity-0 pointer-events-none" : "opacity-1"} font-silkscreen text-xl gap-0`}>
-                        <div 
-                        onClick={handleNextPage}
-                        className="h-1/2 w-full hover:cursor-pointer hover:border hover:border-b-2 hover:border-yellow-900 hover:border-2 flex items-center">
-                            <p>Yes, that's fine</p>
-                        </div>
-                        <div 
-                        onClick={toggleChangeName}
-                        className="h-1/2 w-full hover:cursor-pointer hover:border hover:border-t-2 hover:border-yellow-900 hover:border-2 flex items-center">
-                            <p>No, I have a different preferred name.</p>
-                        </div>
+                            <div 
+                            onClick={handleNextPage}
+                            className="h-1/2 w-full hover:cursor-pointer hover:bg-[#ffebde] hover:border hover:border-b-2 hover:border-yellow-900 hover:border-2 flex items-center">
+                                <p>Yes, that's fine</p>
+                            </div>
+                            <div 
+                            onClick={toggleChangeName}
+                            className="h-1/2 w-full hover:cursor-pointer hover:border hover:bg-[#ffebde] hover:border-t-2 hover:border-yellow-900 hover:border-2 flex items-center">
+                                <p>No, I have a different preferred name.</p>
+                            </div>
                     </div>
                     {
                         changeName &&

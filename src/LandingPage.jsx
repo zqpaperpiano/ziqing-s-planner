@@ -12,7 +12,7 @@ import NewPlayerSettings from "./components/NewPlayerSettings/NewPlayerSettings"
 
 const LandingPage = () => {
     const defPlayer = {
-        "playerID": -1,
+        "playerID": 1,
         "playerEmail": "",
         "playerName": "",
     }
