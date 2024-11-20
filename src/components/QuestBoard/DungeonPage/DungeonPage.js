@@ -19,7 +19,7 @@ const DungeonPage = ({dungeonList, page, dungeonPp}) => {
     // console.log(shownQuests);
 
     return(
-        <div className={`absolute h-full w-full grid gap-4 ${dungeonPp === 6 ? "grid-cols-3 grid-rows-2" : "grid-cols-3"}`}>
+        <div className={`absolute h-full w-full grid gap-4 ${dungeonPp === 6 ? "grid-cols-3 grid-rows-2" : "grid-cols-3 grid-rows-3"}`}>
             {shownDungeons.map((dungeon, index) => {
                 return <DungeonCard key={index} dungeon={dungeon[0]}/>
             })}

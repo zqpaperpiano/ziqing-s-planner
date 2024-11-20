@@ -30,8 +30,26 @@ code {
 }
 
 @font-face {
-  font-family: 'Funnelsans';
+  font-family: 'FunnelSans';
   src: url('../public/fonts/FunnelSans-VariableFont_wght.ttf')
+  format('truetype');
+}
+
+@font-face{
+  font-family: 'GrapeNuts';
+  src: url('../public/fonts/GrapeNuts-Regular.ttf')
+  format('truetype');
+}
+
+@font-face {
+  font-family: 'ReenieBeanie';
+  src: url('../public/fonts/ReenieBeanie-Regular.ttf')
+  format('truetype');
+}
+
+@font-face {
+  font-family: 'PatrickHand';
+  src: url('../public/fonts/PatrickHand-Regular.ttf')
   format('truetype');
 }
 

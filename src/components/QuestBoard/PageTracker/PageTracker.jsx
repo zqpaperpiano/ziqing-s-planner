@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Sakura from '../../../images/sakura.png';
 import { useNavigate } from "react-router";
 
 const PageTracker = ({ maxPages, currPage }) => {

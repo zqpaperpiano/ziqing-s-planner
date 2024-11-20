@@ -22,7 +22,7 @@ const DungeonBoard = () => {
     useEffect(() => {
         const updateDungeonPp = () => {
             if(window.innerWidth < 640){
-                setDungeonPp(3);
+                setDungeonPp(9);
             }else{
                 setDungeonPp(6);
             }
@@ -108,10 +108,14 @@ const DungeonBoard = () => {
                 ><StepBack /></Button>
             </div>
             <div className="h-full w-85p mx-auto flex flex-col">
-                <div className="relative h-10p w-full mx-auto">
+                <div className="relative h-10p w-full mx-auto mt-1">
                     <Button 
+                    sx={{
+                        fontFamily: 'GrapeNuts',
+                        color: 'black'
+                    }}
                     className="absolute  w-auto left-0"
-                    onClick={handleOnClickAddDungeons}>Add Dungeon</Button>
+                    onClick={handleOnClickAddDungeons}>Post a Dungeon</Button>
                 </div>
                 <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
                     <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp}/>

@@ -1,10 +1,5 @@
 import React from "react";
 import './FullNavBar.css';
-import OverviewIcon from '../../../images/overview-icon.png';
-import QuestIcon from '../../../images/quest-icon.png';
-import AdventureIcon from '../../../images/adventure-icon.png';
-import ShopIcon from '../../../images/shop.png';
-import InnIcon from '../../../images/inn.png';
 import { Link } from "react-router-dom";
 
 const FullNavBar = () => {
@@ -13,36 +8,26 @@ const FullNavBar = () => {
         //navbar container
         <div className="h-full w-full bg-darkPink font-silkscreen text-l flex justify-around items-center">
             <Link to={'/'} className="item">
-                <div className="navbar-icon">
-                    <img src={OverviewIcon} className="icon"    />
-                </div>
                 <p>Overview</p>
             </Link>
                 
             <Link to={'/dungeon-board/1'} className="item">
-                <div className="navbar-icon">
-                    <img src={QuestIcon} className="icon"/>
-                </div> 
                 
                 <a>Dungeons</a>
             </Link>
             <div className="item">
-                <div className="navbar-icon">
-                    <img src={AdventureIcon} className="icon"/>
-                </div>
                 
-                <a>Adventure!</a>
+                <a>War Room</a>
+            </div>
+            <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                <div className="h-full w-full ml-2 flex items-center justify-center">
+                    <p>Explore</p>
+                </div>
             </div>
             <Link to={'/shop'} className="item">
-                <div className="navbar-icon">
-                    <img src={ShopIcon} className="icon"/>
-                </div>
                 <a>Shop</a>
             </Link>
             <Link to={'/inn'} className="item">
-                <div className="navbar-icon">
-                    <img src={InnIcon} className="icon"/>
-                </div>
                 <p>Inn</p>
             </Link>
         </div>

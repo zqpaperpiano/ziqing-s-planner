@@ -184,14 +184,14 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule
                         typeSpeed={25}
                         cursorChar="|"
                         strings={[
-                            `Nice to meet you, Name.\n Will you be having a regular routine with the guild?`
+                            `Nice to meet you, Name.\n Will you be having a regular routine of clearing dungeons?`
                         ]}
                     />
                     <div className="absolute bottom-12 h-1/3 flex flex-col w-2/3 bg-[#ffcdac] p-4 gap-4 border border-yellow-900 border-2 font-silkscreen text-xl">
                         <div 
                         onClick={toggleScheduling}
                         className="h-1/2 w-full text-start flex items-center hover:border-2 hover:border hover:cursor-pointer hover:border-yellow-900 hover:border-b-2 hover:bg-[#ffebde]">
-                            <p>Yes, let's discuss a weekly schedule </p> 
+                            <p>Yes, I will allocate some time for this. </p> 
                         </div>
                         <div 
                         onClick={handleNextPage}
@@ -215,7 +215,7 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule
                         </div>
                     </div>
                     <div className={`h-full w-full flex flex-col items-center justify-center transition-transform duration-700`}>
-                        <div className="h-80p w-85p mt-4 bg-bgBrown overflow-x-scroll p-2">
+                        <div className="rounded-lg h-80p w-85p mt-4 bg-bgBrown overflow-x-scroll p-2">
                             
                             <div className="h-full w-2x font-silkscreen text-m grid grid-cols-26 gap-0">
                                 <div className="col-start-1 row-start-1 grid grid-rows-8 gap-0 m-0 p-0">

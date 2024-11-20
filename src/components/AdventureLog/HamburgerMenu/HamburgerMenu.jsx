@@ -1,9 +1,4 @@
 import React, { useState } from "react";
-import OverviewIcon from '../../../images/overview-icon.png';
-import QuestIcon from '../../../images/quest-icon.png';
-import AdventureIcon from '../../../images/adventure-icon.png';
-import ShopIcon from '../../../images/shop.png';
-import InnIcon from '../../../images/inn.png';
 import { Link } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -48,7 +43,13 @@ const HamburgerMenu = () => {
 
                         <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
-                                <p>Adventure</p>
+                                <p>War Room</p>
+                            </div>
+                        </div>
+
+                        <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                            <div className="h-full w-full ml-2 flex items-center">
+                                <p>Explore</p>
                             </div>
                         </div>
 

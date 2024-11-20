@@ -33,6 +33,7 @@ const DynamicInputBox = ({ placeholderText, handleChange, index }) => {
             onChange={handleInputChange}
             placeholder={placeholderText}
             style={{
+                fontFamily: 'PatrickHand',
                 width: inputWidth,
                 maxWidth: maxInputWidth,
             }}

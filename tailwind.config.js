@@ -78,9 +78,11 @@ module.exports = {
       },
       screens: {
         'po': '937px',
+        'tf': '640px',
         'qp': '900px',
         'bs': '712px',
         'hf': '550px',
+        'h-sm': {raw: '(min-height: 720px) and (min-width: 960px)'},
       },
       maxHeight: {
         '1/2': "50%"
@@ -91,7 +93,10 @@ module.exports = {
       fontFamily: {
         silkscreen: ['Silkscreen', 'cursive'],
         tiny5:  ['tiny5', 'sans-serif'],
-        funnel: ['funnelsans', 'sans-serif'],
+        funnelSans: ['funnelSans', 'sans-serif'],
+        grapeNuts: ['GrapeNuts', 'sans-serif'],
+        reenieBeenie: ['ReenieBeanie', 'sans-serif'],
+        patrickHand: ['PatrickHand', 'sans-serif'],
 
       },
     },

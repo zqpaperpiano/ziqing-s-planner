@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { X, Plus } from 'lucide-react'; 
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import Checkpoints from "./Checkpoints";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Background from '../../../images/hip-square.webp';
+
 
 const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dungeonID }) => {
 
@@ -13,7 +15,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
     const [dungeonDetails, setDungeonDetails] = useState({
                                                 dungeonID: dungeonID,
                                                 dungeonName: '',
-                                                dungeonImage: '',
                                                 dungeonDescription: '',
                                                 dungeonCheckpoints: [],
                                                 completionPercentage: 0,
@@ -48,6 +49,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
 
     //takes care of all other aspects when quest details are changed
     const handleDungeonDetailsChange = (e, parameterName) => {
+        console.log(e.target.value);
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, [parameterName]: e.target.value
         }))
@@ -67,17 +69,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
             // console.log(newCheckpointList);
             return newCheckpointList;
         });
-    }
-
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if(file){
-            const imageURL = URL.createObjectURL(file);
-
-            setDungeonDetails((prevDeets) => ({
-                ...prevDeets, dungeonImage: [imageURL]
-            }))
-        }
     }
 
     const handlePostQuest = () => {
@@ -117,12 +108,15 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-            <div className="relative bg-white w-3/4 h-5/6 flex items-center justify-center">
+            <div className="relative w-3/4 h-5/6 flex items-center justify-center">
+                <div className="absolute inset-0">
+                    <img src={Background} className="h-full w-full object-cover z-10" />
+                </div>
                 <button onClick={() => {handleExitAddDungeon()}} className="absolute top-2 right-6 "><X /></button>
-                <div className="overflow-scroll overflow-x-hidden w-full h-full flex items-center justify-evenly flex-col">
+                <div className="overflow-scroll overflow-x-hidden w-full font-grapeNuts h-full flex items-center justify-evenly flex-col z-50">
                     <div className="h-1/6 flex flex-col justify-around">
-                        <h1 className="text-5xl text-center">Spotted a new Dungeon?</h1>
-                        <h3 className="text-center mt-2">Please fill in the details below so an adventurer can take on the quest!</h3>
+                        <h1 className="text-5xl text-center ">Spotted a new Dungeon?</h1>
+                        <h3 className="text-center mt-2 text-xl">Please fill in the details below so an adventurer can take on the quest!</h3>
                     </div>
                     <form className="mt-4 h-5/6 w-full flex flex-col items-center">
                         <ToastContainer 
@@ -132,48 +126,52 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
                             pauseOnFocusLoss
                         />
                         <div className="h-5/6 flex flex-col items-center w-5/6 ">
-                            <p>Dungeon Name:</p>
-                            <input 
-                                onChange={(e) => {handleDungeonDetailsChange(e, "dungeonName")}}
-                                className="border border-gray-300 rounded p-2"
-                                type="text" 
-                                placeholder="Name of Dungeon here!" 
-                                required 
-                            />
-                            <p>Dungeon Image</p>
-                            <div className="flex flex-row justify-center items-center">
-                            <input
-                                onChange={(e) => {handleDungeonDetailsChange(e, "dungeonImage")}}
-                                className="border border-gray-300 rounded p-2"
-                                type="url"
-                                placeholder="Insert a URL"
-                            />
-                            <p>or</p>
-                            <input
-                                onChange={(e) => {handleImageUpload(e)}}
-                                type="file"
-                                accept="image/*"
-                            />
+                            <div className="flex items-center h-12 text-xl">
+                                <p>Dungeon Name:</p>
+                                <TextField variant="standard" 
+                                    onChange={(e) => {handleDungeonDetailsChange(e, "dungeonName")}}
+                                    size="small"
+                                    sx={{
+                                        '& .MuiInputBase-input': {
+                                            fontFamily: 'PatrickHand',
+                                            fontWeight: 'bold',
+                                            fontSize: '1rem',
+                                        }
+                                    }}
+                                />
                             </div>
-                            <p>Dungeon Details:</p>
+                            <p className="text-xl   ">Dungeon Details:</p>
                             <textarea
+                                style={{
+                                    fontFamily: 'PatrickHand' 
+                                }}
                                 value={dungeonDetails.dungeonDescription}
                                 onChange={(e) => handleDungeonDetailsChange(e, "dungeonDescription")}
+                                maxLength={150}
                                 rows="5"
                                 className="border border-gray-300 rounded p-2 w-1/2 h-2/3"
-                                placeholder="A short description of the dungeon to better aid our adventurers..."
+                                placeholder="A short description of the dungeon to better aid our adventurers... (max 150 chars)"
                                 required
                             />
                         </div>
                         <div className="h-1/3 flex flex-col items-center mt-2 w-full">
                             <div className="flex justify-center items-center">
-                                <p>Checkpoints </p>
+                                <p className="text-xl">Checkpoints </p>
                                 <Button onClick={() => {handleAddCheckpoints()}} size="small"><Plus /> Add Checkpoints</Button>
                             </div>
                             <div className="flex flex-col justify-center items-center w-full">
                                 <Checkpoints checkpoints={checkpointList} handleCheckpointChange={handleCheckpointNameChange} handleCheckboxChange={handleCompleteCheckpoints}/>  
                             </div>  
                             <Button 
+                            sx={{
+                                fontFamily: 'GrapeNuts',
+                                fontWeight: 'bold',
+                                color: 'black',
+                                textDecoration: 'underline',
+                                '&:hover':{
+                                    textDecoration: 'underline',
+                                },
+                            }}
                             onClick={() => {
                                 handlePostQuest()}}>
                                 Post Dungeon
