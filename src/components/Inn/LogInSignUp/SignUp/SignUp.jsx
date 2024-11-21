@@ -38,8 +38,7 @@ const SignUp  = ({ setUser }) => {
             }else if(userPassword.length >= 6){
                 //post to database
                 //upon successful posting
-                
-
+            
                 fetch('http://localhost:3001/users/new-user', {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
