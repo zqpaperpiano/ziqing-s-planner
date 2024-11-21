@@ -49,7 +49,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
 
     //takes care of all other aspects when quest details are changed
     const handleDungeonDetailsChange = (e, parameterName) => {
-        console.log(e.target.value);
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, [parameterName]: e.target.value
         }))

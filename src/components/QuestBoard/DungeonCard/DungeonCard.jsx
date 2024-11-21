@@ -3,7 +3,6 @@ import { Button, CardActions, CardMedia } from "@mui/material";
 import Dungeon from '../../../images/Dungeon1.png';
 
 const DungeonCard = ({dungeon}) => {
-
     return(
             <div className=" h-full bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg overflow-hidden">
                 <div className="relative h-full w-full flex flex-col items-center tf:p-4">

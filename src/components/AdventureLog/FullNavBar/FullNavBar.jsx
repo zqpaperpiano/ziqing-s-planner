@@ -15,10 +15,10 @@ const FullNavBar = () => {
                 
                 <a>Dungeons</a>
             </Link>
-            <div className="item">
+            <Link to={'/warRoom'} className="item">
                 
                 <a>War Room</a>
-            </div>
+            </Link>
             <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                 <div className="h-full w-full ml-2 flex items-center justify-center">
                     <p>Explore</p>
