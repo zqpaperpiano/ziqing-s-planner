@@ -14,6 +14,7 @@ import WarRoom from "./components/WarRoom/WarRoom";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import EventCreator from "./components/WarRoom/components/EventCreator";
+import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 
 const LandingPage = () => {
     const defPlayer = {
@@ -62,6 +63,7 @@ const LandingPage = () => {
                                     <Route path="/newPlayer/" element={<NewPlayerSettings  player={player}/>}/>
                                     <Route path="/shop/" element={<Shop />} />
                                     <Route path="/warRoom" element={<WarRoom />} />
+                                    <Route path="/logIn" element={<LogInSignUp />} />
                                 </Routes>   
                             </DungeonProvider>
                         </LocalizationProvider>

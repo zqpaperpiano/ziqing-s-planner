@@ -1,11 +1,8 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { LockKeyhole, Mail, User } from 'lucide-react'
-import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
-import Github from '../../../../images/github.png';
 import { ToastContainer } from "react-toastify";
-import NewPlayerSettings from "../../../NewPlayerSettings/NewPlayerSettings";
 import { useNavigate } from "react-router";
 
 const SignUp  = () => {
@@ -53,27 +50,17 @@ const SignUp  = () => {
         <div className="absolute h-full w-full flex right-0 rounded">
             <div className="h-full w-full flex flex-col items-center justify-center">
                 <ToastContainer />
-                <h1 className="header font-bold text-center">Create Account</h1>
-                <div className="mt-2 h-10 w-60 flex justify-evenly">
-                    <div 
-                    className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                        border border-black border-2 hover:cursor-pointer hover:scale-105
-                        ">
-                        <img src={Facebook} className="absolute h-4"/>
-                    </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full
-                     border border-black border-2 hover:cursor-pointer hover:scale-105
-                     ">
-                        <img src={Google} className="absolute h-4"/>
-                    </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                    border border-black border-2 hover:cursor-pointer hover:scale-105
-                    ">
-                        <img src={Github} className="absolute h-4"/>
+                <div className="w-fit">
+                    <h1 className="header font-bold text-center">Create Account</h1>
+                    <div className="mt-2 h-10 w-full rounded-lg border border-black p-2 flex justify-between px-4 items-center hover:cursor-pointer hover:bg-sky-100">
+                        <div className="h-full aspect-square">
+                            <img src={Google} className="h-full w-full cover-fit" />
+                        </div>
+                        <p className="text-sm font-bold">Continue with Google</p>
                     </div>
 
                 </div>
-                <p className="my-0 h-6 text-center mb-2 bs:b-0"> Or use your email for registration </p>
+                <p className="mt-2 h-6 text-center mb-2 bs:b-0"> Or use your email for registration </p>
                 <div className="h-50p w-85p flex flex-col items-center">
                     <form>
                         <div className="h-8 mt-2 relative flex flex-row items-center">

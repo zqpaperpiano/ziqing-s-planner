@@ -21,8 +21,8 @@ const LogInSignUp = () => {
     return(
         <div className="relative h-full w-full">
             <div id="LogInForm"
-                className={`h-full bg-bgPink  w-50p absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
-                    ${onSignup ? 'translate-x-full' : null}`}
+                className={`h-full bg-bgPink  w-50p z-50 absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
+                    ${onSignup ? 'translate-x-full z-0' : null}`}
             >
                 <LogIn />
             </div>

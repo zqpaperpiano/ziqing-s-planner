@@ -21,43 +21,23 @@ const LogIn = () => {
 
     return(
         <div className="absolute h-full w-full flex left-0 rounded">
-            <div className="h-full w-full flex flex-col items-center justify-evenly mt-4">
-                <h1 className="header font-bold text-center">Welcome back,</h1>
-                <div className="flex rainbow-wave">
-                    <span className="font-bold text-center header">A</span>
-                    <span className="font-bold text-center header">d</span>
-                    <span className="font-bold text-center header">v</span>
-                    <span className="font-bold text-center header">e</span>
-                    <span className="font-bold text-center header">n</span>
-                    <span className="font-bold text-center header">t</span>
-                    <span className="font-bold text-center header">u</span>
-                    <span className="font-bold text-center header">r</span>
-                    <span className="font-bold text-center header">e</span>
-                    <span className="font-bold text-center header">r</span>
-                </div>
-                <div className="mt-2 h-10 w-60 flex justify-evenly">
-                    <div 
-                    className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                        border border-black border-2 hover:cursor-pointer hover:scale-105
-                        ">
-                        <img src={Facebook} className="absolute h-4"/>
+            <div className="h-full w-full flex flex-col items-center justify-center gap-4">
+                <div className="w-fit">
+                    <div className="w-full flex flex-col header font-bold text-center p-2">
+                        <h1>Welcome Back </h1>
+                        <h1>Adventurer</h1>
                     </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full
-                     border border-black border-2 hover:cursor-pointer hover:scale-105
-                     ">
-                        <img src={Google} className="absolute h-4"/>
+                    <div className="h-10 w-full border border-black p-2 rounded-lg flex px-2 justify-between items-center hover:cursor-pointer hover:bg-sky-200">
+                        <div className="h-full aspect-square">
+                            <img src={Google} className="h-full w-full cover-fit" />
+                        </div>
+                        <p className="text-sm font-bold">Continue with Google</p>
                     </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                    border border-black border-2 hover:cursor-pointer hover:scale-105
-                    ">
-                        <img src={Github} className="absolute h-4"/>
-                    </div>
-
-                </div>
+                </div>  
                 <p className="my-0 h-6"> Or log in with your email </p>
                 <div className="h-50p w-85p flex flex-col items-center">
                     <form>
-                        <div className="h-8 mt-2 relative flex items-center">
+                        <div className="h-8 relative flex items-center">
                             {
                                 !playerEmail &&
                                 <span className="absolute flex text-gray-400 pointer-events-none">
