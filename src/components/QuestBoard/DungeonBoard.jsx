@@ -100,7 +100,7 @@ const DungeonBoard = () => {
 
 
     return(
-        <div className="h-full w-full flex">
+        <div className={`h-full w-full flex ${onAddDungeon} ? 'z-10' : 'z-50'`}>
             <ToastContainer />
             <div className="flex items-center justify-center mx-auto">
                 <Button

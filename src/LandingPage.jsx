@@ -15,6 +15,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import EventCreator from "./components/WarRoom/components/EventCreator";
 import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
+import { EventProvider } from "./components/WarRoom/components/EventContext";
 
 const LandingPage = () => {
     const defPlayer = {
@@ -56,6 +57,7 @@ const LandingPage = () => {
                     <div className="md:h-screen h-93vh w-85vw bg-bgPink overflow-hidden">
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DungeonProvider>
+                            <EventProvider>
                                 <Routes>
                                     <Route path="/" element={<Overview />} />
                                     <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
@@ -65,6 +67,7 @@ const LandingPage = () => {
                                     <Route path="/warRoom" element={<WarRoom />} />
                                     <Route path="/logIn" element={<LogInSignUp />} />
                                 </Routes>   
+                            </EventProvider>
                             </DungeonProvider>
                         </LocalizationProvider>
                     </div>

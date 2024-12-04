@@ -1,8 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
 import {Mail, LockKeyhole } from 'lucide-react';
-import Github from '../../../../images/github.png';
-import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
 import './LogIn.css';
 
