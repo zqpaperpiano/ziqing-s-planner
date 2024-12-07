@@ -1,19 +1,72 @@
 import { Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { LockKeyhole, Mail, User } from 'lucide-react'
 import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
 import Github from '../../../../images/github.png';
-import { ToastContainer } from "react-toastify";
-import NewPlayerSettings from "../../../NewPlayerSettings/NewPlayerSettings";
-import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import { redirect, useNavigate } from "react-router";
+import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebase";
+import { AuthContext } from "../../../../config/authContext";
+import { browserLocalPersistence, setPersistence } from "firebase/auth";
 
 const SignUp  = () => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
+    const { signIn } = useContext(AuthContext);
 
     const navigate = useNavigate();
+
+    const verifyUserToken = (token) => {
+        fetch('http://localhost:3001/users/new-user', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                email: userEmail,
+                name: userName
+            })
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            signIn(data);
+            setUserEmail("");
+            setUserPassword("");
+            setUserName("");
+            return navigate('/newPlayer');
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+    const logGUser = async () => {
+        const resp = await signUpWithGPopUp();
+        const respID = await resp.user.getIdToken();
+        verifyUserToken(respID);
+    }
+
+    const logEmailUser = async () => {
+        try{
+            await setPersistence(auth, browserLocalPersistence);
+
+            const resp = await signUpWEmail(userEmail, userPassword);
+            const respID = await resp.user.getIdToken();
+            verifyUserToken(respID);
+            
+        }catch(err){
+            if(err.code === "auth/email-already-in-use"){
+                console.log('Email already exists!');
+            }else{
+                console.log(err);
+            }
+        }
+    }
 
     const handleNameChange = (e) => {
         setUserName(e.target.value);
@@ -27,22 +80,23 @@ const SignUp  = () => {
         setUserPassword(e.target.value);
     }
 
+    const validateEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+
     const handleSubmitButton = () => {
         if(userName !== "" && userEmail !== "" && userPassword !== ""){
-            if(userPassword.length >= 6){
-                const userAcc = {
-                    //userID is sequential given by postgres
-                    "userEmail": userEmail,
-                    "userName": userName,
-                    "userPassword": userPassword
-                }
+            if(!validateEmail(userEmail)){
+                toast.error('Please key in a valid email');
+            }else if(userPassword.length >= 6){
                 //post to database
                 //upon successful posting
-                navigate("/newPlayer");
 
-                //log user in by passing user information back to state
+                logEmailUser(userEmail, userPassword);
+            
             }else{
-                console.log('insert toast error here');
+                toast.error('Your password needs a minimum of 6 letters')
             }
         }
     }
@@ -61,7 +115,9 @@ const SignUp  = () => {
                         ">
                         <img src={Facebook} className="absolute h-4"/>
                     </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full
+                    <div 
+                    onClick={logGUser}
+                    className="relative h-8 w-8 flex items-center justify-center rounded-full
                      border border-black border-2 hover:cursor-pointer hover:scale-105
                      ">
                         <img src={Google} className="absolute h-4"/>
@@ -127,7 +183,7 @@ const SignUp  = () => {
                         </div>
                         <div className="flex items-center justify-center mt-4">
                             <Button
-                                onClick={handleSubmitButton}
+                                onClick={logEmailUser}
                                 className="hover:cursor-pointer"
                                 sx={{color: 'deepPink', borderColor: 'deepPink'}}
                                 variant="outlined"

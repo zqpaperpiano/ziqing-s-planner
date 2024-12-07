@@ -4,7 +4,7 @@ import { ReactTyped } from "react-typed";
 import BackArrow from "../../BackArrow/BackArrow";
 
 
-const PageTwo = ({currPage, handleNextPage}) => {
+const PageTwo = ({currPage, handleNextPage, displayName, changeDisplayName}) => {
     const [changeName, setChangeName] = useState(false);
     const [newName, setNewName] = useState("");
 
@@ -18,6 +18,13 @@ const PageTwo = ({currPage, handleNextPage}) => {
 
     const onChangeName = (e) => {
         setNewName(e.target.value);
+    }
+
+    const onClickSubmit = () => {
+        if(newName !== ""){
+            changeDisplayName(newName);
+        }
+        handleNextPage();
     }
 
 
@@ -34,7 +41,7 @@ const PageTwo = ({currPage, handleNextPage}) => {
                             cursorChar="|"
                             strings={[`Hello adventurer,\n 
                                     when we first met, you said your name was\n 
-                                    ...\n 
+                                    ${displayName}\n 
                                     would you still like to be addressed as such?`]}
                             backSpeed={0}
                             typeSpeed={25}
@@ -55,7 +62,7 @@ const PageTwo = ({currPage, handleNextPage}) => {
                     </div>
                     {
                         changeName &&
-                        <div className="h-full w-full flex flex-col items-center justify-center text-2xl font-silkscreen">
+                        <div className="h-full w-full flex flex-col items-center justify-center text-center text-2xl font-silkscreen">
                             <BackArrow handleClickedBack={toggleChangeName} />
                             <ReactTyped
                             strings={['What would you liked to be addressed as?']}
@@ -64,12 +71,13 @@ const PageTwo = ({currPage, handleNextPage}) => {
                             startWhenVisible
                             />
                             <input
+                                onChange={(e) => {onChangeName(e)}}
                                 className="bg-slate-200 mt-8 rounded-lg h-12 w-1/3 text-m outline-none text-center"
                                 type="text"
                             />
                             <div className="h-fit w-fit p-2 mt-4">
                                 <Button
-                                    onClick={handleNextPage}
+                                    onClick={onClickSubmit}
                                     variant="outlined"
                                     sx={{
                                         backgroundColor: "red",

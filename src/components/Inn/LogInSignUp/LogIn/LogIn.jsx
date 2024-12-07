@@ -1,14 +1,17 @@
 import { Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {Mail, LockKeyhole } from 'lucide-react';
 import Github from '../../../../images/github.png';
 import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
 import './LogIn.css';
+import { toast, ToastContainer } from "react-toastify";
+import { AuthContext } from "../../../../config/authContext";
 
 const LogIn = () => {
     const [playerEmail, setPlayerEmail] = useState("");
-    const [playerPassword, setPlayerPassword] = useState("");
+    const [playerPassword, setPlayerPassword] = useState(""); 
+    const { signIn, isAuthenticated } = useContext(AuthContext);
 
     const handleEmailInput = (e) => {
         setPlayerEmail(e.target.value);
@@ -16,12 +19,57 @@ const LogIn = () => {
 
     const handlePasswordInput = (e) => {
         setPlayerPassword(e.target.value);
-    }   
+    }  
+
+    const validateEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+    
+    const onClickSubmit = () => {
+        if(!validateEmail(playerEmail)){
+            toast.error("Please enter a valid email!");
+        }else if(playerPassword.length === 0){
+            toast.error("Please enter a password");
+        }else{
+            try{
+                fetch('http://localhost:3001/users/log-in', {
+                    method: 'post',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: playerEmail,
+                        password: playerPassword
+                    })
+                })
+                .then(resp => {
+                    if(resp.status === 400 || resp.status === 404){
+                        const err = new Error('Password and emails do not match!');
+                        err.statusCode = 400;
+                        throw err;
+                    }
+                    return resp.json();
+                })
+                .then(data => {
+                    console.log('data: ', data);
+                    signIn(data);
+                    return data;
+                })
+                .catch(err => {
+                    if(err.statusCode === 400){
+                        toast.error("Password and emails do not match");
+                    }
+                })
+            }catch(err){
+                console.log('error:', err);
+            }
+        }
+    }
 
 
     return(
         <div className="absolute h-full w-full flex left-0 rounded">
             <div className="h-full w-full flex flex-col items-center justify-evenly mt-4">
+                <ToastContainer />
                 <h1 className="header font-bold text-center">Welcome back,</h1>
                 <div className="flex rainbow-wave">
                     <span className="font-bold text-center header">A</span>
@@ -92,6 +140,7 @@ const LogIn = () => {
                         </div>
                         <div className="flex items-center justify-center mt-4">
                             <Button
+                                onClick={() => {onClickSubmit()}}
                                 className="hover:cursor-pointer"
                                 sx={{color: 'deepPink', borderColor: 'deepPink'}}
                                 variant="outlined"

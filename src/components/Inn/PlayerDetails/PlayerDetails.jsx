@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PlayerStats from "./PlayerStats/PlayerStats";
 import AccountSettings from "./AccountSettings/AccountSettings";
 import ProfilePreferences from "./ProfilePreferences/ProfilePreferences";
 import NewPlayerSettings from "../../NewPlayerSettings/NewPlayerSettings";
+import { AuthContext } from "../../../config/authContext";
 
-const PlayerDetails = ({ player }) => {
+const PlayerDetails = () => {
     const [selectedPage, setSelectedPage] = useState("Profile Preferences");
+    const {signOut} = useContext(AuthContext);
 
     const handleClickedProfilePreferences = () => {
         setSelectedPage("Profile Preferences");
@@ -17,6 +19,10 @@ const PlayerDetails = ({ player }) => {
 
     const handleClickedAccountSettings = () => {
         setSelectedPage("Account Settings");
+    }
+
+    const onClickLogOut = () => {
+        signOut();
     }
 
     return(
@@ -40,6 +46,12 @@ const PlayerDetails = ({ player }) => {
                         onClick={() => {handleClickedAccountSettings()}}
                         >
                         <p className="text-xs bs:text-m">Account settings</p>
+                    </div>
+                    <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 text-red-500 hover:cursor-pointer hover:bg-turqoiseGreen
+                        `}
+                        onClick={signOut()}
+                        >
+                        <p className="text-xs bs:text-m">Log Out</p>
                     </div>
                 </div>
                 <div className="h-full w-85p">

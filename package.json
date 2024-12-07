@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "animate.css": "^4.1.1",
     "dayjs": "^1.11.13",
+    "firebase": "^11.0.2",
     "framer-motion": "^11.11.17",
     "lucide-react": "^0.453.0",
     "react": "^18.3.1",
@@ -25,6 +26,7 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.6",
     "react-typed": "^2.0.12",
+    "stream-browserify": "^3.0.0",
     "styled-components": "^6.1.13",
     "tailwindcss": "^3.4.14",
     "web-vitals": "^2.1.4"

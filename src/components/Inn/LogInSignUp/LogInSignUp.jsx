@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './LogInSignUp.css';
 import { Button } from "@mui/material";
 import SignUp from "./SignUp/SignUp";
 import LogIn from "./LogIn/LogIn";
+import { AuthContext } from "../../../config/authContext";
 
 const LogInSignUp = () => {
     const [onSignup, toggleOnSignUp] = useState(false);
