@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PlayerStats from "./PlayerStats/PlayerStats";
 import AccountSettings from "./AccountSettings/AccountSettings";
 import ProfilePreferences from "./ProfilePreferences/ProfilePreferences";
@@ -7,7 +7,7 @@ import { AuthContext } from "../../../config/authContext";
 
 const PlayerDetails = () => {
     const [selectedPage, setSelectedPage] = useState("Profile Preferences");
-    const {signOut} = useContext(AuthContext);
+    const {signOut, player} = useContext(AuthContext);
 
     const handleClickedProfilePreferences = () => {
         setSelectedPage("Profile Preferences");
@@ -21,9 +21,11 @@ const PlayerDetails = () => {
         setSelectedPage("Account Settings");
     }
 
-    const onClickLogOut = () => {
-        signOut();
-    }
+    useEffect(() => {
+        console.log(player);
+    }, [])
+
+
 
     return(
         <div className="h-full w-full">
@@ -49,7 +51,7 @@ const PlayerDetails = () => {
                     </div>
                     <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 text-red-500 hover:cursor-pointer hover:bg-turqoiseGreen
                         `}
-                        onClick={signOut()}
+                        onClick={signOut}
                         >
                         <p className="text-xs bs:text-m">Log Out</p>
                     </div>

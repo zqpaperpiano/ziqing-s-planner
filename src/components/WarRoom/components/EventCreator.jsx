@@ -1,19 +1,28 @@
-import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import dayjs from "dayjs";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { X } from 'lucide-react';
 import DungeonSelector from "../../DungeonSelector/DungeonSelector";
-import { DungeonContext } from "../../QuestBoard/DungeonContext/DungeonContext";
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import { ToastContainer, toast } from 'react-toastify';
+import { EventContext } from "./EventContext";
 
-const EventCreator = ({toggleCreatingEvent}) => {
-    const startTime = new Date();
-    const [cat, setCat] = useState("Dungeon");
+const EventCreator = ({toggleCreatingEvent, time}) => {
+    const [cat, setCat] = useState("misc");
     const [eventName, setEventName] = useState("");
+    const [defStart, setDefStart] = useState(time[0]);
+    const [defEnd, setDefEnd] = useState(time[1]);
+    const [eventDescription, setEventDescription] = useState("");
+    const {eventList, setEventList, categories} = useContext(EventContext);
 
     const onChangeEventName = (e) => {
         setEventName(e.target.value);
+    }
+
+    const onChangeEventDescription = (e) => {
+        setEventDescription(e.target.value)
     }
 
     const onChangeEventCat = (e) => {
@@ -24,10 +33,34 @@ const EventCreator = ({toggleCreatingEvent}) => {
         toggleCreatingEvent();
     }
 
+    const onClickSave = () => {
+        if(!eventName){
+            toast.error("Please fill in an event name!");  
+            return; 
+        }
+
+        if(defEnd.toDate().getTime() <= defStart.toDate().getTime()){
+            toast.error("Please ensure that end time is after the start time!")
+            return;
+        }
+
+        const eventId = eventList.length + 1;
+        const newEvent = {
+            id: eventId,
+            title: eventName,
+            start: defStart.toDate(),
+            end: defEnd.toDate(),
+            color: categories[cat].color
+        }
+        setEventList((prevList) => [...prevList, newEvent])
+        handleClickExit();
+    }
+
     return(
-        <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items align">
-            <div className="relative h-90p w-4/5 bg-white my-auto overflow-hidden ">
-                <div className="h-10p w-full font-grapeNuts text-3xl text-center">
+        <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+            <ToastContainer />
+            <div className="relative h-90p w-4/5 flex flex-col items-center gap-0 bg-white overflow-y-auto">
+                <div className="h-fit w-full font-grapeNuts text-3xl text-center">
                     <p>New Event</p>
                 </div>
                 <div 
@@ -35,78 +68,83 @@ const EventCreator = ({toggleCreatingEvent}) => {
                 className="absolute right-0 top-0 hover:cursor-pointer">
                     <X />
                 </div>
-                <div className="flex-1 w-full font-grapeNuts flex flex-col items-center justify-center gap-2">
-                    <div className="w-1/2 flex flex-col items-start">
-                        {/* <InputLabel>Event Name</InputLabel> */}
-                        <TextField 
-                            className="w-full"
-                            value={eventName}
-                            onChange={onChangeEventName}
-                            variant="outlined" 
-                            size="small"
-                            label="Event Title"
-                            sx={{
-                                '& .MuiInputBase-input': {
-                                    fontFamily: 'PatrickHand',
-                                    fontWeight: 'bold',
-                                    fontSize: '1rem',
-                                },
-                            }}
-                        />
-                    </div>
-                    <div className="w-1/3 flex flex-col items-center justify-center">
-                        <div className="flex text-xl w-full items-center justify-between">
-                                <p>Choose category </p>
-                                <Button
-                                    size="small"
+                <div className="flex-1 w-95p font-grapeNuts flex flex-col justify-evenly gap-1">
+                    <div className="w-full flex h-fit gap-4">
+                        <div className="w-1/2">
+                            <TextField 
+                                className="w-full"
+                                value={eventName}
+                                onChange={onChangeEventName}
+                                variant="outlined" 
+                                size="small"
+                                label="Event Title"
+                                sx={{
+                                    height: '40px',
+                                    backgroundColor: '#f5f5f5',
+                                    '& .MuiInputBase-input': {
+                                        fontFamily: 'PatrickHand',
+                                        fontWeight: 'bold',
+                                        fontSize: '1rem',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="w-1/4 relative">
+                        <FormControl fullWidth>
+                                <InputLabel
+                                    id="event-category-label"
+                                >Category</InputLabel>
+                                <Select
+                                    id="event-category"
+                                    labelId="event-category-label"
+                                    onChange={onChangeEventCat}
+                                    value={cat}
+                                    label="Category"
+                                    fullWidth
                                     sx={{
-                                        fontFamily: 'GrapeNuts',
-                                        color: 'blue', 
-                                        fontSize: '0.75rem',
+                                        height: '40px',
+                                        backgroundColor: '#f5f5f5',
+                                        width: '100%',
+                                        fontFamily: 'PatrickHand'
                                     }}
-                                >Add Category</Button>
+                                >
+                                    {
+                                        Object.entries(categories).map((cat) => {
+                                            return(
+                                                <MenuItem
+                                                    sx={{
+                                                        fontFamily: 'PatrickHand'
+                                                    }}
+                                                    value={cat[0]}>
+                                                        <div className="h-full w-full flex items-center">
+                                                            <div className={`h-4 w-4 rounded-full bg-[${cat[1].color}]`}>
+                                                            </div>
+                                                            <p>{cat[1].name}</p>
+                                                        </div>
+                                                    </MenuItem>
+                                            )
+                                        })
+                                    }   
+                                </Select>
+                            </FormControl>
+                        </div>
+                        {
+                            cat === "Dungeon" &&
+                            <div className="w-1/3">
+                                <DungeonSelector />
                             </div>
-                            <Select
-                                onChange={onChangeEventCat}
-                                value={cat}
-                                label="category"
-                                fullWidth
-                                sx={{
-                                    fontFamily: 'PatrickHand'
-                                }}
-                            >   
-                                <MenuItem 
-                                sx={{
-                                    fontFamily: 'PatrickHand'
-                                }}
-                                value={"Dungeon"}>Clearing Dungeon</MenuItem>
-                                <MenuItem 
-                                sx={{
-                                    fontFamily: 'PatrickHand'
-                                }}
-                                value={"Errands"}>Running Errands</MenuItem>
-                                <MenuItem 
-                                sx={{
-                                    fontFamily: 'PatrickHand'
-                                }}
-                                value={"Misc"}>Misc</MenuItem>
-                                <MenuItem
-                                sx={{
-                                    fontFamily: 'PatrickHand'
-                                }}
-                                value={"Meetings"}>Having Meetings</MenuItem>
-                                <MenuItem
-                                sx={{
-                                    fontFamily: 'PatrickHand'
-                                }}
-                                value={"Social"}>Social Actvities</MenuItem>
-                            </Select>
+                        }
                     </div>
-                    <div className="flex-1 w-75p flex justify-center items-center gap-2 mt-2">
+                    <div className="w-full flex justify-center items-center gap-2">
                         <div className="w-1/3 flex flex-col justify-center items-center">
                             <DatePicker 
                                 disablePast
+                                defaultValue={defStart}
+                                onChange={(e) => {setDefStart(e)}}
                                 formatDensity="dense"
+                                sx={{
+                                    backgroundColor: '#f5f5f5',
+                                }}
                                 slotProps={{
                                     textField: {
                                         size: "small"
@@ -120,53 +158,85 @@ const EventCreator = ({toggleCreatingEvent}) => {
                                     },
                                     
                                 }}
-                                label="Day" />
+                                label="Start Day" />
                         </div>
                         <div className="w-1/3 flex flex-col justify-center items-center">
                             <MobileTimePicker 
+                            onChange={(e) => {setDefStart(e)}}
                             label="Start Time"
+                            sx={{
+                                backgroundColor: '#f5f5f5',
+                            }}
                             slotProps={{
                                 textField: {
                                     size: 'small',
                                 }
                             }}
-                            defaultValue={dayjs(startTime.getTime())} />
+                            defaultValue={defStart} />
+                        </div>
+                        <div><ArrowRightAltIcon /></div>
+                        <div className="w-1/3 flex flex-col justify-center items-center">
+                            <DatePicker 
+                                onChange={(e) => {setDefEnd(e)}}
+                                disablePast
+                                formatDensity="dense"
+                                defaultValue={defEnd}
+                                sx={{
+                                    backgroundColor: '#f5f5f5',
+                                }}
+                                slotProps={{
+                                    textField: {
+                                        size: "small"
+                                    },
+                                    popper: {
+                                        placement: 'bottom-end',
+                                        sx: {
+                                            paddingTop: '10px',
+                                            scale: '0.85'
+                                        }
+                                    },
+                                    
+                                }}
+                                label="End Day" />
                         </div>
                         <div className="w-1/3 flex flex-col justify-center items-center">
                             <MobileTimePicker 
+                            onChange={(e) => {setDefEnd(e)}}
                             label="End Time"
+                            sx={{
+                                backgroundColor: '#f5f5f5',
+                            }}
                             slotProps={{
                                 textField: {
-                                    size: 'small'
+                                    size: 'small',
                                 }
                             }}
-                            defaultValue={dayjs(startTime.getTime())} />
+                            defaultValue={defEnd} />
                         </div>
                     </div>
-                    {
-                        cat === "Dungeon" &&
-                        <div className="w-1/3 flex-1">
-                            <p className="font-grapeNuts text-xl">Choose your dungeon</p>
-                            <DungeonSelector />
-                        </div>
-                    }
-                    <div className="absolute bottom-2">
-                        <Button
-                            variant="text"
-                            size="small"
-                            sx={{
-                                fontFamily: 'GrapeNuts',
-                                textDecoration: 'underline',
-                                color: 'blue',
-                                textDecorationColor: 'blue'
-                            }}
-                        >Add Event</Button>
-                    </div>
-
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        sx={{
+                            backgroundColor: '#f5f5f5',
+                            '& .MuiInputBase-input': {
+                                fontFamily: 'PatrickHand',
+                                fontWeight: 'bold',
+                                fontSize: '1rem',
+                            },
+                        }}
+                        label="Description of the event"
+                        multiline
+                        rows={7}
+                        value={eventDescription}
+                        onChange={onChangeEventDescription}
+                        
+                    />
+                    <Button
+                        onClick={onClickSave}
+                    >Save</Button>
                 </div>
             </div>
-
-
         </div>
     );
 }

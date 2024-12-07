@@ -1,7 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState, useContext } from "react";
 import { LockKeyhole, Mail, User } from 'lucide-react'
-import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
 import Github from '../../../../images/github.png';
 import { ToastContainer, toast } from "react-toastify";
@@ -10,7 +9,7 @@ import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebas
 import { AuthContext } from "../../../../config/authContext";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 
-const SignUp  = () => {
+const SignUp  = ({logGUser}) => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
@@ -18,7 +17,7 @@ const SignUp  = () => {
 
     const navigate = useNavigate();
 
-    const verifyUserToken = (token) => {
+    const verifyUserToken = (token, email, name) => {
         fetch('http://localhost:3001/users/new-user', {
             method: 'POST',
             headers: {
@@ -26,8 +25,8 @@ const SignUp  = () => {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                email: userEmail,
-                name: userName
+                email: email,
+                name: name
             })
         })
         .then((res) => {
@@ -41,15 +40,11 @@ const SignUp  = () => {
             return navigate('/newPlayer');
         })
         .catch((err) => {
-            console.log(err);
+            console.log(err)
         })
     }
 
-    const logGUser = async () => {
-        const resp = await signUpWithGPopUp();
-        const respID = await resp.user.getIdToken();
-        verifyUserToken(respID);
-    }
+
 
     const logEmailUser = async () => {
         try{
@@ -57,8 +52,7 @@ const SignUp  = () => {
 
             const resp = await signUpWEmail(userEmail, userPassword);
             const respID = await resp.user.getIdToken();
-            verifyUserToken(respID);
-            
+            verifyUserToken(respID, userEmail, userName);
         }catch(err){
             if(err.code === "auth/email-already-in-use"){
                 console.log('Email already exists!');
@@ -107,29 +101,19 @@ const SignUp  = () => {
         <div className="absolute h-full w-full flex right-0 rounded">
             <div className="h-full w-full flex flex-col items-center justify-center">
                 <ToastContainer />
-                <h1 className="header font-bold text-center">Create Account</h1>
-                <div className="mt-2 h-10 w-60 flex justify-evenly">
-                    <div 
-                    className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                        border border-black border-2 hover:cursor-pointer hover:scale-105
-                        ">
-                        <img src={Facebook} className="absolute h-4"/>
-                    </div>
-                    <div 
+                <div className="w-fit">
+                    <h1 className="header font-bold text-center">Create Account</h1>
+                    <div className="mt-2 h-10 w-full rounded-lg border border-black p-2 flex justify-between px-4 items-center hover:cursor-pointer hover:bg-sky-100">
+                        <div className="h-full aspect-square">
+                            <img src={Google} className="h-full w-full cover-fit" />
+                        </div>
+                        <p 
                     onClick={logGUser}
-                    className="relative h-8 w-8 flex items-center justify-center rounded-full
-                     border border-black border-2 hover:cursor-pointer hover:scale-105
-                     ">
-                        <img src={Google} className="absolute h-4"/>
-                    </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                    border border-black border-2 hover:cursor-pointer hover:scale-105
-                    ">
-                        <img src={Github} className="absolute h-4"/>
+                    className="text-sm font-bold">Continue with Google</p>
                     </div>
 
                 </div>
-                <p className="my-0 h-6 text-center mb-2 bs:b-0"> Or use your email for registration </p>
+                <p className="mt-2 h-6 text-center mb-2 bs:b-0"> Or use your email for registration </p>
                 <div className="h-50p w-85p flex flex-col items-center">
                     <form>
                         <div className="h-8 mt-2 relative flex flex-row items-center">

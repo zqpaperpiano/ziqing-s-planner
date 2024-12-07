@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './landingPage.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Overview from "./components/Overview/Overview";
 import Inn from "./components/Inn/Inn";
-import cover from './images/cover2.png'
 import DungeonBoard from "./components/QuestBoard/DungeonBoard";
 import { DungeonProvider } from "./components/QuestBoard/DungeonContext/DungeonContext";
 import HamburgerMenu from "./components/AdventureLog/HamburgerMenu/HamburgerMenu";
@@ -16,6 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AuthProvider } from "./config/authContext";
 import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { EventProvider } from "./components/WarRoom/components/EventContext";
 
 const LandingPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -32,47 +32,40 @@ const LandingPage = () => {
     return(
         //container
         <div className="h-screen w-screen bg-gradient-to-b from-gradientStart via-gradientMid to-gradientEnd">
-            
+            <EventProvider>
+            <AuthProvider>
+            <DungeonProvider>
             <Router>
-                <div className="relative h-screen w-screen flex md:flex-col md:justify-center md:items-center overflow-hidden ">
-                    <div className="md:w-85vw md:h-7vh hidden md:block">
-                        <FullNavBar />
-                    </div>
+                    <div className="relative h-screen w-screen flex md:flex-col md:justify-center md:items-center overflow-hidden ">
+                        <div className="md:w-85vw md:h-7vh hidden md:block">
+                            <FullNavBar />
+                        </div>
 
-                    <div className="md:hidden">
-                        <HamburgerMenu />
-                    </div>
+                        <div className="md:hidden">
+                            <HamburgerMenu />
+                        </div>
 
-                    <div className="md:h-screen h-93vh w-85vw bg-bgPink overflow-hidden">
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <AuthProvider>
-                                <DungeonProvider>
-                                        <Routes>
-                                            <Route element={<ProtectedRoute />} >
-                                                <Route path="/" element={<Overview />} />
-                                                <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
-                                                <Route path="/inn" element={<Inn />} />
-                                                <Route path="/newPlayer" element={<NewPlayerSettings />}/>
-                                                <Route path="/shop/" element={<Shop />} />
-                                                <Route path="/warRoom" element={<WarRoom />} />
-                                            </Route>
-                                            
-                                            <Route path="/signIn" element={<LogInSignUp />} />
-                                        </Routes>   
-                                    </DungeonProvider>
-                            </AuthProvider>
-                        </LocalizationProvider>
+                        <div className="md:h-screen h-93vh w-85vw bg-bgPink overflow-hidden">
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Routes>
+                                    <Route element={<ProtectedRoute />} >
+                                        <Route path="/" element={<Overview />} />
+                                        <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
+                                        <Route path="/inn" element={<Inn />} />
+                                        <Route path="/newPlayer" element={<NewPlayerSettings />}/>
+                                        <Route path="/shop/" element={<Shop />} />
+                                        <Route path="/warRoom" element={<WarRoom />} />
+                                    </Route>
+                                    
+                                    <Route path="/signIn" element={<LogInSignUp />} />
+                                </Routes>   
+                            </LocalizationProvider>
+                        </div>
                     </div>
-                </div>
-            </Router>
-            
-            
-
-            {/*cover*/}
-            {/* <div className= "w-85vw h-30vh p-0 m-0"> 
-                <img src={cover} className="h-full w-full object-fill" />
-            </div> */}
-            
+                </Router>
+            </DungeonProvider>
+            </AuthProvider>
+            </EventProvider>
         </div>
     );
 }

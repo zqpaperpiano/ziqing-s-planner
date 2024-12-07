@@ -1,17 +1,18 @@
 import { Button } from "@mui/material";
 import React, { useContext, useState } from "react";
 import {Mail, LockKeyhole } from 'lucide-react';
-import Github from '../../../../images/github.png';
-import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
 import './LogIn.css';
 import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../config/authContext";
+import { signUpWithGPopUp } from "../../../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
-const LogIn = () => {
+const LogIn = ({ logGUser }) => {
     const [playerEmail, setPlayerEmail] = useState("");
     const [playerPassword, setPlayerPassword] = useState(""); 
     const { signIn, isAuthenticated } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleEmailInput = (e) => {
         setPlayerEmail(e.target.value);
@@ -24,6 +25,41 @@ const LogIn = () => {
     const validateEmail = (email) => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailPattern.test(email);
+    }
+
+    const loginGoogle = async() => {
+        const resp = await signUpWithGPopUp();
+        const uid = resp.user.uid
+        const email = resp.user.email;
+        const displayName = resp.user.displayName;
+        const respID = await resp.user.getIdToken();
+        getUserInfo(respID, uid, email, displayName);
+    }
+
+    const getUserInfo = (token, uid, email, displayName) => {
+        fetch('http://localhost:3001/users/getUser', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                uid: uid,
+                email: email,
+                displayName: displayName
+            })
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            console.log(data);
+            signIn(data);
+            return navigate('/')
+        })
+        .catch((err) => {
+            console.log('an error has occured: ', err);
+        })
     }
     
     const onClickSubmit = () => {
@@ -68,44 +104,26 @@ const LogIn = () => {
 
     return(
         <div className="absolute h-full w-full flex left-0 rounded">
-            <div className="h-full w-full flex flex-col items-center justify-evenly mt-4">
-                <ToastContainer />
-                <h1 className="header font-bold text-center">Welcome back,</h1>
-                <div className="flex rainbow-wave">
-                    <span className="font-bold text-center header">A</span>
-                    <span className="font-bold text-center header">d</span>
-                    <span className="font-bold text-center header">v</span>
-                    <span className="font-bold text-center header">e</span>
-                    <span className="font-bold text-center header">n</span>
-                    <span className="font-bold text-center header">t</span>
-                    <span className="font-bold text-center header">u</span>
-                    <span className="font-bold text-center header">r</span>
-                    <span className="font-bold text-center header">e</span>
-                    <span className="font-bold text-center header">r</span>
-                </div>
-                <div className="mt-2 h-10 w-60 flex justify-evenly">
+            <div className="h-full w-full flex flex-col items-center justify-center gap-4">
+                <div className="w-fit">
+                    <div className="w-full flex flex-col header font-bold text-center p-2">
+                        <h1>Welcome Back </h1>
+                        <h1>Adventurer</h1>
+                    </div>
                     <div 
-                    className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                        border border-black border-2 hover:cursor-pointer hover:scale-105
-                        ">
-                        <img src={Facebook} className="absolute h-4"/>
+                    onClick={logGUser}
+                    className="h-10 w-full border border-black p-2 rounded-lg flex px-2 justify-between items-center hover:cursor-pointer hover:bg-sky-200">
+                        <div 
+                        className="h-full aspect-square">
+                            <img src={Google} className="h-full w-full cover-fit" />
+                        </div>
+                        <p className="text-sm font-bold">Continue with Google</p>
                     </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full
-                     border border-black border-2 hover:cursor-pointer hover:scale-105
-                     ">
-                        <img src={Google} className="absolute h-4"/>
-                    </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                    border border-black border-2 hover:cursor-pointer hover:scale-105
-                    ">
-                        <img src={Github} className="absolute h-4"/>
-                    </div>
-
-                </div>
+                </div>  
                 <p className="my-0 h-6"> Or log in with your email </p>
                 <div className="h-50p w-85p flex flex-col items-center">
                     <form>
-                        <div className="h-8 mt-2 relative flex items-center">
+                        <div className="h-8 relative flex items-center">
                             {
                                 !playerEmail &&
                                 <span className="absolute flex text-gray-400 pointer-events-none">

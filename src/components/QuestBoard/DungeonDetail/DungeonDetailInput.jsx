@@ -106,12 +106,25 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
     // can just set number of checkpoints and it automatically creates``
 
     return(
-        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <div className="relative w-3/4 h-5/6 flex items-center justify-center">
                 <div className="absolute inset-0">
-                    <img src={Background} className="h-full w-full object-cover z-10" />
+                    <img src={Background} className="h-full w-full object-cover z-0" />
                 </div>
-                <button onClick={() => {handleExitAddDungeon()}} className="absolute top-2 right-6 "><X /></button>
+                <Button 
+                    onClick={handleExitAddDungeon}
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 2,
+                        color: 'black',
+                        zIndex: 100,
+
+                        '&:hover':{
+                            backgroundColor: 'transparent'
+                        }
+                    }}
+                ><X /></Button>
                 <div className="overflow-scroll overflow-x-hidden w-full font-grapeNuts h-full flex items-center justify-evenly flex-col z-50">
                     <div className="h-1/6 flex flex-col justify-around">
                         <h1 className="text-5xl text-center ">Spotted a new Dungeon?</h1>

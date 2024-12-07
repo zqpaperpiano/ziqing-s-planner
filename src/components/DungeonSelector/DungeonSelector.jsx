@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { DungeonContext } from "../QuestBoard/DungeonContext/DungeonContext";
-import { MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const DungeonSelector = ({  }) => {
     const {dungeonList, setDungeonList} = useContext(DungeonContext);
@@ -15,30 +15,41 @@ const DungeonSelector = ({  }) => {
 
     return(
         <div className="h-full w-full">
-            <Select
-                onChange={onSelectDungeon}
-                value={selectedDungeon}
-                label="Choose the dungeon to clear"
-                fullWidth
-                sx={{
-                    fontFamily: 'PatrickHand'
-                }}
-            >
-                {
-                    dungeonList.map((dungeon, index) => {
-                        return(
-                            <MenuItem
-                        sx={{
-                            fontFamily: 'PatrickHand'
-                        }}
-                            value={dungeon[0].dungeonID}>
-                                {dungeon[0].dungeonName}
-                        </MenuItem>
-                        )
+            <FormControl fullWidth>
+                <InputLabel
+                    id="dungeon-selector"
+                    sx={{
+                        marginBottom: '10px'
+                    }}
+                >Dungeon</InputLabel>
+                <Select
+                    onChange={onSelectDungeon}
+                    labelId="dungeon-selector"
+                    value={selectedDungeon}
+                    label="Dungeon"
+                    fullWidth
+                    sx={{
+                        height: '40px',
+                        backgroundColor: '#f5f5f5',
+                        fontFamily: 'PatrickHand'
+                    }}
+                >
+                    {
+                        dungeonList.map((dungeon, index) => {
+                            return(
+                                <MenuItem
+                            sx={{
+                                fontFamily: 'PatrickHand'
+                            }}
+                                value={dungeon[0].dungeonID}>
+                                    {dungeon[0].dungeonName}
+                            </MenuItem>
+                            )
 
-                    })
-                }
-            </Select>
+                        })
+                    }
+                </Select>
+            </FormControl>
         </div>
     );
 }
