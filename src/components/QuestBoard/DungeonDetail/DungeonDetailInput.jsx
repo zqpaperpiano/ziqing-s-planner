@@ -152,7 +152,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
                                     }}
                                 />
                             </div>
-                            <p className="text-xl   ">Dungeon Details:</p>
+                            <p className="text-xl">Dungeon Details:</p>
                             <textarea
                                 style={{
                                     fontFamily: 'PatrickHand' 
