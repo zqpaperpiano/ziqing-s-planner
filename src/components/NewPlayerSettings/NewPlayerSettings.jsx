@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import './NewPlayerSettings.css';
 import PageOne from "./Pages/PageOne";
 import PageTwo from "./Pages/PageTwo";
@@ -6,19 +6,33 @@ import PageThree from "./Pages/PageThree";
 import PageFour from "./Pages/PageFour";
 import PageFive from "./Pages/PageFive";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../../config/authContext";
 
 
-const NewPlayerSettings = ({ player }) => {
+const NewPlayerSettings = () => {
     const [currPage, setCurrPage] = useState(1);
     const [schedule, setSchedule] = useState([]);
     const [hasSchedule, setHasSchedule] = useState(false);
     const [salary, setSalary] = useState(0);
     const [hasSalary, setHasSalary] = useState(false);
     const [salaryFrequency, setSalaryFrequency] = useState(null);
-    const [displayName, setDisplayName] = useState(player.displayName);
+    const { player } = useContext(AuthContext);
+    const [displayName, setDisplayName] = useState("");
+
+    useEffect(() => {
+        console.log(player);
+    })
+
+    useEffect(() => {
+        setDisplayName(player.name);
+    }, [player])
 
     const handleSetSchedule = (schedule) => {
         setSchedule(schedule);
+    }
+
+    const changeDisplayName = (newName) => {
+        setDisplayName(newName);
     }
 
     const handleSetHasSchedule = (val) => {
@@ -65,7 +79,7 @@ const NewPlayerSettings = ({ player }) => {
                     ${currPage === 5 && "-translate-x-80p"}
                     `}>
                     <PageOne handleNextPage={handleNextPage}/>
-                    <PageTwo currPage={currPage} handleNextPage={handleNextPage}/>
+                    <PageTwo currPage={currPage} handleNextPage={handleNextPage} displayName={displayName} changeDisplayName={changeDisplayName}/>
                     <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} setHasSchedule={handleSetHasSchedule} handleSetSchedule={handleSetSchedule}/>
                     <PageFour 
                         currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}
