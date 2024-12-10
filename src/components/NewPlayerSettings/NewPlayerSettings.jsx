@@ -20,10 +20,6 @@ const NewPlayerSettings = () => {
     const [displayName, setDisplayName] = useState("");
 
     useEffect(() => {
-        console.log(player);
-    })
-
-    useEffect(() => {
         setDisplayName(player.name);
     }, [player])
 
@@ -59,7 +55,6 @@ const NewPlayerSettings = () => {
     }
 
     const handlePrevPage = () => {
-        console.log(currPage);
         setCurrPage((prevVal) => prevVal - 1);
     }
 
