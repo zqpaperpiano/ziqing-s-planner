@@ -6,7 +6,7 @@ import LogIn from "./LogIn/LogIn";
 import { AuthContext } from "../../../config/authContext";
 import { auth, signUpWEmail, signUpWithGPopUp } from "../../../config/firebase";
 import { redirect, useNavigate } from "react-router";
-import { convertFieldResponseIntoMuiTextFieldProps } from "@mui/x-date-pickers/internals";
+import config from '../../../config/config.json';
 
 const LogInSignUp = () => {
     const [onSignup, toggleOnSignUp] = useState(false);
@@ -30,7 +30,7 @@ const LogInSignUp = () => {
             const uid = resp.user.uid;
             const respID = await resp.user.getIdToken();
 
-            fetch('http://localhost:3001/users/googleUser', {
+            fetch(`${config.development}users/googleUser`, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

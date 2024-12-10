@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../config/authContext";
 import { signUpWithGPopUp } from "../../../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import config from '../../../../config/config.json'
 
 const LogIn = ({ logGUser }) => {
     const [playerEmail, setPlayerEmail] = useState("");
@@ -37,7 +38,7 @@ const LogIn = ({ logGUser }) => {
     }
 
     const getUserInfo = (token, uid, email, displayName) => {
-        fetch('http://localhost:3001/users/getUser', {
+        fetch(`${config.development}users/getUser`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',

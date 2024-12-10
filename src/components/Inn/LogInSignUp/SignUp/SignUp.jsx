@@ -2,8 +2,12 @@ import { Button } from "@mui/material";
 import React, { useEffect, useState, useContext } from "react";
 import { LockKeyhole, Mail, User } from 'lucide-react'
 import Google from '../../../../images/google-plus.png';
-import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../../../../config/authContext";
+import { browserLocalPersistence, setPersistence } from "firebase/auth";
+import config from '../../../../config/config.json';
+import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebase";
+import { ToastContainer, toast } from "react-toastify";
 
 const SignUp  = ({logGUser}) => {
     const [userName, setUserName] = useState("");
@@ -14,7 +18,7 @@ const SignUp  = ({logGUser}) => {
     const navigate = useNavigate();
 
     const verifyUserToken = (token, email, name) => {
-        fetch('http://localhost:3001/users/new-user', {
+        fetch(`${config.development}users/new-user`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
