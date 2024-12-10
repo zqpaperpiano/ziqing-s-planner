@@ -40,12 +40,10 @@ const NewPlayerSettings = ({ player }) => {
     const navigate = useNavigate();
 
     const handleNextPage = () => {
-        // setTransition(true);
         setCurrPage((prevVal) => prevVal +1)
     }
 
     const handlePrevPage = () => {
-        console.log(currPage);
         setCurrPage((prevVal) => prevVal - 1);
     }
 
