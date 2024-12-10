@@ -4,31 +4,28 @@ import Pfp from '../../../../images/profile-pic.jpg';
 import EditIcon from '@mui/icons-material/Edit';
 import { EventContext } from "../../../WarRoom/components/EventContext";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import EditCategories from "../EditPopUps/EditCategories";
+import EditCat from "../EditPopUps/EditCat";
  
 const ProfilePreferences = () => { 
     const {categories} = useContext(EventContext);
-    const [selectedCat, setSelectedCat] = useState(null);
     const [editCategories, setEditCategories] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     const toggleEditCategories = () => {
         if(editCategories){
             setEditCategories(false);
+            setEditMode(false);
         }else{
             setEditCategories(true);
+            setEditMode(true);
         }
-    }
-
-    const onClickCategory = (e) => {
-        setSelectedCat(e.target.id);
-        toggleEditCategories();
     }
 
     return( 
         <div className={"relative h-full w-full flex flex-col"}> {/* Change flex direction based on screen size */}
-            {editCategories && <EditCategories cat={selectedCat}/>}
+            {editCategories && <EditCat onClose={toggleEditCategories} />}
             {/* pfp, displayName, status */} 
-            <div className={`relative h-1/3 w-full ${editCategories ? 'opacity-0 z-0': 'opacity-100 z-50'}`}>
+            <div className={`relative h-1/3 w-full ${editMode ? 'opacity-0 z-0': 'opacity-100 z-50'}`}>
                 <div className="h-full w-70p p-2 flex">
                     <div className="relative h-full aspect-square">
                         <img src={Pfp} 
@@ -59,7 +56,7 @@ const ProfilePreferences = () => {
                     className="absolute top-2 right-2 text-xs text-sky-500 underline hover:text-sky-200 hover:cursor-pointer"
                 >Edit Details</div>
             </div>
-            <div className={`h-2/3 w-full flex ${editCategories ? 'opacity-0 z-0' : 'opacity-100 z-50'}`}>
+            <div className={`h-2/3 w-full flex ${editMode ? 'opacity-0 z-0' : 'opacity-100 z-50'}`}>
                 <div className="h-2/3 flex-auto p-2">
                     <div className="relative h-fit w-full flex items-center">
                         <p className="text-sm font-bold p-0 m-0 pl-2">Schedule</p>
@@ -89,7 +86,9 @@ const ProfilePreferences = () => {
                 <div className="h-2/3 flex-auto p-2">
                     <div className="relative h-fit w-full flex items-center">
                         <p className="text-sm font-bold p-0 m-0 pl-2">Categories</p>
-                        <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-300">Edit Categories</p>
+                        <p 
+                        onClick={toggleEditCategories}
+                        className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-300">Edit Categories</p>
                     </div>
                     <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-evenly items-center p-2">
                         <div className={`h-full w-full grid gap-1`}>
@@ -98,13 +97,7 @@ const ProfilePreferences = () => {
                                     return(
                                         <div 
                                         key={cat[0]}
-                                        onClick={onClickCategory}
-                                        className="relative h-full w-full rounded-lg hover:bg-slate-300">
-                                            <div 
-                                            id={cat[0]}
-                                            className="absolute h-full w-full inset-0 z-50 rounded-lg flex justify-end items-center opacity-0 hover:cursor-pointer hover:opacity-100">
-                                                <MoreVertIcon className="pointer-events-none" />
-                                            </div>
+                                        className="relative h-full w-full rounded-lg">
                                             <div className="absolute h-full z-20 w-full flex items-center justify-start gap-2 z-20 p-1">
                                                 <div 
                                                     style={{backgroundColor: cat[1].color}}
