@@ -23,6 +23,12 @@ const NewPlayerSettings = () => {
         setDisplayName(player.name);
     }, [player])
 
+    useEffect(() => {
+        if(schedule && schedule.length >0){
+            setHasSchedule(true);
+        }
+    }, [schedule]);
+
     const handleSetSchedule = (schedule) => {
         setSchedule(schedule);
     }
@@ -50,7 +56,6 @@ const NewPlayerSettings = () => {
     const navigate = useNavigate();
 
     const handleNextPage = () => {
-        // setTransition(true);
         setCurrPage((prevVal) => prevVal +1)
     }
 
@@ -75,7 +80,7 @@ const NewPlayerSettings = () => {
                     `}>
                     <PageOne handleNextPage={handleNextPage}/>
                     <PageTwo currPage={currPage} handleNextPage={handleNextPage} displayName={displayName} changeDisplayName={changeDisplayName}/>
-                    <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} setHasSchedule={handleSetHasSchedule} handleSetSchedule={handleSetSchedule}/>
+                    <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} handleSetSchedule={handleSetSchedule}/>
                     <PageFour 
                         currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}
                         setHasSalary={handleSetHasSalary} setSalary={handleSetSalary} setSalaryFrequency={handleSetSalaryFrequency}

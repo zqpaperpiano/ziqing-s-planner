@@ -28,6 +28,9 @@ const Shop = () => {
                     <img src={Coin} className="h-full object-fit" />
                     <p className="font-tiny5 text-2xl">1000</p>
                 </div>
+                <div className="absolute left-8 h-full w-fit hover:cursor-pointer hover:bg-turqoiseGreen rounded-lg p-2 flex items-center justify-center">
+                    <p className="font-tiny5 text-l ">Add money</p>
+                </div>
             </div>
             <div className="w-full flex-1 grid grid-cols-4 grid-rows-2">
                 <ShopCard categoryName={"Food"} itemIcon={FoodIcon} purchaseItem={addToShoppingLog}/>
