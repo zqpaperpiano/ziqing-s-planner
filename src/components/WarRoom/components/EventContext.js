@@ -5,23 +5,23 @@ export const EventContext = createContext();
 export const EventProvider = ({children}) => {
     const [eventList, setEventList] = useState([]);
     const [categories, setCategories] = useState({
-        dungeons: {
+        cat1: {
             name: 'Clearing dungeons',
             color: '#ca4a55',
         },
-        errands: {
+        cat2: {
             name: 'Running errands',
             color: '#ee694b',
         },
-        misc: {
+        cat3: {
             name: 'Misc',
             color: '#fdb814'
         },
-        meetings: {
+        cat4: {
             name: 'Meetings',
             color: '#30ad6e'
         },
-        social: {
+        cat5: {
             name: 'Social activities',
             color: '#1d58a0'
         }

@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { EventContext } from "./EventContext";
 
 const EventCreator = ({toggleCreatingEvent, time}) => {
-    const [cat, setCat] = useState("misc");
+    const [cat, setCat] = useState("cat2");
     const [eventName, setEventName] = useState("");
     const [defStart, setDefStart] = useState(time[0]);
     const [defEnd, setDefEnd] = useState(time[1]);
@@ -117,7 +117,7 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
                                                     }}
                                                     value={cat[0]}>
                                                         <div className="h-full w-full flex items-center">
-                                                            <div className={`h-4 w-4 rounded-full bg-[${cat[1].color}]`}>
+                                                            <div className={`h-4 w-4 rounded-full`} style={{backgroundColor: cat[1].color}}>
                                                             </div>
                                                             <p>{cat[1].name}</p>
                                                         </div>
