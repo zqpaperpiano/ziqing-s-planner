@@ -17,12 +17,14 @@ const NewPlayerSettings = ({ player }) => {
     const [salaryFrequency, setSalaryFrequency] = useState(null);
     const [displayName, setDisplayName] = useState(player.displayName);
 
+    useEffect(() => {
+        if(schedule && schedule.length >0){
+            setHasSchedule(true);
+        }
+    }, [schedule]);
+
     const handleSetSchedule = (schedule) => {
         setSchedule(schedule);
-    }
-
-    const handleSetHasSchedule = (val) => {
-        setHasSchedule(val);
     }
 
     const handleSetSalary = (amt) => {
@@ -64,7 +66,7 @@ const NewPlayerSettings = ({ player }) => {
                     `}>
                     <PageOne handleNextPage={handleNextPage}/>
                     <PageTwo currPage={currPage} handleNextPage={handleNextPage}/>
-                    <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} setHasSchedule={handleSetHasSchedule} handleSetSchedule={handleSetSchedule}/>
+                    <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} handleSetSchedule={handleSetSchedule}/>
                     <PageFour 
                         currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}
                         setHasSalary={handleSetHasSalary} setSalary={handleSetSalary} setSalaryFrequency={handleSetSalaryFrequency}
