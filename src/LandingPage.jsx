@@ -16,6 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import EventCreator from "./components/WarRoom/components/EventCreator";
 import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 import { EventProvider } from "./components/WarRoom/components/EventContext";
+import Explore from "./components/Explore/Explore";
 
 const LandingPage = () => {
     const defPlayer = {
@@ -66,6 +67,7 @@ const LandingPage = () => {
                                     <Route path="/shop/" element={<Shop />} />
                                     <Route path="/warRoom" element={<WarRoom />} />
                                     <Route path="/logIn" element={<LogInSignUp />} />
+                                    <Route path="/explore" element={<Explore />} />
                                 </Routes>   
                             </EventProvider>
                             </DungeonProvider>

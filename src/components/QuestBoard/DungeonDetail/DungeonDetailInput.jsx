@@ -9,15 +9,14 @@ import Background from '../../../images/hip-square.webp';
 
 const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dungeonID }) => {
 
-    // console.log('quest id received:', questID);
-
     const [checkpointList, setCheckpointList] = useState([]);
     const [dungeonDetails, setDungeonDetails] = useState({
-                                                dungeonID: dungeonID,
-                                                dungeonName: '',
-                                                dungeonDescription: '',
-                                                dungeonCheckpoints: [],
-                                                completionPercentage: 0,
+                                                [dungeonID]: {
+                                                    dungeonName: '',
+                                                    dungeonDescription: '',
+                                                    dungeonCheckpoints: [],
+                                                    completionPercentage: 0,
+                                                }
                                             });
 
     
@@ -30,13 +29,22 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
             }   
             return count;
         }, 0);
+        
+        let len = checkpointList.length;
+        let completionPercentage = (completedCount / len).toFixed(2);
+        if(isNaN(completionPercentage)){
+            completionPercentage = 0;
+        }
 
-        const completionPercentage = (completedCount / checkpointList.length).toFixed(2);
+        // console.log('hello: ', completionPercentage);
 
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, 
-            dungeonCheckpoints : [checkpointList],
-            completionPercentage: [completionPercentage]
+            [dungeonID]: {
+                ...prevDeets[dungeonID],
+                dungeonCheckpoints: checkpointList,
+                completionPercentage: completionPercentage
+            }
         }))
     }, [checkpointList]);
     
@@ -50,7 +58,11 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
     //takes care of all other aspects when quest details are changed
     const handleDungeonDetailsChange = (e, parameterName) => {
         setDungeonDetails((prevDeets) => ({
-            ...prevDeets, [parameterName]: e.target.value
+            ...prevDeets, 
+            [dungeonID]: {
+                ...prevDeets[dungeonID],
+                [parameterName]: e.target.value
+            }
         }))
     }
 
@@ -71,12 +83,15 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
     }
 
     const handlePostQuest = () => {
+        console.log(dungeonDetails[dungeonID].dungeonName);
+        const curr = dungeonDetails[dungeonID];
+
         // do necessary verification of all inputs first
-        if (dungeonDetails.dungeonName === ''){
+        if (curr.dungeonName === ''){
             notifyEmptyName();
-        }else if(dungeonDetails.dungeonDescription === ''){
+        }else if(curr.dungeonDescription === ''){
             notifyEmptyDescription();
-        }else if(dungeonDetails.dungeonCheckpoints[0].length === 0){
+        }else if(curr.dungeonCheckpoints[0].length === 0){
             notifyEmptyCheckpoint();
         }else{
             handleIncreaseDungeons(dungeonDetails);
@@ -85,12 +100,19 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
     }
 
     const handleCompleteCheckpoints = (i, checked) => {
-        const checkpointName = Object.keys(dungeonDetails.dungeonCheckpoints[0][i]);
-        const temp = {[checkpointName]: [checked][0]};
+
+        checkpointList.map((checkpoint) => {
+            let arr = Object.entries(checkpoint);
+            console.log(arr);
+        })
+
+        // const temp = {[checkpointName]: [checked][0]};
 
         setCheckpointList((prevList) => {
             const newList = prevList.map((checkpoint, index) => {
                 if(index === i){
+                    let arr = Object.entries(checkpoint);
+                    let temp = {[arr[0]] : [checked][0]}
                     return temp;
                 }
                 return checkpoint;

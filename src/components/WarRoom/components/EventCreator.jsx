@@ -16,6 +16,11 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
     const [defEnd, setDefEnd] = useState(time[1]);
     const [eventDescription, setEventDescription] = useState("");
     const {eventList, setEventList, categories} = useContext(EventContext);
+    const [dungeon, setDungeon] = useState(null);
+
+    const onDungeonChange = (e) => {
+        setDungeon(e.target.value);
+    }
 
     const onChangeEventName = (e) => {
         setEventName(e.target.value);
@@ -131,7 +136,7 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
                         {
                             cat === "Dungeon" &&
                             <div className="w-1/3">
-                                <DungeonSelector />
+                                <DungeonSelector onDungeonChange={onDungeonChange}/>
                             </div>
                         }
                     </div>
