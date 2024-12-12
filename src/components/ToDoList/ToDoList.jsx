@@ -30,6 +30,7 @@ const ToDoList = () => {
 
     return(
         <div className="h-full w-full flex flex-col items-center justify-center text-white overflow-scroll">
+            <p>To-Do List</p>
             {
                 listItems.map((item) => {
                     return(

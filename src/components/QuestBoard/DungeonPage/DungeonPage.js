@@ -10,6 +10,7 @@ const DungeonPage = ({ page, dungeonPp}) => {
     let counter = 0;
 
     Object.entries(dungeonList).map((val) => {
+        // console.log('mapping dungoenList: ', val);
         if(counter >= startIndex && counter - startIndex <= dungeonPp){
             shownDungeons.push(val);
         }
@@ -27,7 +28,7 @@ const DungeonPage = ({ page, dungeonPp}) => {
     return(
         <div className={`absolute h-full w-full grid gap-4 ${dungeonPp === 6 ? "grid-cols-3 grid-rows-2" : "grid-cols-3 grid-rows-3"}`}>
             {shownDungeons.map((dungeon, index) => {
-                console.log(dungeon);
+                // console.log(dungeon);   
                 return <DungeonCard key={index} dungeon={dungeon[1]}/>
             })}
         </div>

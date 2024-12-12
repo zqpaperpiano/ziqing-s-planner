@@ -16,16 +16,16 @@ const Explore = () => {
     }
 
     useEffect(() => {
-        console.log(adventureDeets);
-    }, [adventureDeets])
+        console.log(adventureDeets)
+    }, [adventureDeets]);
 
 
     return(
         <div className="h-full w-full">
             {
-                !adventureDeets && !inExploration &&
-                <AdventureDetails onStartExploration={handleNewAdventureDeets}/>
-                // <Exploration />
+                !adventureDeets && !inExploration ?
+                <AdventureDetails onStartExploration={handleNewAdventureDeets}/> :
+                <Exploration details={adventureDeets}/>
             }
 
         </div>

@@ -39,7 +39,8 @@ const DungeonBoard = () => {
 
     useEffect(() => {
         const length = Object.keys(dungeonList).length;
-        const nextVal = parseInt(Object.keys(dungeonList)[length - 1]) + 1;
+        let nextVal = parseInt(Object.keys(dungeonList)[length - 1]) + 1;
+        if(isNaN(nextVal)) nextVal = 1;
         setNextDungeonID(nextVal);
     }, [dungeonList]);
 

@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TimePicker from "../../TimePicker/TimePicker";
 import { FormControl, InputLabel, MenuItem, Select, Button } from "@mui/material";
 import DungeonSelector from "../../DungeonSelector/DungeonSelector";
+import { DungeonContext } from "../../QuestBoard/DungeonContext/DungeonContext";
 
 const AdventureDetails = ({ onStartExploration }) => {
     const [duration, setDuration] = useState(0);
     const [purpose, setPurpose] = useState('misc');
     const [selectedDungeon, setSelectedDungeon] = useState(null);
+    const {dungeonList} = useContext(DungeonContext);
 
     const onDurationChange = (duration) => {
         let mins = parseInt(duration.slice(0, 2));
@@ -17,9 +19,10 @@ const AdventureDetails = ({ onStartExploration }) => {
         setPurpose(e.target.value);
     }
 
-    const onDungeonChange = (e) => {
-        console.log('changed');
-        setSelectedDungeon(e.target.value);
+    const onDungeonChange = (dungeonId) => {
+        // console.log(dungeonList[dungeonId]);
+        const dungeonDeets = dungeonList[dungeonId]
+        setSelectedDungeon(dungeonDeets);
     }
 
     const handleClickStart = () => {

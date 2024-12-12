@@ -134,7 +134,7 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
                             </FormControl>
                         </div>
                         {
-                            cat === "Dungeon" &&
+                            cat === "cat1" &&
                             <div className="w-1/3">
                                 <DungeonSelector onDungeonChange={onDungeonChange}/>
                             </div>

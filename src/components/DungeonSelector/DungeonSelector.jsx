@@ -8,8 +8,8 @@ const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {
 
     const onSelectDungeon = (e) => {
         let dungeonId = e.target.value;
-        let dungeonInfo = dungeonList[dungeonId];
-        console.log(dungeonList);
+        setSelectedDungeon(dungeonId);
+        onDungeonChange(dungeonId);
     }
 
     
@@ -40,14 +40,15 @@ const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {
                     }}
                 >
                     {
-                        dungeonList.map((dungeon, index) => {
+                        Object.entries(dungeonList).map((dungeon, index) => {
                             return(
                                 <MenuItem
+                                key={index}
                             sx={{
                                 fontFamily: newfont
                             }}
-                                value={dungeon[0].dungeonID}>
-                                    {dungeon[0].dungeonName}
+                                value={dungeon[0]}>
+                                    {dungeon[1].dungeonName}
                             </MenuItem>
                             )
 
