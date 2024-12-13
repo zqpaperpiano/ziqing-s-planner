@@ -22,13 +22,18 @@ const Explore = () => {
         setInExploration(true);
     }
 
+    const exitExplortaion = () => {
+        setInExploration(false);
+        setAdventureDeets(null);
+    }
+
 
     return(
         <div className="h-full w-full">
             {
                 !adventureDeets && !inExploration ?
                 <AdventureDetails onStartExploration={handleNewAdventureDeets}/> :
-                <Exploration details={adventureDeets}/>
+                <Exploration details={adventureDeets} handleExitExploration={exitExplortaion}/>
             }
 
         </div>

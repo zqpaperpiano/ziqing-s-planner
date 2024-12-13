@@ -17,7 +17,7 @@ const ToDoList = () => {
     }
 
     useEffect(() => {
-        console.log(listItems);
+        console.log('listitems: ', listItems);
     }, [listItems]);
 
     const onChangeChecklistName = (name, key) => {
