@@ -9,6 +9,7 @@ import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebas
 import { AuthContext } from "../../../../config/authContext";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 
+
 const SignUp  = ({logGUser}) => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
