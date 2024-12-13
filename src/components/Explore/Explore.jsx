@@ -7,17 +7,20 @@ const Explore = () => {
     const [inExploration, setInExploration] = useState(false);
 
     const handleNewAdventureDeets = (duration, purpose, dungeon) => {
-        setAdventureDeets({
-            "duration": duration,
-            "purpose": purpose,
-            "dungeon": dungeon
-        });
+        if(!dungeon){
+            setAdventureDeets({
+                "duration": duration,
+                "purpose": purpose
+            });
+        }else{
+            setAdventureDeets({
+                "duration": duration,
+                "purpose": purpose,
+                "dungeon": dungeon
+            });
+        }
         setInExploration(true);
     }
-
-    useEffect(() => {
-        console.log(adventureDeets)
-    }, [adventureDeets]);
 
 
     return(

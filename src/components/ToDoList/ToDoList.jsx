@@ -8,10 +8,6 @@ const ToDoList = () => {
             name: "",
             completed: false
         }},
-        {"item2": {
-            name: "",
-            completed: false
-        }}
     ]);
 
     const handleKeyPress = (e) => {
@@ -20,21 +16,55 @@ const ToDoList = () => {
         }
     }
 
+    useEffect(() => {
+        console.log(listItems);
+    }, [listItems]);
+
+    const onChangeChecklistName = (name, key) => {
+        let temp = listItems;
+        let newTemp = temp.map((prev) => {
+            if(prev[key]){
+                return {[key]: {...prev[key], name: name}}
+            }
+            return prev;
+        })
+
+        setListItems(newTemp);
+    }
+    
     const addChecklist = () => {
-        let lastItem = Object.keys(listItems[listItems.length - 1])[0]
-        let lastNum = parseInt(lastItem.slice(4, lastItem.length)) + 1;
-        setListItems([...listItems, {[`item${lastNum}`]: {
-            name: "", completed: false
-        }}])
+        let lastNum = 1;
+        if(listItems.length > 0){
+            let lastObj = listItems[listItems.length - 1];
+            let lastKey = Object.keys(lastObj)[0];
+            lastNum = parseInt(lastKey.slice(4, lastKey.length)) + 1;
+        }
+        
+        let newItem = {[`item${lastNum}`] : {name: "", completed: false}}
+        setListItems((prevList) => [...prevList, newItem])
     }
 
+    const deleteChecklist = (ind) => {
+        let filtered = listItems.filter((itm) => {
+            let key = Object.keys(itm)[0];
+            console.log(itm);
+            if(key !== ind){
+                return itm;
+            }
+        })
+        // console.log(filtered);
+        setListItems(filtered);
+        }
+        
+
     return(
-        <div className="h-full w-full flex flex-col items-center justify-center text-white overflow-scroll">
+        <div className="h-full w-full flex flex-col items-center justify-center text-white overflow-auto">
             <p>To-Do List</p>
             {
                 listItems.map((item) => {
+                    // console.log(item);
                     return(
-                        <ListItems item={item} onKeyPress={handleKeyPress}/>
+                        <ListItems item={item} onRenameChecklist={onChangeChecklistName} onKeyPress={handleKeyPress} onDeleteChecklist={deleteChecklist}/>
                     )
                 })
             }

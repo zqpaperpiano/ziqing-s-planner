@@ -3,6 +3,7 @@ import TimePicker from "../../TimePicker/TimePicker";
 import { FormControl, InputLabel, MenuItem, Select, Button } from "@mui/material";
 import DungeonSelector from "../../DungeonSelector/DungeonSelector";
 import { DungeonContext } from "../../QuestBoard/DungeonContext/DungeonContext";
+import { ToastContainer, toast } from 'react-toastify';
 
 const AdventureDetails = ({ onStartExploration }) => {
     const [duration, setDuration] = useState(0);
@@ -20,18 +21,25 @@ const AdventureDetails = ({ onStartExploration }) => {
     }
 
     const onDungeonChange = (dungeonId) => {
-        // console.log(dungeonList[dungeonId]);
         const dungeonDeets = dungeonList[dungeonId]
         setSelectedDungeon(dungeonDeets);
     }
 
     const handleClickStart = () => {
-        onStartExploration(duration, purpose, selectedDungeon);
+        if(purpose !== 'misc' && !selectedDungeon){
+            toast.error('Please select a dungeon first!');
+        }else if(purpose === 'misc'){
+            onStartExploration(duration, purpose, null);
+        }else{
+            onStartExploration(duration, purpose, selectedDungeon);
+        }
+        
     }
 
     return(
         <div className="relative h-full w-full flex flex-col items-center justify-center">
             <div className="h-1/5 w-full flex text-center font-silkscreen text-3xl justify-center items-center">
+                <ToastContainer />
                 <h1>Exploration Declaration Form</h1>
             </div>
             
