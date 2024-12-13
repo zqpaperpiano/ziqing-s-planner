@@ -41,17 +41,17 @@ const HamburgerMenu = () => {
                             </div>
                         </Link>
 
-                        <Link to={'warRoom'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                        <Link to={'/warRoom'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
                                 <p>War Room</p>
                             </div>
                         </Link>
 
-                        <div className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
+                        <Link to={'/explore'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">
                                 <p>Explore</p>
                             </div>
-                        </div>
+                        </Link>
 
                         <Link to={'/shop'} className="h-full w-full  hover:bg-turqoiseGreen hover:cursor-pointer">
                             <div className="h-full w-full ml-2 flex items-center">

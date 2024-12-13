@@ -3,7 +3,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "@mui/material";
 
-const SetClock = ({setSchedule,handleNextSlide}) => {
+const SetClock = ({ onDurationChange}) => {
     const [inputTracker, setInputTracker] = useState(1);
 
     const [hour, setHour] = useState("00");
@@ -145,10 +145,6 @@ const SetClock = ({setSchedule,handleNextSlide}) => {
        }
     }
 
-    useEffect(() => {
-        console.log(inputTracker);
-    }, [inputTracker])
-
     const cycleInput = () => {
         setInputTracker((prevVal) => {
             if(prevVal === 4){
@@ -159,10 +155,9 @@ const SetClock = ({setSchedule,handleNextSlide}) => {
         })
     }
 
-    const handleSetTime = () => {
-        setSchedule(hour, minute);
-        handleNextSlide();
-    }
+    useEffect(() => {
+        onDurationChange(hour, minute);
+    }, [hour, minute]);
 
     return(
         <div className="h-full w-full flex flex-col justify-center items-center mt-2">
@@ -215,19 +210,6 @@ const SetClock = ({setSchedule,handleNextSlide}) => {
                         </div>
                     </div>
                 </div>
-            <div className="h-15p w-full m-4">
-                <Button
-                    onClick={handleSetTime}
-                    variant="outlined"
-                    size="large"
-                    sx={{
-                        color: 'white',
-                        backgroundColor: 'red'
-                    }}
-                >
-                    Set
-                </Button>
-            </div>
         </div>
     );
 }

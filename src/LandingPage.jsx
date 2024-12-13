@@ -16,6 +16,7 @@ import { AuthProvider } from "./config/authContext";
 import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { EventProvider } from "./components/WarRoom/components/EventContext";
+import Explore from "./components/Explore/Explore";
 
 const LandingPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);

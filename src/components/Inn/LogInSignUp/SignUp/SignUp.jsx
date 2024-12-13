@@ -107,7 +107,9 @@ const SignUp  = ({logGUser}) => {
                         <div className="h-full aspect-square">
                             <img src={Google} className="h-full w-full cover-fit" />
                         </div>
-                        <p className="text-sm font-bold">Continue with Google</p>
+                        <p 
+                    onClick={logGUser}
+                    className="text-sm font-bold">Continue with Google</p>
                     </div>
 
                 </div>

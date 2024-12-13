@@ -58,20 +58,22 @@ const CategoryBar = ({cat, onChangeName, onChangeColor, onDeleteCat}) => {
                     value={cat[1].name}
                     />
             </div>
-            <div 
-            id={`${cat[0]}-del`}
-            onClick={onDeleteCat}
-            className="h-full flex-auto flex justify-center items-center px-2 hover:bg-red-500 rounded-lg hover:cursor-pointer">
-                <DeleteIcon 
-                    sx={{
-                        pointerEvents: 'none',
-                        color: 'black',
-                        '&:hover':{
-                            color: 'white'
-                        }
-                    }}
-                />
-            </div>
+            {   cat[0] !== 'cat1' &&
+                <div 
+                id={`${cat[0]}-del`}
+                onClick={onDeleteCat}
+                className="h-full flex-auto flex justify-center items-center px-2 hover:bg-red-500 rounded-lg hover:cursor-pointer">
+                    <DeleteIcon 
+                        sx={{
+                            pointerEvents: 'none',
+                            color: 'black',
+                            '&:hover':{
+                                color: 'white'
+                            }
+                        }}
+                    />
+                </div>
+            }
         </div>
     );
 }

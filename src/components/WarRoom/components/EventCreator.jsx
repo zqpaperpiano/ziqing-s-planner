@@ -1,7 +1,6 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import dayjs from "dayjs";
 import React, { useContext, useState, useEffect } from "react";
 import { X } from 'lucide-react';
 import DungeonSelector from "../../DungeonSelector/DungeonSelector";
@@ -16,6 +15,11 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
     const [defEnd, setDefEnd] = useState(time[1]);
     const [eventDescription, setEventDescription] = useState("");
     const {eventList, setEventList, categories} = useContext(EventContext);
+    const [dungeon, setDungeon] = useState(null);
+
+    const onDungeonChange = (e) => {
+        setDungeon(e.target.value);
+    }
 
     const onChangeEventName = (e) => {
         setEventName(e.target.value);
@@ -129,9 +133,9 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
                             </FormControl>
                         </div>
                         {
-                            cat === "Dungeon" &&
+                            cat === "cat1" &&
                             <div className="w-1/3">
-                                <DungeonSelector />
+                                <DungeonSelector onDungeonChange={onDungeonChange}/>
                             </div>
                         }
                     </div>

@@ -33,8 +33,15 @@ const DungeonBoard = () => {
         window.addEventListener("resize", updateDungeonPp);
     })
 
+    // useEffect(() => {
+    //     console.log(dungeonList)
+    // }, [dungeonList])
+
     useEffect(() => {
-        setNextDungeonID((prevID) => {return prevID + 1});
+        const length = Object.keys(dungeonList).length;
+        let nextVal = parseInt(Object.keys(dungeonList)[length - 1]) + 1;
+        if(isNaN(nextVal)) nextVal = 1;
+        setNextDungeonID(nextVal);
     }, [dungeonList]);
 
     useEffect(() => {
@@ -47,9 +54,14 @@ const DungeonBoard = () => {
 
     //when a new quest is added
     const handleIncreaseDungeons = (newDungeon) => {
-        setDungeonList((prevList) => [
-            ...prevList, [newDungeon]
-        ])
+        const dungeonArr = Object.entries(newDungeon);
+        const keys = dungeonArr[0][0];
+        const temp = dungeonArr[0][1];
+        setDungeonList((prevList) => ({
+            ...prevList,
+            [keys]: temp
+        })
+        )
         setTotalDungeons((prevVal) => prevVal + 1);
     }
 

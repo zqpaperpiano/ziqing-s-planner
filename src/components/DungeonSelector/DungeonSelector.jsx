@@ -2,16 +2,20 @@ import React, { useState, useContext, useEffect } from "react";
 import { DungeonContext } from "../QuestBoard/DungeonContext/DungeonContext";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-const DungeonSelector = ({  }) => {
-    const {dungeonList, setDungeonList} = useContext(DungeonContext);
+const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {
+    const {dungeonList} = useContext(DungeonContext);
     const [selectedDungeon, setSelectedDungeon] = useState("");
+
     const onSelectDungeon = (e) => {
-        setSelectedDungeon(e.target.value);
+        let dungeonId = e.target.value;
+        setSelectedDungeon(dungeonId);
+        onDungeonChange(dungeonId);
     }
 
-    useEffect(() => {
-        console.log(selectedDungeon);
-    }, [selectedDungeon]);
+    
+    const newBgColor = bgColor || '#f5f5f5';
+    const newfont = font || 'PatrickHand' ;
+    const newHeight = height || '40px';
 
     return(
         <div className="h-full w-full">
@@ -19,7 +23,8 @@ const DungeonSelector = ({  }) => {
                 <InputLabel
                     id="dungeon-selector"
                     sx={{
-                        marginBottom: '10px'
+                        marginBottom: '10px',
+                        fontFamily: newfont
                     }}
                 >Dungeon</InputLabel>
                 <Select
@@ -29,20 +34,21 @@ const DungeonSelector = ({  }) => {
                     label="Dungeon"
                     fullWidth
                     sx={{
-                        height: '40px',
-                        backgroundColor: '#f5f5f5',
-                        fontFamily: 'PatrickHand'
+                        height: newHeight,
+                        backgroundColor: newBgColor,
+                        fontFamily: newfont
                     }}
                 >
                     {
-                        dungeonList.map((dungeon, index) => {
+                        Object.entries(dungeonList).map((dungeon, index) => {
                             return(
                                 <MenuItem
+                                key={index}
                             sx={{
-                                fontFamily: 'PatrickHand'
+                                fontFamily: newfont
                             }}
-                                value={dungeon[0].dungeonID}>
-                                    {dungeon[0].dungeonName}
+                                value={dungeon[0]}>
+                                    {dungeon[1].dungeonName}
                             </MenuItem>
                             )
 
