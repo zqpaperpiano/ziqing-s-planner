@@ -17,6 +17,7 @@ import EventCreator from "./components/WarRoom/components/EventCreator";
 import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 import { EventProvider } from "./components/WarRoom/components/EventContext";
 import Explore from "./components/Explore/Explore";
+import DungeonDetailCard from "./components/QuestBoard/DungeonDetail/DungeonDetailCard";
 
 const LandingPage = () => {
     const defPlayer = {
@@ -62,6 +63,7 @@ const LandingPage = () => {
                                 <Routes>
                                     <Route path="/" element={<Overview />} />
                                     <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
+                                    <Route path="/dungeon/:dungeonID" element={<DungeonDetailCard />} />
                                     <Route path="/inn" element={<Inn player={player}/>} />
                                     <Route path="/newPlayer/" element={<NewPlayerSettings  player={player}/>}/>
                                     <Route path="/shop/" element={<Shop />} />
