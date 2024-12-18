@@ -20,15 +20,18 @@ const DungeonCard = ({dungeon}) => {
                 translateY: "-50%",
                 width: "75vw",
                 height: "80vh",
+                rotateY: 180
             }: {}}
             transition={{
                 type: "spring",
                 stiffness: 300,
                 damping: 20,
-                duration: 1
+                duration: 1.5,
+                rotateY: {delay: 0.1, duration: 0.75}
             }}
-            className="h-full bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg overflow-hidden selected-animation">
-                <div className="relative h-full w-full flex flex-col items-center tf:p-4">
+            className="relative h-full overflow-hidden  backface-hidden dungeon-card rounded-lg bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1]">
+                <div 
+                className="absolute inset-0 flex flex-col items-center tf:p-4">
                     <div className="h-full w-full text-center flex flex-col pointer-event-none justify-center items-center font-silkscreen py-2">
                         <div className="h-[75px] w-[75px]">
                             <img src={Dungeon} className="h-full w-full object-fit" />
@@ -70,7 +73,7 @@ const DungeonCard = ({dungeon}) => {
                             }}>Abandon</Button>
                     </div>
                 </div>
-            </motion.div>
+            </motion.div>   
     );
 }
 

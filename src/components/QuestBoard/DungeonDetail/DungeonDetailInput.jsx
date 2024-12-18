@@ -103,16 +103,13 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
 
         checkpointList.map((checkpoint) => {
             let arr = Object.entries(checkpoint);
-            console.log(arr);
         })
-
-        // const temp = {[checkpointName]: [checked][0]};
 
         setCheckpointList((prevList) => {
             const newList = prevList.map((checkpoint, index) => {
                 if(index === i){
-                    let arr = Object.entries(checkpoint);
-                    let temp = {[arr[0]] : [checked][0]}
+                    let arr = Object.keys(checkpoint);
+                    let temp = {[arr] : checked}
                     return temp;
                 }
                 return checkpoint;
