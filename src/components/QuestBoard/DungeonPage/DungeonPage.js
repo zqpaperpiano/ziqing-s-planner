@@ -3,7 +3,7 @@ import { useLocation, useParams } from "react-router";
 import DungeonCard from "../DungeonCard/DungeonCard";
 import { DungeonContext } from "../DungeonContext/DungeonContext";
 
-const DungeonPage = ({ page, dungeonPp}) => {
+const DungeonPage = ({ page, dungeonPp, handleRemoveDungeon}) => {
     const { dungeonList } = useContext(DungeonContext);
     const startIndex = (page - 1) * dungeonPp;
     let shownDungeons = [];
@@ -32,7 +32,7 @@ const DungeonPage = ({ page, dungeonPp}) => {
                 return( 
                 <div 
                 key={index} id={`dungeon${dungeon[0]}`} className="h-full w-full">
-                    <DungeonCard dungeon={dungeon} page={page}/>
+                    <DungeonCard dungeon={dungeon} page={page} handleRemoveDungeon={handleRemoveDungeon}/>
                 </div>
                 )
             })}

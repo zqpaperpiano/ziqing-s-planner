@@ -21,6 +21,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
                                                     dungeonDescription: '',
                                                     dungeonCheckpoints: checkpointList,
                                                     completionPercentage: 0,
+                                                    dungeonCompleted: false
                                                 }
                                             });
 

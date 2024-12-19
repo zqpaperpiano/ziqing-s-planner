@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 import './DungeonCard.css';
 import { useNavigate } from "react-router";
 
-const DungeonCard = ({dungeon, page}) => {
+const DungeonCard = ({dungeon, page, handleRemoveDungeon}) => {
     const [selected, setSelected] = useState(false);
     const navigate = useNavigate();
 
@@ -61,6 +61,7 @@ const DungeonCard = ({dungeon, page}) => {
                                 fontFamily: 'silkscreen'
                             }}>Details</Button>
                         <Button 
+                            onClick={() => {handleRemoveDungeon(dungeon[0])}}
                             variant="text"
                             size="small"
                             sx={{
