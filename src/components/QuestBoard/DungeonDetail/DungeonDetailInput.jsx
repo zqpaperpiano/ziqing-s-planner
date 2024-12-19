@@ -9,21 +9,26 @@ import Background from '../../../images/hip-square.webp';
 
 const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dungeonID }) => {
 
-    const [checkpointList, setCheckpointList] = useState([]);
+    const [checkpointList, setCheckpointList] = useState([
+        {"C1": {
+            "checkpointName": "Checkpoint 1",
+            "completion": false
+        }}
+    ]);
     const [dungeonDetails, setDungeonDetails] = useState({
                                                 [dungeonID]: {
                                                     dungeonName: '',
                                                     dungeonDescription: '',
-                                                    dungeonCheckpoints: [],
+                                                    dungeonCheckpoints: checkpointList,
                                                     completionPercentage: 0,
                                                 }
                                             });
 
-    
+
     //when there is a change in the checkpoint list, change quest details as well
     useEffect(() => {
         const completedCount = checkpointList.reduce((count, checkpoint) => {
-            const value = Object.values(checkpoint)[0];
+            const value = Object.values(checkpoint)[0].completion;
             if(value){
                 return count + 1;
             }   
@@ -31,12 +36,10 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
         }, 0);
         
         let len = checkpointList.length;
-        let completionPercentage = (completedCount / len).toFixed(2);
+        let completionPercentage = (completedCount / len).toFixed(4);
         if(isNaN(completionPercentage)){
             completionPercentage = 0;
         }
-
-        // console.log('hello: ', completionPercentage);
 
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, 
@@ -47,13 +50,11 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
             }
         }))
     }, [checkpointList]);
-    
-    //initializes a new checkpoint object:false into the checkpoint list
-    const handleAddCheckpoints = () => {
-        const arrLen = checkpointList.length;
-        const checkpoint = "Checkpoint " + (arrLen + 1);
-        setCheckpointList((prevList) => [...prevList, { [checkpoint]: false }])
+
+    const checkpointListSubmimssion = (newList) => {
+        setCheckpointList(newList);
     }
+    
 
     //takes care of all other aspects when quest details are changed
     const handleDungeonDetailsChange = (e, parameterName) => {
@@ -66,24 +67,8 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
         }))
     }
 
-    //changes name of the checkpoint
-    const handleCheckpointNameChange = (value, index) => {
-        setCheckpointList((prevList) => {
-            const val = Object.values(checkpointList[index]);
-            const newCheckpointList = prevList.map((checkpoint, i) => {
-                // console.log(i);
-                if (i===index){
-                    return {[value]: [val]};
-                }
-                return checkpoint;
-            });
-            // console.log(newCheckpointList);
-            return newCheckpointList;
-        });
-    }
 
     const handlePostQuest = () => {
-        console.log(dungeonDetails[dungeonID].dungeonName);
         const curr = dungeonDetails[dungeonID];
 
         // do necessary verification of all inputs first
@@ -99,24 +84,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
         }
     }
 
-    const handleCompleteCheckpoints = (i, checked) => {
-
-        checkpointList.map((checkpoint) => {
-            let arr = Object.entries(checkpoint);
-        })
-
-        setCheckpointList((prevList) => {
-            const newList = prevList.map((checkpoint, index) => {
-                if(index === i){
-                    let arr = Object.keys(checkpoint);
-                    let temp = {[arr] : checked}
-                    return temp;
-                }
-                return checkpoint;
-            })
-            return newList;
-        })
-    }
 
     const notifyEmptyName = () => toast.error("Please fill in a dungeon name!");
     const notifyEmptyDescription = () => toast.error("Please fill in a description!");
@@ -125,7 +92,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
     // can just set number of checkpoints and it automatically creates``
 
     return(
-        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
             <div className="relative w-3/4 h-5/6 flex items-center justify-center">
                 <div className="absolute inset-0">
                     <img src={Background} className="h-full w-full object-cover z-0" />
@@ -188,10 +155,10 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
                         <div className="h-1/3 flex flex-col items-center mt-2 w-full">
                             <div className="flex justify-center items-center">
                                 <p className="text-xl">Checkpoints </p>
-                                <Button onClick={() => {handleAddCheckpoints()}} size="small"><Plus /> Add Checkpoints</Button>
+                               
                             </div>
                             <div className="flex flex-col justify-center items-center w-full">
-                                <Checkpoints checkpoints={checkpointList} handleCheckpointChange={handleCheckpointNameChange} handleCheckboxChange={handleCompleteCheckpoints}/>  
+                                <Checkpoints checkpoints={checkpointList} handleSubmit={checkpointListSubmimssion}/>  
                             </div>  
                             <Button 
                             sx={{

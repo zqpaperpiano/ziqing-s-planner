@@ -16,6 +16,7 @@ const DungeonBoard = () => {
     const [nextDungeonID, setNextDungeonID] = useState(dungeonList.length);
     const [maxPages, setMaxPages] = useState(1);
     const [dungeonPp, setDungeonPp] = useState(3);
+    const {currPage} = useParams();
 
     const navigate = useNavigate();
 

@@ -13,7 +13,7 @@ const DynamicInputBox = ({ placeholderText, handleChange, index }) => {
     }, []);
 
     const handleInputChange = (e) => {
-
+        
         if(e.target.value !== ""){
             const newWidth = Math.min(
                 inputRef.current.scrollWidth + 2,

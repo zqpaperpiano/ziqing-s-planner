@@ -32,7 +32,7 @@ const DungeonPage = ({ page, dungeonPp}) => {
                 return( 
                 <div 
                 key={index} id={`dungeon${dungeon[0]}`} className="h-full w-full">
-                    <DungeonCard dungeon={dungeon}/>
+                    <DungeonCard dungeon={dungeon} page={page}/>
                 </div>
                 )
             })}
