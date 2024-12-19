@@ -18,6 +18,7 @@ import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 import { EventProvider } from "./components/WarRoom/components/EventContext";
 import Explore from "./components/Explore/Explore";
 import DungeonDetailCard from "./components/QuestBoard/DungeonDetail/DungeonDetailCard";
+import { ShopProvider } from "./components/Shop/shopComponents/ShopContext";
 
 const LandingPage = () => {
     const defPlayer = {
@@ -60,6 +61,7 @@ const LandingPage = () => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DungeonProvider>
                             <EventProvider>
+                            <ShopProvider>
                                 <Routes>
                                     <Route path="/" element={<Overview />} />
                                     <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
@@ -70,7 +72,8 @@ const LandingPage = () => {
                                     <Route path="/warRoom" element={<WarRoom />} />
                                     <Route path="/logIn" element={<LogInSignUp />} />
                                     <Route path="/explore" element={<Explore />} />
-                                </Routes>   
+                                </Routes>     
+                            </ShopProvider>  
                             </EventProvider>
                             </DungeonProvider>
                         </LocalizationProvider>

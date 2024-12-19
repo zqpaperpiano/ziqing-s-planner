@@ -49,6 +49,7 @@ module.exports = {
       },
       colors:{
         bgPink: '#fdebf1',
+        midPink: '#fbd4e1',
         darkPink: '#F8BDD1',
         turqoiseGreen: '#BDF8E4',
         deepPink: '#D48BA3',

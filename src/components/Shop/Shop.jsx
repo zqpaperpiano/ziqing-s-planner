@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import Coin from '../../images/Coin.png'
-import ShopCard from "./shopComponents/ShopCard";
-import FoodIcon from '../../images/FoodIcon.png';
-import DrinkIcon from '../../images/DrinkIcon.png';
-import TransportIcon from '../../images/TransportIcon.png';
-import BasketIcon from '../../images/BasketIcon.png';
-import ShoppingIcon from '../../images/ShoppingIcon.png';
-import SuppliesIcon from '../../images/SuppliesIcon.png';
-import UtilityIcon from '../../images/UtilityIcon.png';
-import EntertainmentIcon from '../../images/EntertainmentIcon.png';
-import { Button } from "@mui/material";
+import ShopCategoriesTab from "./shopComponents/ShopCategoriesTab";
+import PurchaseLogTab from "./shopComponents/PurchaseLogTab";
+
 
 const Shop = () => {
     const [shoppingLog, setShoppingLog] = useState([]);
+    const [selectedTab, setSelectedTab] = useState('shopCat')
 
     const addToShoppingLog = (itemName, price) => {
         const newItem = {[itemName]: price}
         setShoppingLog(prev => ([
             ...prev, newItem
         ]));
+    }
+
+    const onSelectTab = (newTab) => {
+        setSelectedTab(newTab);
     }
 
     return(
@@ -29,15 +27,13 @@ const Shop = () => {
                     <p className="font-tiny5 text-2xl">1000</p>
                 </div>
             </div>
-            <div className="w-full flex-1 grid grid-cols-4 grid-rows-2">
-                <ShopCard categoryName={"Food"} itemIcon={FoodIcon} purchaseItem={addToShoppingLog}/>
-                <ShopCard categoryName={"Drinks"} itemIcon={DrinkIcon} purchaseItem={addToShoppingLog} />
-                <ShopCard categoryName={"Transport"} itemIcon={TransportIcon} purchaseItem={addToShoppingLog} />
-                <ShopCard categoryName={"Groceries"} itemIcon={BasketIcon} purchaseItem={addToShoppingLog} />
-                <ShopCard categoryName={"Shopping"} itemIcon={ShoppingIcon} purchaseItem={addToShoppingLog} />
-                <ShopCard categoryName={"Supplies"} itemIcon={SuppliesIcon} purchaseItem={addToShoppingLog} />
-                <ShopCard categoryName={"Bills"} itemIcon={UtilityIcon} purchaseItem={addToShoppingLog} />
-                <ShopCard categoryName={"Entertainment"} itemIcon={EntertainmentIcon} purchaseItem={addToShoppingLog} />
+            <div className="relative w-full flex-1">
+                <div className={`absolute h-full w-full ${selectedTab === 'shopCat' ? 'z-50' : 'z-20'}`}>
+                    <ShopCategoriesTab onSelectTab={onSelectTab} addToShoppingLog={addToShoppingLog} tabColor={selectedTab === 'shopCat' ? 'bg-darkPink' : 'bg-midPink'} />
+                </div>
+                <div className={`absolute h-full w-full ${selectedTab === 'purchaseLog' ? 'z-50' : 'z-20'}`}>
+                    <PurchaseLogTab onSelectTab={onSelectTab} tabColor={selectedTab === 'purchaseLog' ? 'bg-darkPink' : 'bg-midPink'}/>
+                </div>
             </div>
         </div>
     );

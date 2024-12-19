@@ -46,7 +46,7 @@ const ShopCard = ({categoryName, itemIcon, purchaseItem}) => {
                             <div className="absolute top-4 h-[100px] w-[100px]">
                                 <img src={itemIcon} className="h-full w-full object-fit" />
                             </div>
-                            <p className="absolute bottom-8 font-silkscreen text-2xl text-center ">{categoryName}</p>
+                            <p className="absolute bottom-8 font-silkscreen text-xl text-center ">{categoryName}</p>
                         </div>
                     </div>
 
