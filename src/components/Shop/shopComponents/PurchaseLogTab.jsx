@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { ShopContext } from "./ShopContext";
+import BreakdownChart from "./PurchaseLogComponents/BreakdownChart";
 
 const PurchaseLogTab = ({ tabColor, onSelectTab }) => {
+    const { purchaseHistory } = useContext(ShopContext);
+
+    useEffect(() => {
+        // console.log(purchaseHistory);
+    })
+
     return(
         <div className="relative h-full w-full rounded-lg bg-darkPink">
             <div 
             onClick={() => {onSelectTab('purchaseLog')}}
-            className={`absolute -top-7 left-36 rounded-lg w-40 h-full ${tabColor} hover:cursor-pointer z-0`}>
+            className={`absolute -top-7 left-40 rounded-lg w-40 h-full ${tabColor} hover:cursor-pointer z-0`}>
                 <p className="font-silkscreen text-sm text-center pointer-event-none">Log</p>
             </div>
             <div className="absolute h-full w-1/2 rounded-lg flex flex-col items-center justify-center z-50">
@@ -17,6 +25,7 @@ const PurchaseLogTab = ({ tabColor, onSelectTab }) => {
                     <p className="hover:cursor-pointer">All time</p>
                 </div>
                 <div className="h-2/3 w-3/4 border border-black">
+                    <BreakdownChart />
                 </div>
 
             </div>
