@@ -17,6 +17,8 @@ import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { EventProvider } from "./components/WarRoom/components/EventContext";
 import Explore from "./components/Explore/Explore";
+import DungeonDetailCard from "./components/QuestBoard/DungeonDetail/DungeonDetailCard";
+import { ShopProvider } from "./components/Shop/shopComponents/ShopContext";
 
 const LandingPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -46,24 +48,29 @@ const LandingPage = () => {
                             <HamburgerMenu />
                         </div>
 
-                        <div className="md:h-screen h-93vh w-85vw bg-bgPink overflow-hidden">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <div className="md:h-screen h-93vh w-85vw bg-bgPink overflow-hidden">
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DungeonProvider>
+                            <EventProvider>
+                            <ShopProvider>
                                 <Routes>
-                                    <Route element={<ProtectedRoute />} >
-                                        <Route path="/" element={<Overview />} />
-                                        <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
-                                        <Route path="/inn" element={<Inn />} />
-                                        <Route path="/newPlayer" element={<NewPlayerSettings />}/>
-                                        <Route path="/shop/" element={<Shop />} />
-                                        <Route path="/warRoom" element={<WarRoom />} />
-                                    </Route>
-                                    
-                                    <Route path="/signIn" element={<LogInSignUp />} />
-                                </Routes>   
-                            </LocalizationProvider>
-                        </div>
+                                    <Route path="/" element={<Overview />} />
+                                    <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
+                                    <Route path="/dungeon-board/:page-number/dungeon/:dungeonID" element={<DungeonDetailCard />} />
+                                    <Route path="/inn" element={<Inn />} />
+                                    <Route path="/newPlayer/" element={<NewPlayerSettings />}/>
+                                    <Route path="/shop/" element={<Shop />} />
+                                    <Route path="/warRoom" element={<WarRoom />} />
+                                    <Route path="/logIn" element={<LogInSignUp />} />
+                                    <Route path="/explore" element={<Explore />} />
+                                </Routes>     
+                            </ShopProvider>  
+                            </EventProvider>
+                            </DungeonProvider>
+                        </LocalizationProvider>
                     </div>
-                </Router>
+                </div>
+            </Router>
             </DungeonProvider>
             </AuthProvider>
             </EventProvider>

@@ -20,10 +20,12 @@ module.exports = {
         '60p': '60%',
         '15p': '15%',
         '80p': '80%',
+        '95p': '95%',
       },
       width:{
         '85vw': '85vw',
         '95p': '95%',
+        '2.5p': '2.5%',
         '85p' : '85%',
         '30p' : '30%',
         '10p':'10%',
@@ -49,6 +51,7 @@ module.exports = {
       },
       colors:{
         bgPink: '#fdebf1',
+        midPink: '#fbd4e1',
         darkPink: '#F8BDD1',
         turqoiseGreen: '#BDF8E4',
         deepPink: '#D48BA3',
