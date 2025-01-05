@@ -33,6 +33,12 @@ const DungeonBoard = () => {
         window.addEventListener("resize", updateDungeonPp);
     })
 
+    useEffect(() => {
+        const numDungeons = dungeonList.length;
+        setTotalDungeons(numDungeons)
+    }, [dungeonList])
+
+
     // useEffect(() => {
     //     console.log(dungeonList)
     // }, [dungeonList])
@@ -62,12 +68,13 @@ const DungeonBoard = () => {
             [keys]: temp
         })
         )
-        setTotalDungeons((prevVal) => prevVal + 1);
     }
 
-    //when a quest is completed or deleted
-    const handleDecreaseDungeons = () => {
-        setTotalDungeons((prevVal) => Math.max(0, prevVal - 1))
+    const handleRemoveDungeons = (dungeonID) => {
+       setDungeonList((prevList) => {
+        const { [dungeonID]: _ , ...newData} = prevList;
+        return newData;
+       })
     }
 
     const handleOnClickAddDungeons = () => {
@@ -76,19 +83,6 @@ const DungeonBoard = () => {
 
     const handleExitAddDungeon = () => {
         setOnAddDungeon(false);
-    }
-
-    const handleCompletedCheckpoint = (obj, i) => {
-        setDungeonList((prevList) => {
-            const newList = prevList.map((checkpoint, index) => {
-                if(index === i){
-                    return obj;
-                }
-                return checkpoint;
-            })
-
-            return newList;
-        })
     }
 
     const handleClickNext = () => {
@@ -130,7 +124,7 @@ const DungeonBoard = () => {
                     onClick={handleOnClickAddDungeons}>Post a Dungeon</Button>
                 </div>
                 <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
-                    <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp}/>
+                    <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleRemoveDungeons}/>
 
                 </div>
                 <div className="h-5p w-full mb-0.5">

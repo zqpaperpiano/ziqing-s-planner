@@ -16,10 +16,6 @@ const ToDoList = () => {
         }
     }
 
-    useEffect(() => {
-        console.log('listitems: ', listItems);
-    }, [listItems]);
-
     const onChangeChecklistName = (name, key) => {
         let temp = listItems;
         let newTemp = temp.map((prev) => {
