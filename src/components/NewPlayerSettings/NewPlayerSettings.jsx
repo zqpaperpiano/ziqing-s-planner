@@ -7,6 +7,8 @@ import PageFour from "./Pages/PageFour";
 import PageFive from "./Pages/PageFive";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../config/authContext";
+import config from '../../config/config.json';
+import { auth } from "../../config/firebase";
 
 
 const NewPlayerSettings = () => {
@@ -17,17 +19,49 @@ const NewPlayerSettings = () => {
     const [hasSalary, setHasSalary] = useState(false);
     const [salaryFrequency, setSalaryFrequency] = useState(null);
     const { player } = useContext(AuthContext);
-    const [displayName, setDisplayName] = useState("");
-
-    useEffect(() => {
-        setDisplayName(player.name);
-    }, [player])
+    const [displayName, setDisplayName] = useState(player.displayName);
 
     useEffect(() => {
         if(schedule && schedule.length >0){
             setHasSchedule(true);
         }
     }, [schedule]);
+
+    useEffect(() => {
+        console.log(player);
+    })
+
+    useEffect(() => {
+        if(salary > 0 && salaryFrequency){
+            setHasSalary(true);
+        }
+    }, [salary, salaryFrequency])
+
+    const handleSubmitPreferences = () => {
+        let preferences = {
+            preferences: {
+                hasSchedule: hasSchedule,
+                schedule: schedule,
+                hasSalary: hasSalary,
+                salary: salary,
+                salaryFrequency: salaryFrequency
+            }
+        }
+
+        const userToken = auth.currentUser.getIdToken();
+        const uid = auth.currentUser.uid;
+
+        // fetch(`${config.development.apiURL}users/newUserPreferences`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Authorization': `Bearer ${userToken}`
+        //     },
+        //     body: JSON.stringify({
+
+        //     })
+        // })
+    }
 
     const handleSetSchedule = (schedule) => {
         setSchedule(schedule);
@@ -85,7 +119,7 @@ const NewPlayerSettings = () => {
                         currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}
                         setHasSalary={handleSetHasSalary} setSalary={handleSetSalary} setSalaryFrequency={handleSetSalaryFrequency}
                         />
-                    <PageFive handlePrevPage={handlePrevPage} handleNextPage={handleExitNPS}/>
+                    <PageFive handlePrevPage={handlePrevPage} handleNextPage={handleSubmitPreferences}/>
                 </div>
 
                     

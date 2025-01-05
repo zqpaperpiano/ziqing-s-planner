@@ -5,11 +5,12 @@ import Google from '../../../../images/google-plus.png';
 import './LogIn.css';
 import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../../../../config/authContext";
-import { signUpWithGPopUp } from "../../../../config/firebase";
+import { auth, signUpWithGPopUp } from "../../../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import config from '../../../../config/config.json'
+import { browserLocalPersistence, setPersistence, signInWithEmailAndPassword } from "firebase/auth";
 
-const LogIn = ({ logGUser }) => {
+const LogIn = ({ logGUser, emptyFields, failedLogin, invalidEmail, tooManylogins }) => {
     const [playerEmail, setPlayerEmail] = useState("");
     const [playerPassword, setPlayerPassword] = useState(""); 
     const { signIn, isAuthenticated } = useContext(AuthContext);
@@ -28,84 +29,64 @@ const LogIn = ({ logGUser }) => {
         return emailPattern.test(email);
     }
 
-    const loginGoogle = async() => {
-        const resp = await signUpWithGPopUp();
-        const uid = resp.user.uid
-        const email = resp.user.email;
-        const displayName = resp.user.displayName;
-        const respID = await resp.user.getIdToken();
-        getUserInfo(respID, uid, email, displayName);
-    }
+    const emailUserLogin = async () => {
+        try{
 
-    const getUserInfo = (token, uid, email, displayName) => {
-        fetch(`${config.development}users/getUser`, {
+            if(playerPassword.length <= 0 || playerEmail.length <= 0){
+                emptyFields();
+            }else if(!validateEmail(playerEmail)){
+                invalidEmail();
+            }else{
+                await setPersistence(auth, browserLocalPersistence);
+
+                const resp = await signInWithEmailAndPassword(auth, playerEmail, playerPassword);
+                const respID = await resp.user.getIdToken();
+                const uid = resp.user.uid;
+
+                verifyUserLogin(respID, uid);
+            }
+
+        }catch(err){
+            if(err.code === 'auth/invalid-credential'){
+                failedLogin();
+            }else if(err.code === 'auth/too-many-requests'){
+                tooManylogins();
+            }else{
+                console.log(err);
+            }
+            
+        }
+    }
+    
+    const verifyUserLogin = (token, uid) => {
+        fetch(`${config.development.apiURL}users/log-in`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                uid: uid,
-                email: email,
-                displayName: displayName
+                uid: uid
             })
         })
         .then((res) => {
             return res.json();
         })
         .then((data) => {
-            console.log(data);
             signIn(data);
-            return navigate('/')
-        })
-        .catch((err) => {
-            console.log('an error has occured: ', err);
-        })
-    }
-    
-    const onClickSubmit = () => {
-        if(!validateEmail(playerEmail)){
-            toast.error("Please enter a valid email!");
-        }else if(playerPassword.length === 0){
-            toast.error("Please enter a password");
-        }else{
-            try{
-                fetch('http://localhost:3001/users/log-in', {
-                    method: 'post',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        email: playerEmail,
-                        password: playerPassword
-                    })
-                })
-                .then(resp => {
-                    if(resp.status === 400 || resp.status === 404){
-                        const err = new Error('Password and emails do not match!');
-                        err.statusCode = 400;
-                        throw err;
-                    }
-                    return resp.json();
-                })
-                .then(data => {
-                    console.log('data: ', data);
-                    signIn(data);
-                    return data;
-                })
-                .catch(err => {
-                    if(err.statusCode === 400){
-                        toast.error("Password and emails do not match");
-                    }
-                })
-            }catch(err){
-                console.log('error:', err);
+            setPlayerEmail("");
+            setPlayerPassword('');
+            if(data.completedCalibration){
+                return navigate('/');
             }
-        }
+            return navigate('/newPlayer');
+        })
     }
 
 
     return(
-        <div className="absolute h-full w-full flex left-0 rounded">
-            <div className="h-full w-full flex flex-col items-center justify-center gap-4">
+        <div className="absolute h-full w-full flex left-0 rounded">       
+            <div className="h-full w-full flex flex-col items-center justify-center gap-4">  
                 <div className="w-fit">
                     <div className="w-full flex flex-col header font-bold text-center p-2">
                         <h1>Welcome Back </h1>
@@ -159,7 +140,7 @@ const LogIn = ({ logGUser }) => {
                         </div>
                         <div className="flex items-center justify-center mt-4">
                             <Button
-                                onClick={() => {onClickSubmit()}}
+                                onClick={emailUserLogin}
                                 className="hover:cursor-pointer"
                                 sx={{color: 'deepPink', borderColor: 'deepPink'}}
                                 variant="outlined"

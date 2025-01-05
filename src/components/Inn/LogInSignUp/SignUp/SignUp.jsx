@@ -9,7 +9,7 @@ import config from '../../../../config/config.json';
 import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebase";
 import { ToastContainer, toast } from "react-toastify";
 
-const SignUp  = ({logGUser}) => {
+const SignUp  = ({logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPassword}) => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
@@ -18,7 +18,7 @@ const SignUp  = ({logGUser}) => {
     const navigate = useNavigate();
 
     const verifyUserToken = (token, email, name) => {
-        fetch(`${config.development}users/new-user`, {
+        fetch(`${config.development.apiURL}users/new-user`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
@@ -45,7 +45,6 @@ const SignUp  = ({logGUser}) => {
     }
 
 
-
     const logEmailUser = async () => {
         try{
             await setPersistence(auth, browserLocalPersistence);
@@ -55,7 +54,7 @@ const SignUp  = ({logGUser}) => {
             verifyUserToken(respID, userEmail, userName);
         }catch(err){
             if(err.code === "auth/email-already-in-use"){
-                console.log('Email already exists!');
+                repeatedEmail();
             }else{
                 console.log(err);
             }
@@ -80,18 +79,14 @@ const SignUp  = ({logGUser}) => {
     }
 
     const handleSubmitButton = () => {
-        if(userName !== "" && userEmail !== "" && userPassword !== ""){
-            if(!validateEmail(userEmail)){
-                toast.error('Please key in a valid email');
-            }else if(userPassword.length >= 6){
-                //post to database
-                //upon successful posting
-
-                logEmailUser(userEmail, userPassword);
-            
-            }else{
-                toast.error('Your password needs a minimum of 6 letters')
-            }
+        if(userName === "" || userEmail === "" || userPassword === ""){
+            emptyFields();
+        }else if(!validateEmail(userEmail)){
+            invalidEmail();
+        }else if(userPassword.length < 6){
+            invalidPassword();
+        }else{
+            logEmailUser(userEmail, userPassword);
         }
     }
 

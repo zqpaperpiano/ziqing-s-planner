@@ -7,7 +7,7 @@ import { AuthContext } from "../../../config/authContext";
 
 const PlayerDetails = () => {
     const [selectedPage, setSelectedPage] = useState("Profile Preferences");
-    const {signOut, player} = useContext(AuthContext);
+    const {logOut, player} = useContext(AuthContext);
 
     const handleClickedProfilePreferences = () => {
         setSelectedPage("Profile Preferences");
@@ -20,10 +20,6 @@ const PlayerDetails = () => {
     const handleClickedAccountSettings = () => {
         setSelectedPage("Account Settings");
     }
-
-    useEffect(() => {
-        console.log(player);
-    }, [])
 
 
 
@@ -51,7 +47,7 @@ const PlayerDetails = () => {
                     </div>
                     <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 text-red-500 hover:cursor-pointer hover:bg-turqoiseGreen
                         `}
-                        onClick={signOut}
+                        onClick={logOut}
                         >
                         <p className="text-xs bs:text-m">Log Out</p>
                     </div>

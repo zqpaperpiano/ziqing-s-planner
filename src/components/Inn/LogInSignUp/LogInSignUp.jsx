@@ -4,9 +4,11 @@ import { Button } from "@mui/material";
 import SignUp from "./SignUp/SignUp";
 import LogIn from "./LogIn/LogIn";
 import { AuthContext } from "../../../config/authContext";
-import { auth, signUpWEmail, signUpWithGPopUp } from "../../../config/firebase";
+import { auth, signUpWithGPopUp } from "../../../config/firebase";
+import { setPersistence, browserLocalPersistence } from "firebase/auth";
 import { redirect, useNavigate } from "react-router";
 import config from '../../../config/config.json';
+import { ToastContainer, toast } from "react-toastify";
 
 const LogInSignUp = () => {
     const [onSignup, toggleOnSignUp] = useState(false);
@@ -21,16 +23,24 @@ const LogInSignUp = () => {
         }
     }
 
+    useEffect(() => {
+        if(player){
+            navigate('/');
+        }
+    })
+
    
     const logGUser = async() => {
         try{
+            await setPersistence(auth, browserLocalPersistence);
+
             const resp = await signUpWithGPopUp();
             const displayName = resp.user.displayName;
             const email = resp.user.email;
             const uid = resp.user.uid;
             const respID = await resp.user.getIdToken();
 
-            fetch(`${config.development}users/googleUser`, {
+            fetch(`${config.development.apiURL}users/googleUser`, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
@@ -46,7 +56,6 @@ const LogInSignUp = () => {
                 return res.json();
             })
             .then((data) => {
-                console.log(data);
                 signIn(data);
                 if(data.completedCalibration){
                     return navigate('/');
@@ -61,21 +70,47 @@ const LogInSignUp = () => {
         }
     }
 
+    const emptyFields = () => {
+        console.log('herre');
+        toast.error('Please ensure all fields have been filled in!');
+    }
+
+    const failedLogIn = () => {
+        toast.error('Email and password do not match. Please try again.');
+    }
+
+    const tooManyLogins = () => {
+        toast.warning('You have attempted to log in too many times. Please try again later');
+    }
+
+    const invalidEmail = () => {
+        toast.error('Please enter a valid email.');
+    }
+
+    const repeatedEmail = () => {
+        toast.error('There is an account associated with this email. Please log in instead.');
+    }
+
+    const invalidPassword = () => {
+        toast.error('Please have at least 6 characters for your password');
+    }
+
 
     return(
         <div className="relative h-full w-full">
+            <ToastContainer />
             <div id="LogInForm"
                 className={`h-full bg-bgPink  w-50p z-40 absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
                     ${onSignup ? 'translate-x-full z-0 opacity-0 pointer-event-none' : null}`}
             >
-                <LogIn logGUser={logGUser}/>
+                <LogIn logGUser={logGUser} failedLogin={failedLogIn} tooManylogins={tooManyLogins} emptyFields={emptyFields} invalidEmail={invalidEmail}/>
             </div>
 
             <div id="SignUpForm"
                 className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 bf:transition-transform duration-500
                     ${onSignup  ? "translate-x-full opacity-100 z-50" : "opacity-0 z-10"}`}
             >
-                <SignUp logGUser={logGUser}/>
+                <SignUp logGUser={logGUser} invalidEmail={invalidEmail} invalidPassword={invalidPassword} repeatedEmail={repeatedEmail} emptyFields={emptyFields}/>
             </div>
 
             <div id="overlay-container"

@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Button, TextField } from "@mui/material";
 import { ReactTyped } from "react-typed";
 import BackArrow from "../../BackArrow/BackArrow";
+import { AuthContext } from "../../../config/authContext";
 
 
 const PageTwo = ({currPage, handleNextPage, displayName, changeDisplayName}) => {
     const [changeName, setChangeName] = useState(false);
     const [newName, setNewName] = useState("");
+    const { player } = useContext(AuthContext);
+
+    useEffect(() => {
+        console.log(player);
+    })
 
     const toggleChangeName = () => {
         if(changeName){
