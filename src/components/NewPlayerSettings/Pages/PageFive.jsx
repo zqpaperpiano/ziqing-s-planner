@@ -2,7 +2,7 @@ import React from "react";
 import { ReactTyped } from "react-typed";
 import BackArrow from "../../BackArrow/BackArrow";
 
-const PageFive = ({handlePrevPage, handleNextPage}) => {
+const PageFive = ({handlePrevPage, handleNextPage, displayName}) => {
     return(
         <div className="relative h-full w-1/5 backgrounds font-silkscreen text-2xl flex flex-col items-center justify-center whitespace-pre-line">
             <BackArrow handleClickedBack={handlePrevPage}/>
@@ -10,7 +10,7 @@ const PageFive = ({handlePrevPage, handleNextPage}) => {
                 className="text-center"
                 backSpeed={0}
                 typeSpeed={25}
-                strings={["Thank you name, for your time.\n All your information has been recorded.\n Best of luck in your conquests. "]}
+                strings={[`Thank you ${displayName}, for your time.\n All your information has been recorded.\n Best of luck in your conquests. `]}
             />
             <div 
             onClick={handleNextPage}

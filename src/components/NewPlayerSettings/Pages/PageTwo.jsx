@@ -5,14 +5,10 @@ import BackArrow from "../../BackArrow/BackArrow";
 import { AuthContext } from "../../../config/authContext";
 
 
-const PageTwo = ({currPage, handleNextPage, displayName, changeDisplayName}) => {
+const PageTwo = ({currPage, handleNextPage, changeDisplayName, displayName}) => {
     const [changeName, setChangeName] = useState(false);
-    const [newName, setNewName] = useState("");
     const { player } = useContext(AuthContext);
-
-    useEffect(() => {
-        console.log(player);
-    })
+    const [editName, setEditName] = useState(displayName);
 
     const toggleChangeName = () => {
         if(changeName){
@@ -23,12 +19,12 @@ const PageTwo = ({currPage, handleNextPage, displayName, changeDisplayName}) => 
     }
 
     const onChangeName = (e) => {
-        setNewName(e.target.value);
+        setEditName(e.target.value);
     }
 
     const onClickSubmit = () => {
-        if(newName !== ""){
-            changeDisplayName(newName);
+        if(editName !== ""){
+            changeDisplayName(editName);
         }
         handleNextPage();
     }

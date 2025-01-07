@@ -83,12 +83,12 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
                 {
                     currPage === 4 &&
                     <div className={`h-full w-full absolute flex flex-col justify-center items-center
-                    ${onSalary ? "opacity-0 z-10" : "opacity-1 z-50"}`}>
+                    ${onSalary && "opacity-0 pointer-events-none"}`}>
                         <BackArrow  handleClickedBack={handlePrevPage}/>
-
+                        
+                       
                         <div className="absolute text-center">
                             <ReactTyped
-                                
                                 backSpeed={0}
                                 typeSpeed={25}
                                 strings={[`

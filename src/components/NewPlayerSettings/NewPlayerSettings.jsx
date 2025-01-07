@@ -18,18 +18,8 @@ const NewPlayerSettings = () => {
     const [salary, setSalary] = useState(0);
     const [hasSalary, setHasSalary] = useState(false);
     const [salaryFrequency, setSalaryFrequency] = useState(null);
-    const { player } = useContext(AuthContext);
-    const [displayName, setDisplayName] = useState(player.displayName);
-
-    useEffect(() => {
-        if(schedule && schedule.length >0){
-            setHasSchedule(true);
-        }
-    }, [schedule]);
-
-    useEffect(() => {
-        console.log(player);
-    })
+    const { player, setPlayer } = useContext(AuthContext);
+    const [displayName, setDisplayName] = useState(player.name);
 
     useEffect(() => {
         if(salary > 0 && salaryFrequency){
@@ -37,34 +27,46 @@ const NewPlayerSettings = () => {
         }
     }, [salary, salaryFrequency])
 
+
     const handleSubmitPreferences = () => {
         let preferences = {
-            preferences: {
                 hasSchedule: hasSchedule,
                 schedule: schedule,
                 hasSalary: hasSalary,
                 salary: salary,
                 salaryFrequency: salaryFrequency
-            }
         }
 
         const userToken = auth.currentUser.getIdToken();
         const uid = auth.currentUser.uid;
 
-        // fetch(`${config.development.apiURL}users/newUserPreferences`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-type': 'application/json',
-        //         'Authorization': `Bearer ${userToken}`
-        //     },
-        //     body: JSON.stringify({
-
-        //     })
-        // })
+        fetch(`${config.development.apiURL}users/newUserPreferences`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${userToken}`
+            },
+            body: JSON.stringify({
+                'uid': uid,
+                'displayName': displayName,
+                'preferences': preferences
+            })
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            setPlayer(data);
+            navigate('/');
+        })
     }
 
     const handleSetSchedule = (schedule) => {
         setSchedule(schedule);
+    }
+
+    const handleHasSchedule = (bool) => {
+        setHasSchedule(bool);
     }
 
     const changeDisplayName = (newName) => {
@@ -97,10 +99,6 @@ const NewPlayerSettings = () => {
         setCurrPage((prevVal) => prevVal - 1);
     }
 
-    const handleExitNPS = () => {
-        navigate('/');
-    }
-
 
     return(
         <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items align">
@@ -114,12 +112,12 @@ const NewPlayerSettings = () => {
                     `}>
                     <PageOne handleNextPage={handleNextPage}/>
                     <PageTwo currPage={currPage} handleNextPage={handleNextPage} displayName={displayName} changeDisplayName={changeDisplayName}/>
-                    <PageThree currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} handleSetSchedule={handleSetSchedule}/>
+                    <PageThree currPage={currPage} handleNextPage={handleNextPage} displayName={displayName} handlePrevPage={handlePrevPage} handleSetSchedule={handleSetSchedule} handleHasSchedule={handleHasSchedule}/>
                     <PageFour 
                         currPage={currPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}
                         setHasSalary={handleSetHasSalary} setSalary={handleSetSalary} setSalaryFrequency={handleSetSalaryFrequency}
                         />
-                    <PageFive handlePrevPage={handlePrevPage} handleNextPage={handleSubmitPreferences}/>
+                    <PageFive handlePrevPage={handlePrevPage} handleNextPage={handleSubmitPreferences} displayName={displayName}/>
                 </div>
 
                     

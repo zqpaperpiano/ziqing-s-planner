@@ -8,11 +8,12 @@ import { auth, signUpWithGPopUp } from "../../../config/firebase";
 import { setPersistence, browserLocalPersistence } from "firebase/auth";
 import { redirect, useNavigate } from "react-router";
 import config from '../../../config/config.json';
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const LogInSignUp = () => {
     const [onSignup, toggleOnSignUp] = useState(false);
     const { signIn, player } = useContext(AuthContext);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const onToggleLogIn = () => {  
@@ -24,10 +25,10 @@ const LogInSignUp = () => {
     }
 
     useEffect(() => {
-        if(player){
+        if(player && !loading){
             navigate('/');
         }
-    })
+    }, [])
 
    
     const logGUser = async() => {
@@ -71,7 +72,6 @@ const LogInSignUp = () => {
     }
 
     const emptyFields = () => {
-        console.log('herre');
         toast.error('Please ensure all fields have been filled in!');
     }
 
@@ -95,6 +95,14 @@ const LogInSignUp = () => {
         toast.error('Please have at least 6 characters for your password');
     }
 
+    const successfulResetPassword = () => {
+        toast.success('A password reset email has been sent to your email if you have an account with us.');
+    }
+
+    const toggleLoading = (bool) => {
+        setLoading(bool);
+    }
+
 
     return(
         <div className="relative h-full w-full">
@@ -103,14 +111,14 @@ const LogInSignUp = () => {
                 className={`h-full bg-bgPink  w-50p z-40 absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
                     ${onSignup ? 'translate-x-full z-0 opacity-0 pointer-event-none' : null}`}
             >
-                <LogIn logGUser={logGUser} failedLogin={failedLogIn} tooManylogins={tooManyLogins} emptyFields={emptyFields} invalidEmail={invalidEmail}/>
+                <LogIn onSignUp={onSignup} logGUser={logGUser} failedLogin={failedLogIn} tooManylogins={tooManyLogins} successfulResetPassword={successfulResetPassword} emptyFields={emptyFields} invalidEmail={invalidEmail}/>
             </div>
 
             <div id="SignUpForm"
                 className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 bf:transition-transform duration-500
                     ${onSignup  ? "translate-x-full opacity-100 z-50" : "opacity-0 z-10"}`}
             >
-                <SignUp logGUser={logGUser} invalidEmail={invalidEmail} invalidPassword={invalidPassword} repeatedEmail={repeatedEmail} emptyFields={emptyFields}/>
+                <SignUp onSignUp={onSignup} logGUser={logGUser} invalidEmail={invalidEmail} invalidPassword={invalidPassword} repeatedEmail={repeatedEmail} emptyFields={emptyFields} setLoading={toggleLoading}/>
             </div>
 
             <div id="overlay-container"
@@ -145,7 +153,6 @@ const LogInSignUp = () => {
                             </div>
                         </div>
             </div>
-
         </div>
     );
 }

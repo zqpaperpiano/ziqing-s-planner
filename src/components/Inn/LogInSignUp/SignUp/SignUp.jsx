@@ -4,18 +4,33 @@ import { LockKeyhole, Mail, User } from 'lucide-react'
 import Google from '../../../../images/google-plus.png';
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../../../config/authContext";
-import { browserLocalPersistence, setPersistence } from "firebase/auth";
+import { browserLocalPersistence, deleteUser, setPersistence } from "firebase/auth";
 import config from '../../../../config/config.json';
 import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebase";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
-const SignUp  = ({logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPassword}) => {
+const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPassword, setLoading}) => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
     const { signIn } = useContext(AuthContext);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+            if (event.key === 'Enter' && onSignUp){
+                handleSubmitButton();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        }
+    }, [onSignUp, userName, userEmail, userPassword])
+
 
     const verifyUserToken = (token, email, name) => {
         fetch(`${config.development.apiURL}users/new-user`, {
@@ -29,10 +44,29 @@ const SignUp  = ({logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPas
                 name: name
             })
         })
-        .then((res) => {
+        .then(async (res) => {
+            if(res.status !== 201){
+                const errTxt = await res.text();
+
+                //rollback
+                if(auth.currentUser){
+                    
+                    await deleteUser(auth.currentUser)
+                    .then(() => {
+                        toast.error('An error has occured. Please try again or contact an administrator if the issue persists.');
+                    })
+
+                    .catch((err) => {console.log('Rollback met an issue: ', err)});
+
+                    
+                }
+
+                throw new Error(`Error ${res.status}`, errTxt);
+            }
             return res.json();
         })
         .then((data) => {
+            setLoading(true);
             signIn(data);
             setUserEmail("");
             setUserPassword("");
@@ -40,15 +74,15 @@ const SignUp  = ({logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPas
             return navigate('/newPlayer');
         })
         .catch((err) => {
-            console.log(err)
+            console.log('Failed: ',err)
         })
     }
 
-
+    //uid taken directly from user object in backend
     const logEmailUser = async () => {
         try{
             await setPersistence(auth, browserLocalPersistence);
-
+            setLoading(true);
             const resp = await signUpWEmail(userEmail, userPassword);
             const respID = await resp.user.getIdToken();
             verifyUserToken(respID, userEmail, userName);
@@ -80,6 +114,7 @@ const SignUp  = ({logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPas
 
     const handleSubmitButton = () => {
         if(userName === "" || userEmail === "" || userPassword === ""){
+            console.log('here in signup');
             emptyFields();
         }else if(!validateEmail(userEmail)){
             invalidEmail();
@@ -95,7 +130,6 @@ const SignUp  = ({logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPas
     return(
         <div className="absolute h-full w-full flex right-0 rounded">
             <div className="h-full w-full flex flex-col items-center justify-center">
-                <ToastContainer />
                 <div className="w-fit">
                     <h1 className="header font-bold text-center">Create Account</h1>
                     <div className="mt-2 h-10 w-full rounded-lg border border-black p-2 flex justify-between px-4 items-center hover:cursor-pointer hover:bg-sky-100">
@@ -162,7 +196,7 @@ const SignUp  = ({logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPas
                         </div>
                         <div className="flex items-center justify-center mt-4">
                             <Button
-                                onClick={logEmailUser}
+                                onClick={handleSubmitButton}
                                 className="hover:cursor-pointer"
                                 sx={{color: 'deepPink', borderColor: 'deepPink'}}
                                 variant="outlined"

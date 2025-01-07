@@ -18,6 +18,10 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     const tableHeight = newHeight || "80%";
 
     useEffect(() => {
+        console.log('selectedTimes: ', selectedTimes);
+    }, [selectedTimes])
+
+    useEffect(() => {
         window.addEventListener("mouseup", handleMouseUp);
         
         return(() => {
@@ -39,6 +43,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         setIsDragging(false);
     }
 
+    //adds time selected into array or removes it if previously selected
     const handleClickedTime = (e) => {
         const {id} = e.target;
         if(!selectedTimes.includes(id)){
@@ -82,12 +87,10 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     }
 
     const findBreaks = (schedArr) => {
-        const timeArr = schedArr.map(key => key.slice(3));
+        const timeArr = schedArr.map(key => key.slice(3)); //removes the day from the string
         const sortedArr = timeArr.sort((a, b) => a-b);
 
         let breaks = [sortedArr[0]];
-        console.log(breaks);
-
 
         for(let i = 0; i < sortedArr.length - 1; ++i){
             const curr = convertTimeToMin(sortedArr[i]);
@@ -106,6 +109,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                 }
             }
         }
+        breaks.push(sortedArr[sortedArr.length - 1]);
 
         return breaks;
     }
@@ -115,6 +119,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         const sched = [];
         if(filteredDay.length > 0){
             const breaks = findBreaks(filteredDay);
+            console.log('breaks: ', breaks);
             for(let i = 0; i < breaks.length; i = i + 2){
                 const newSet = {
                     "start": breaks[i],

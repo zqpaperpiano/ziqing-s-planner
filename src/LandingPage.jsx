@@ -53,17 +53,20 @@ const LandingPage = () => {
                             <DungeonProvider>
                             <EventProvider>
                             <ShopProvider>
-                                <Routes>
+                            <Routes>
+                                <Route path="/logIn" element={<LogInSignUp />} />
+
+                                <Route element={<ProtectedRoute />}>
                                     <Route path="/" element={<Overview />} />
                                     <Route path="/dungeon-board/:page-number" element={<DungeonBoard />} />  
                                     <Route path="/dungeon-board/:page-number/dungeon/:dungeonID" element={<DungeonDetailCard />} />
                                     <Route path="/inn" element={<Inn />} />
-                                    <Route path="/newPlayer/" element={<NewPlayerSettings />}/>
+                                    <Route path="/newPlayer" element={<NewPlayerSettings />}/>
                                     <Route path="/shop/" element={<Shop />} />
                                     <Route path="/warRoom" element={<WarRoom />} />
-                                    <Route path="/logIn" element={<LogInSignUp />} />
                                     <Route path="/explore" element={<Explore />} />
-                                </Routes>     
+                                </Route>
+                            </Routes>     
                             </ShopProvider>  
                             </EventProvider>
                             </DungeonProvider>

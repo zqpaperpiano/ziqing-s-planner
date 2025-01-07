@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { ReactTyped } from "react-typed";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './PageThree.css';
@@ -8,8 +8,9 @@ import SetClock from "../../SetClock/SetClock";
 import BackArrow from "../../BackArrow/BackArrow";
 import { TimerReset } from "lucide-react";
 import Scheduler from "../../Scheduler/Scheduler";
+import { AuthContext } from "../../../config/authContext";
 
-const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule }) => {
+const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule, displayName, handleHasSchedule }) => {
     const [selectedTimes, setSelectedTimes] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [isScheduling, setIsScheduling] = useState(false);
@@ -51,17 +52,23 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule
                         typeSpeed={25}
                         cursorChar="|"
                         strings={[
-                            `Nice to meet you, Name.\n Will you be having a regular routine of clearing dungeons?`
+                            `Nice to meet you, ${displayName}.\n Will you be having a regular routine of clearing dungeons?`
                         ]}
                     />
                     <div className="absolute bottom-12 h-1/3 flex flex-col w-2/3 bg-[#ffcdac] p-4 gap-4 border border-yellow-900 border-2 font-silkscreen text-xl">
                         <div 
-                        onClick={toggleScheduling}
+                        onClick={() => {
+                            handleHasSchedule(true);
+                            toggleScheduling();
+                        }}
                         className="h-1/2 w-full text-start flex items-center hover:border-2 hover:border hover:cursor-pointer hover:border-yellow-900 hover:border-b-2 hover:bg-[#ffebde]">
                             <p>Yes, I will allocate some time for this. </p> 
                         </div>
                         <div 
-                        onClick={handleNextPage}
+                        onClick={() => {
+                            handleHasSchedule(false);
+                            handleNextPage();
+                        }}
                         className="h-1/2 w-full text-start flex items-center hover:border-2 hover:border hover:cursor-pointer hover:border-yellow-900 hover:border-t-2  hover:bg-[#ffebde]">
                             <p>No, I will be dropping by at random times of the day. </p> 
                         </div>
