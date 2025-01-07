@@ -27,6 +27,12 @@ const NewPlayerSettings = () => {
         }
     }, [salary, salaryFrequency])
 
+    useEffect(() => {
+        if(player.completedCalibration){
+            navigate('/');
+        }
+    })
+
 
     const handleSubmitPreferences = () => {
         let preferences = {

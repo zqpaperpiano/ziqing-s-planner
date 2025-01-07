@@ -7,7 +7,7 @@ import { AuthContext } from "../../../config/authContext";
 
 const PlayerDetails = () => {
     const [selectedPage, setSelectedPage] = useState("Profile Preferences");
-    const {logOut, player} = useContext(AuthContext);
+    const {logOut} = useContext(AuthContext);
 
     const handleClickedProfilePreferences = () => {
         setSelectedPage("Profile Preferences");

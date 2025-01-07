@@ -5,7 +5,7 @@ import defPfp from '../../../../images/profile-pic.jpg';
 const ProfileOverview = ({player}) => { 
     const [selectedDisplay, setSelectedDisplay] = useState("Longest Dungeons");
     const pfp = player.pfp || defPfp;
-    const [displayName, setDisplayName] = useState(player.displayName);
+    const [displayName, setDisplayName] = useState(player.name);
     const [status, setStatus] = useState(player.status);
 
     const handleChangeDisplayName = (e) => {

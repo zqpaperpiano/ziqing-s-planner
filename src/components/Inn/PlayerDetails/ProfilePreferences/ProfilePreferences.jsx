@@ -7,7 +7,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditCat from "../EditPopUps/EditCat";
 import EditDetails from "../EditPopUps/EditDetails";
 import EditSchedule from "../EditPopUps/EditSchedule";
- 
+import { AuthContext } from "../../../../config/authContext";
 
 
 const ProfilePreferences = () => { 
@@ -16,6 +16,7 @@ const ProfilePreferences = () => {
     const [editSchedule, setEditSchedule] = useState(false);
     const [editDetails, setEditDetails] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const { player, setPlayer } = useContext(AuthContext);
 
     const toggleEditSchedule = () => {
         if(editSchedule){
@@ -52,6 +53,7 @@ const ProfilePreferences = () => {
             {editCategories && <EditCat onClose={toggleEditCategories} />}
             {editDetails && <EditDetails handleClose={toggleEditDetails}/>}
             {editSchedule && <EditSchedule onClose={toggleEditSchedule}/>}
+
             {/* pfp, displayName, status */} 
             <div className={`relative h-1/3 w-full ${editMode ? 'opacity-0 z-0 pointer-events-none': 'opacity-100 z-50'}`}>
                 <div className="h-full w-70p p-2 flex">
@@ -71,9 +73,9 @@ const ProfilePreferences = () => {
                         </div>
                     </div>
                     <div className="relative h-full w-full flex flex-col pl-2 justify-center">
-                        <p className="font-bold text-xl">Wabbit_Sushi</p>
+                        <p className="font-bold text-xl">{player.name}</p>
                         <p className="text-sm italic">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consectetur dui eu laoreet commodo.
+                            {player.status}
                         </p>
                     
                     </div>

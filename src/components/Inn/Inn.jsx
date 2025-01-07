@@ -7,7 +7,6 @@ const Inn = () => {
     return(
         <div className="relative h-full w-full">
             <PlayerDetails  />
-            {/* <p>Hello</p> */}
         </div>
     );
 }
