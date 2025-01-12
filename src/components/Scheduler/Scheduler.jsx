@@ -18,7 +18,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     const tableHeight = newHeight || "80%";
 
     useEffect(() => {
-        console.log('selectedTimes: ', selectedTimes);
+        console.log('selected times: ', selectedTimes);
     }, [selectedTimes])
 
     useEffect(() => {
@@ -129,6 +129,10 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             }
         }
 
+        if(sched.length === 0){
+            sched.push("Rest");
+        }
+
         return sched;
     }
 
@@ -175,7 +179,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                     {
                         hoursOfDay.map((hour, index) => {
                             return(
-                                <div className={`h-full w-full row-start-1 grid grid-rows-8 flex items-center select-none`}>
+                                <div key={index} className={`h-full w-full row-start-1 grid grid-rows-8 flex items-center select-none`}>
                                     <p>{hour}</p>
                                     {
                                         daysOfWeek.map((day) => {

@@ -19,7 +19,7 @@ const NewPlayerSettings = () => {
     const [hasSalary, setHasSalary] = useState(false);
     const [salaryFrequency, setSalaryFrequency] = useState(null);
     const { player, setPlayer } = useContext(AuthContext);
-    const [displayName, setDisplayName] = useState(player.name);
+    const [displayName, setDisplayName] = useState(null);
 
     useEffect(() => {
         if(salary > 0 && salaryFrequency){
@@ -28,10 +28,20 @@ const NewPlayerSettings = () => {
     }, [salary, salaryFrequency])
 
     useEffect(() => {
-        if(player.completedCalibration){
-            navigate('/');
-        }
+        setDisplayName(player.name);
     })
+
+    useEffect(() => {
+        console.log(player);
+        console.log(player.name);
+        console.log('displayName: ', displayName);
+    })
+
+        // useEffect(() => {
+        //     if(player.completedCalibration){
+        //         navigate('/');
+        //     }
+        // })
 
 
     const handleSubmitPreferences = () => {

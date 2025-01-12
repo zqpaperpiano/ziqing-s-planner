@@ -1,5 +1,5 @@
 import { Button, InputAdornment, InputLabel, Tab, Tabs, TextField } from "@mui/material"; 
-import React, { useContext, useState } from "react"; 
+import React, { useContext, useState, useEffect } from "react"; 
 import Pfp from '../../../../images/profile-pic.jpg';
 import EditIcon from '@mui/icons-material/Edit';
 import { EventContext } from "../../../WarRoom/components/EventContext";
@@ -8,6 +8,7 @@ import EditCat from "../EditPopUps/EditCat";
 import EditDetails from "../EditPopUps/EditDetails";
 import EditSchedule from "../EditPopUps/EditSchedule";
 import { AuthContext } from "../../../../config/authContext";
+import DayScheduleBreakdown from "./Components/DayScheduleBreakdown";
 
 
 const ProfilePreferences = () => { 
@@ -16,7 +17,7 @@ const ProfilePreferences = () => {
     const [editSchedule, setEditSchedule] = useState(false);
     const [editDetails, setEditDetails] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const { player, setPlayer } = useContext(AuthContext);
+    const { player } = useContext(AuthContext);
 
     const toggleEditSchedule = () => {
         if(editSchedule){
@@ -27,6 +28,10 @@ const ProfilePreferences = () => {
             setEditMode(true);
         }
     }
+
+    useEffect(() => {
+        console.log(player.preferences.schedule)
+    })
 
     const toggleEditDetails = () => {
         if(editDetails){
@@ -55,9 +60,9 @@ const ProfilePreferences = () => {
             {editSchedule && <EditSchedule onClose={toggleEditSchedule}/>}
 
             {/* pfp, displayName, status */} 
-            <div className={`relative h-1/3 w-full ${editMode ? 'opacity-0 z-0 pointer-events-none': 'opacity-100 z-50'}`}>
+            <div className={`relative h-1/4 w-full ${editMode ? 'opacity-0 z-0 pointer-events-none': 'opacity-100 z-50'}`}>
                 <div className="h-full w-70p p-2 flex">
-                    <div className="relative h-full aspect-square">
+                    {/* <div className="relative h-full aspect-square">
                         <img src={Pfp} 
                             className={`h-full w-full object-fit`}
                         />
@@ -71,7 +76,7 @@ const ProfilePreferences = () => {
                             >Edit Picture</p>
                             
                         </div>
-                    </div>
+                    </div> */}
                     <div className="relative h-full w-full flex flex-col pl-2 justify-center">
                         <p className="font-bold text-xl">{player.name}</p>
                         <p className="text-sm italic">
@@ -87,13 +92,13 @@ const ProfilePreferences = () => {
                     className="absolute top-2 right-2 text-xs text-sky-500 underline hover:text-sky-200 hover:cursor-pointer"
                 >Edit Details</div>
             </div>
-            <div className={`h-2/3 w-full flex ${editMode ? 'opacity-0 z-0 pointer-events-none' : 'opacity-100 z-50'}`}>
-                <div className="h-2/3 flex-auto p-2">
+            <div className={`h-3/4 w-full flex flex-col ${editMode ? 'opacity-0 z-0 pointer-events-none' : 'opacity-100 z-50'}`}>
+                <div className="h-1/2 w-full p-2">
                     <div className="relative h-fit w-full flex items-center">
-                        <p className="text-sm font-bold p-0 m-0 pl-2">Schedule</p>
+                        <p className="text-sm font-bold p-0 m-0 pl-2">Routine</p>
                         <p 
                         onClick={toggleEditSchedule}
-                        className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Schedule</p>
+                        className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Routine</p>
                     </div>
                     <div className="h-90p w-full rounded-lg border-darkPink border-2 flex">
                         <div className="h-full w-fit grid grid-rows-7 border-r-darkPink border-r-2 text-start p-1 gap-2 items-center ">
@@ -106,56 +111,58 @@ const ProfilePreferences = () => {
                                 <p>Sun</p>
                         </div>
                         <div className="h-full w-3/4 grid grid-rows-7 flex text-start p-1 gap-2 items-center">
-                            <p>0830 - 1730</p>
-                            <p>0830 - 1730</p>
-                            <p>0830 - 1730</p>
-                            <p>0830 - 1730</p>
-                            <p>0830 - 1730</p>
-                            <p>0830 - 1230; 1430 - 1730</p>
-                            <p> Rest </p>
+                            <DayScheduleBreakdown day={player.preferences.schedule.Mon}/>
+                            <DayScheduleBreakdown day={player.preferences.schedule.Tue}/>
+                            <DayScheduleBreakdown day={player.preferences.schedule.Wed}/>
+                            <DayScheduleBreakdown day={player.preferences.schedule.Thu}/> 
+                            <DayScheduleBreakdown day={player.preferences.schedule.Fri}/>
+                            <DayScheduleBreakdown day={player.preferences.schedule.Sat}/>
+                            <DayScheduleBreakdown day={player.preferences.schedule.Sun}/>
                         </div>
                     </div>
                 </div>
-                <div className="h-2/3 flex-auto p-2">
-                    <div className="relative h-fit w-full flex items-center">
-                        <p className="text-sm font-bold p-0 m-0 pl-2">Categories</p>
-                        <p 
-                        onClick={toggleEditCategories}
-                        className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-300">Edit Categories</p>
-                    </div>
-                    <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-evenly items-center p-2">
-                        <div className={`h-full w-full grid gap-1`}>
-                            {
-                                Object.entries(categories).map((cat) => {
-                                    return(
-                                        <div 
-                                        key={cat[0]}
-                                        className="relative h-full w-full rounded-lg">
-                                            <div className="absolute h-full z-20 w-full flex items-center justify-start gap-2 z-20 p-1">
-                                                <div 
-                                                    style={{backgroundColor: cat[1].color}}
-                                                    className={`h-3 w-3 rounded-full`}>
+                <div className="h-1/2 w-full p-2 flex">
+                    <div className="h-full flex-auto p-2">
+                        <div className="relative h-fit w-full flex items-center">
+                            <p className="text-sm font-bold p-0 m-0 pl-2">Categories</p>
+                            <p 
+                            onClick={toggleEditCategories}
+                            className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-300">Edit Categories</p>
+                        </div>
+                        <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-evenly items-center p-2">
+                            <div className={`h-full w-full grid gap-1`}>
+                                {
+                                    Object.entries(categories).map((cat) => {
+                                        return(
+                                            <div 
+                                            key={cat[0]}
+                                            className="relative h-full w-full rounded-lg">
+                                                <div className="absolute h-full z-20 w-full flex items-center justify-start gap-2 z-20 p-1">
+                                                    <div 
+                                                        style={{backgroundColor: cat[1].color}}
+                                                        className={`h-3 w-3 rounded-full`}>
+                                                        </div>
+                                                        <div className="text-sm select-none">{cat[1].name}</div>
                                                     </div>
-                                                    <div className="text-sm select-none">{cat[1].name}</div>
                                                 </div>
-                                            </div>
-                                    )
-                                })
-                            }
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="h-2/3 flex-auto p-2">
-                    <div className="relative h-fit w-full flex items-center">
-                        <p className="text-sm font-bold p-0 m-0 pl-2">Salary</p>
-                        <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Salary</p>
-                    </div>
-                    <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-center items-center">
-                        <div className="h-1/2 w-1/2 rounded-full bg-black text-white flex justify-center items-center">
-                            <p>1000</p>
+                    <div className="h-full flex-auto p-2">
+                        <div className="relative h-fit w-full flex items-center">
+                            <p className="text-sm font-bold p-0 m-0 pl-2">Salary</p>
+                            <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Salary</p>
                         </div>
+                        <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-center items-center">
+                            <div className="h-1/2 w-1/2 rounded-full bg-black text-white flex justify-center items-center">
+                                <p>1000</p>
+                            </div>
 
-                        <p>Monthly</p>
+                            <p>Monthly</p>
+                        </div>
                     </div>
                 </div>
             </div>

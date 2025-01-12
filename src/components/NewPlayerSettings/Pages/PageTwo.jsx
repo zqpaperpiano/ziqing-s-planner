@@ -15,7 +15,7 @@ const PageTwo = ({currPage, handleNextPage, changeDisplayName, displayName}) => 
             setChangeName(false);
         }else{
             setChangeName(true);
-        }
+       }
     }
 
     const onChangeName = (e) => {
@@ -43,7 +43,7 @@ const PageTwo = ({currPage, handleNextPage, changeDisplayName, displayName}) => 
                             cursorChar="|"
                             strings={[`Hello adventurer,\n 
                                     when we first met, you said your name was\n 
-                                    ${displayName}\n 
+                                    ${player.name}\n 
                                     would you still like to be addressed as such?`]}
                             backSpeed={0}
                             typeSpeed={25}

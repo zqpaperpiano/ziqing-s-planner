@@ -3,27 +3,11 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { ReactTyped } from "react-typed";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './PageThree.css';
-
-import SetClock from "../../SetClock/SetClock";
 import BackArrow from "../../BackArrow/BackArrow";
-import { TimerReset } from "lucide-react";
 import Scheduler from "../../Scheduler/Scheduler";
-import { AuthContext } from "../../../config/authContext";
 
 const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule, displayName, handleHasSchedule }) => {
-    const [selectedTimes, setSelectedTimes] = useState([]);
-    const [isDragging, setIsDragging] = useState(false);
     const [isScheduling, setIsScheduling] = useState(false);
-
-    const daysOfWeek = [
-        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
-    ];
-
-    const hoursOfDay = [
-        "0000", "0100", "0200", "0300", "0400", "0500", "0600", "0700", "0800", "0900", "1000",
-        "1100", "1200", "1300", "1400", "1500", "1600", "1700", '1800', '1900', '2000', '2100',
-        '2200', '2300'
-    ]
 
     const toggleScheduling = () => {
         if(isScheduling){
@@ -52,7 +36,7 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule
                         typeSpeed={25}
                         cursorChar="|"
                         strings={[
-                            `Nice to meet you, ${displayName}.\n Will you be having a regular routine of clearing dungeons?`
+                            `Nice to meet you, ${displayName}.\n Will you allocate some time every week to clear dungeons?`
                         ]}
                     />
                     <div className="absolute bottom-12 h-1/3 flex flex-col w-2/3 bg-[#ffcdac] p-4 gap-4 border border-yellow-900 border-2 font-silkscreen text-xl">
