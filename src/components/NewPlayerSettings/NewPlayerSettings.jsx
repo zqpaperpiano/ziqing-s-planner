@@ -32,16 +32,10 @@ const NewPlayerSettings = () => {
     })
 
     useEffect(() => {
-        console.log(player);
-        console.log(player.name);
-        console.log('displayName: ', displayName);
+        if(player.completedCalibration){
+            navigate('/');
+        }
     })
-
-        // useEffect(() => {
-        //     if(player.completedCalibration){
-        //         navigate('/');
-        //     }
-        // })
 
 
     const handleSubmitPreferences = () => {
@@ -73,6 +67,7 @@ const NewPlayerSettings = () => {
         })
         .then((data) => {
             setPlayer(data);
+            localStorage.setItem('player', JSON.stringify(data));
             navigate('/');
         })
     }

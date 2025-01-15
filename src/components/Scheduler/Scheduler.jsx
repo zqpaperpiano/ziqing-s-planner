@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Button } from "@mui/material";
+import { AuthContext } from "../../config/authContext";
+import { useLocation } from "react-router-dom";
 
 const daysOfWeek = [
     "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
@@ -16,10 +18,13 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     const [isDragging, setIsDragging] = useState(false);
     const tableWidth = newWidth || "85%";
     const tableHeight = newHeight || "80%";
+    const {player} = useContext(AuthContext);
+    const prevSched = player.preferences.schedule || null;
+    const location = useLocation();
 
     useEffect(() => {
-        console.log('selected times: ', selectedTimes);
-    }, [selectedTimes])
+        console.log(location);
+    })
 
     useEffect(() => {
         window.addEventListener("mouseup", handleMouseUp);

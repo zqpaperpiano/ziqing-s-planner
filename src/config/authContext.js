@@ -10,25 +10,22 @@ export const AuthProvider = ({ children }) => {
     const [player, setPlayer] = useState(null);
     const storedPlayer = localStorage.getItem('player');
 
-
     useEffect(() => {
-        console.log('my player: ', player);
-    }, [player])
-
-    useEffect(() => {
-
-        if(player !== auth.currentUser){
+        if(player !== auth.currentUser && player !== null){
             localStorage.setItem('player', JSON.stringify(player));
-        }else if(player === auth.currentUser){
+        }else if(player === auth.currentUser || (auth.currentUser && !player)){
             setPlayer(JSON.parse(localStorage.getItem('player')));
         }
     }, [player])
 
+
     useEffect(() => {
         const unsubscribe  = onAuthStateChanged(auth, (currUser) => {
             if(currUser){
+                console.log('reinstated user');
                 setPlayer(currUser);
             }else{
+                console.log('removing user');
                 setPlayer(null);
             }
             setLoading(false);

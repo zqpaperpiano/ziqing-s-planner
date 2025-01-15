@@ -19,6 +19,10 @@ const ProfilePreferences = () => {
     const [editMode, setEditMode] = useState(false);
     const { player } = useContext(AuthContext);
 
+    // useEffect(() => {
+    //     console.log("schedule: ", player?.preferences?.schedule);
+    // })
+
     const toggleEditSchedule = () => {
         if(editSchedule){
             setEditSchedule(false);
@@ -28,10 +32,6 @@ const ProfilePreferences = () => {
             setEditMode(true);
         }
     }
-
-    useEffect(() => {
-        console.log(player.preferences.schedule)
-    })
 
     const toggleEditDetails = () => {
         if(editDetails){
@@ -111,13 +111,13 @@ const ProfilePreferences = () => {
                                 <p>Sun</p>
                         </div>
                         <div className="h-full w-3/4 grid grid-rows-7 flex text-start p-1 gap-2 items-center">
-                            <DayScheduleBreakdown day={player.preferences.schedule.Mon}/>
-                            <DayScheduleBreakdown day={player.preferences.schedule.Tue}/>
-                            <DayScheduleBreakdown day={player.preferences.schedule.Wed}/>
-                            <DayScheduleBreakdown day={player.preferences.schedule.Thu}/> 
-                            <DayScheduleBreakdown day={player.preferences.schedule.Fri}/>
-                            <DayScheduleBreakdown day={player.preferences.schedule.Sat}/>
-                            <DayScheduleBreakdown day={player.preferences.schedule.Sun}/>
+                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Mon}/>
+                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Tue}/>
+                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Wed}/>
+                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Thu}/>
+                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Fri}/>
+                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Sat}/>
+                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Sun}/>
                         </div>
                     </div>
                 </div>

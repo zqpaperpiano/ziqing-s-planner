@@ -105,27 +105,28 @@ const LogInSignUp = () => {
 
 
     return(
-        <div className="relative h-full w-full">
-            <ToastContainer />
-            <div id="LogInForm"
-                className={`h-full bg-bgPink  w-50p z-40 absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
-                    ${onSignup ? 'translate-x-full z-0 opacity-0 pointer-event-none' : null}`}
-            >
-                <LogIn onSignUp={onSignup} logGUser={logGUser} failedLogin={failedLogIn} tooManylogins={tooManyLogins} successfulResetPassword={successfulResetPassword} emptyFields={emptyFields} invalidEmail={invalidEmail}/>
-            </div>
+        <div className="fixed inset-0 bg-gradient-to-b from-gradientStart via-gradientMid to-gradientEnd h-full w-full flex items-center justify-center">
+                <div className="relative h-full w-3/4">
+                <ToastContainer />
+                <div id="LogInForm"
+                    className={`h-full bg-bgPink  w-50p z-40 absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
+                        ${onSignup ? 'translate-x-full z-0 opacity-0 pointer-event-none' : null}`}
+                >
+                    <LogIn onSignUp={onSignup} logGUser={logGUser} failedLogin={failedLogIn} tooManylogins={tooManyLogins} successfulResetPassword={successfulResetPassword} emptyFields={emptyFields} invalidEmail={invalidEmail}/>
+                </div>
 
-            <div id="SignUpForm"
-                className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 bf:transition-transform duration-500
-                    ${onSignup  ? "translate-x-full opacity-100 z-50" : "opacity-0 z-10"}`}
-            >
-                <SignUp onSignUp={onSignup} logGUser={logGUser} invalidEmail={invalidEmail} invalidPassword={invalidPassword} repeatedEmail={repeatedEmail} emptyFields={emptyFields} setLoading={toggleLoading}/>
-            </div>
+                <div id="SignUpForm"
+                    className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 bf:transition-transform duration-500
+                        ${onSignup  ? "translate-x-full opacity-100 z-50" : "opacity-0 z-10"}`}
+                >
+                    <SignUp onSignUp={onSignup} logGUser={logGUser} invalidEmail={invalidEmail} invalidPassword={invalidPassword} repeatedEmail={repeatedEmail} emptyFields={emptyFields} setLoading={toggleLoading}/>
+                </div>
 
-            <div id="overlay-container"
-                className={`h-full w-50p z-50 top-0 left-1/2 absolute overflow-hidden
-                        transition-transform duration-500 ${onSignup ? '-translate-x-full' : 'translate-x-0'}`}
-            >
-                <div id="ovelay-bg"
+                <div id="overlay-container"
+                    className={`h-full w-50p z-50 top-0 left-1/2 absolute overflow-hidden
+                            transition-transform duration-500 ${onSignup ? '-translate-x-full' : 'translate-x-0'}`}
+                >
+                    <div id="ovelay-bg"
                     className={`bg-gradient-to-r from-[#A0557A] to-[#D48BA3] relative -left-full h-full w-2x 
                     ${onSignup ? 'translate-x-1/2' : 'translate-x-0'}`}>
                             <div id="left-overlay"
@@ -152,6 +153,7 @@ const LogInSignUp = () => {
                                         </div>
                             </div>
                         </div>
+                    </div>
             </div>
         </div>
     );
