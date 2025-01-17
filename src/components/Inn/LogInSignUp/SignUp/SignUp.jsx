@@ -33,6 +33,7 @@ const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, 
 
 
     const verifyUserToken = (token, email, name) => {
+        setLoading(true);
         fetch(`${config.development.apiURL}users/new-user`, {
             method: 'POST',
             headers: {
@@ -66,7 +67,6 @@ const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, 
             return res.json();
         })
         .then((data) => {
-            setLoading(true);
             signIn(data);
             setUserEmail("");
             setUserPassword("");
@@ -82,9 +82,9 @@ const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, 
     const logEmailUser = async () => {
         try{
             await setPersistence(auth, browserLocalPersistence);
-            setLoading(true);
             const resp = await signUpWEmail(userEmail, userPassword);
             const respID = await resp.user.getIdToken();
+
             verifyUserToken(respID, userEmail, userName);
         }catch(err){
             if(err.code === "auth/email-already-in-use"){

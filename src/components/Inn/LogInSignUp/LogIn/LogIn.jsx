@@ -127,10 +127,7 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
 
     return(
         <div className="absolute h-full w-full flex left-0 rounded"> 
-        <div className="fixed inset-0">
-        </div>
-        
-            <div className="h-full w-full">  
+            <div className={`h-full w-full `}>  
                 {
                     resetPassword?
                     <div className="h-full w-full flex flex-col justify-center items-center gap-4">
