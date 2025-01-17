@@ -12,7 +12,6 @@ import DayScheduleBreakdown from "./Components/DayScheduleBreakdown";
 
 
 const ProfilePreferences = () => { 
-    const {categories} = useContext(EventContext);
     const [editCategories, setEditCategories] = useState(false);
     const [editSchedule, setEditSchedule] = useState(false);
     const [editDetails, setEditDetails] = useState(false);
@@ -132,7 +131,7 @@ const ProfilePreferences = () => {
                         <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-evenly items-center p-2">
                             <div className={`h-full w-full grid gap-1`}>
                                 {
-                                    Object.entries(categories).map((cat) => {
+                                    Object.entries(player?.preferences?.categories).map((cat) => {
                                         return(
                                             <div 
                                             key={cat[0]}

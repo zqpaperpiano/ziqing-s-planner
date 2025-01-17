@@ -35,8 +35,8 @@ const LandingPage = () => {
     return(
         //container
         <div className="h-screen w-screen bg-gradient-to-b from-gradientStart via-gradientMid to-gradientEnd">
-            <EventProvider>
             <AuthProvider>
+            <EventProvider>
             <DungeonProvider>
             <Router>
                     <div className="relative h-screen w-screen flex md:flex-col md:justify-center md:items-center overflow-hidden ">
@@ -75,8 +75,8 @@ const LandingPage = () => {
                 </div>
             </Router>
             </DungeonProvider>
-            </AuthProvider>
             </EventProvider>
+            </AuthProvider>
         </div>
     );
 }

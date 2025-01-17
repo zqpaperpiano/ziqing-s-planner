@@ -21,6 +21,29 @@ const NewPlayerSettings = () => {
     const { player, setPlayer } = useContext(AuthContext);
     const [displayName, setDisplayName] = useState(null);
 
+    const categories = {
+        cat1: {
+            name: 'Clearing dungeons',
+            color: '#ca4a55',
+        },
+        cat2: {
+            name: 'Running errands',
+            color: '#ee694b',
+        },
+        cat3: {
+            name: 'Misc',
+            color: '#fdb814'
+        },
+        cat4: {
+            name: 'Meetings',
+            color: '#30ad6e'
+        },
+        cat5: {
+            name: 'Social activities',
+            color: '#1d58a0'
+        }
+    }
+
     useEffect(() => {
         if(salary > 0 && salaryFrequency){
             setHasSalary(true);
@@ -44,7 +67,8 @@ const NewPlayerSettings = () => {
                 schedule: schedule,
                 hasSalary: hasSalary,
                 salary: salary,
-                salaryFrequency: salaryFrequency
+                salaryFrequency: salaryFrequency,
+                categories: categories
         }
 
         const userToken = auth.currentUser.getIdToken();

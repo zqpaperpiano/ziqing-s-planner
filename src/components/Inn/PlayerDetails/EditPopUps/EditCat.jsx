@@ -1,20 +1,20 @@
 import { Button, CircularProgress} from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
-import { EventContext } from "../../../WarRoom/components/EventContext";
 import { X } from "lucide-react";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
-
+import config from "../../../../config/config.json";
 import CategoryBar from "./Components/CategoryBar";
+import { AuthContext } from "../../../../config/authContext";
+import { auth } from "../../../../config/firebase";
 
 const EditCat = ({ onClose }) => {
-    const {categories, setCategories} = useContext(EventContext);
+    const { player, setPlayer } = useContext(AuthContext);
     const [currInput, setCurrInput] = useState(null);
-    const [tempList, setTempList] = useState(categories);
+    const [tempList, setTempList] = useState(player?.preferences?.categories);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
 
@@ -48,8 +48,27 @@ const EditCat = ({ onClose }) => {
     }
 
     const onSaveChanges = () => {
-        setCategories(tempList);
-        onClose();
+        fetch(`${config.development.apiURL}users/updateUserEventCategories`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
+            },
+            body: JSON.stringify({
+                uid: auth.currentUser.uid,
+                categories: tempList
+            })
+        })
+        .then((resp) => {
+            resp.json();
+        })
+        .then((data) => {
+            setPlayer(data);
+            onClose();
+        })
+        .catch((err) => {
+            console.log('an error has occured: ', err);
+        })
     }
 
     const onAddCategory = (e) => {
@@ -87,7 +106,7 @@ const EditCat = ({ onClose }) => {
     return(
         <div className="fixed inset-0 bg-black z-40 bg-opacity-30 backdrop-blur-sm flex items-center justify-center">
             {
-                !categories || categories === "" ?
+                !player?.preferences?.categories || player?.preferences?.categories === "" ?
                 <div className="h-screen w-screen flex items-center justify-center">
                     <CircularProgress size="large" color="black"/>
                 </div> :
@@ -145,9 +164,9 @@ const EditCat = ({ onClose }) => {
                     
                     <div className=" w-3/4 flex-1 flex flex-col justify-around gap-2    ">
                         {
-                            Object.entries(tempList).map((cat) => {
+                            Object.entries(tempList).map((cat, index) => {
                                 return(
-                                    <CategoryBar cat={cat} onChangeName={onChangeName} onChangeColor={onChangeColor} onDeleteCat={onClickDelete}/>
+                                    <CategoryBar key={index} cat={cat} onChangeName={onChangeName} onChangeColor={onChangeColor} onDeleteCat={onClickDelete}/>
                                 )
 
                             })
