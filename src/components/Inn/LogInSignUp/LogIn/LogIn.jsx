@@ -10,12 +10,12 @@ import config from '../../../../config/config.json'
 import { browserLocalPersistence,sendPasswordResetEmail,  setPersistence, signInWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 
-const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, tooManylogins, successfulResetPassword }) => {
+const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, tooManylogins, successfulResetPassword, loading }) => {
     const [playerEmail, setPlayerEmail] = useState("");
     const [playerPassword, setPlayerPassword] = useState(""); 
     const [resetPassword, setResetPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState('');
-    const { signIn} = useContext(AuthContext);
+    const { signIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -47,13 +47,13 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
 
     const emailUserLogin = async () => {
         try{
-            console.log('on press enter: ', playerEmail, playerPassword);
             if(playerPassword.length <= 0 || playerEmail.length <= 0){
-                console.log('here in log in')
                 emptyFields();
             }else if(!validateEmail(playerEmail)){
                 invalidEmail();
             }else{
+                loading(true);
+                
                 await setPersistence(auth, browserLocalPersistence);
 
                 const resp = await signInWithEmailAndPassword(auth, playerEmail, playerPassword);

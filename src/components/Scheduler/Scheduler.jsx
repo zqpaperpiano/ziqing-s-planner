@@ -14,16 +14,19 @@ const hoursOfDay = [
 ]
 
 const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => {
-    const [selectedTimes, setSelectedTimes] = useState([]);
+    const {player} = useContext(AuthContext);
     const [isDragging, setIsDragging] = useState(false);
     const tableWidth = newWidth || "85%";
     const tableHeight = newHeight || "80%";
-    const {player} = useContext(AuthContext);
-    const prevSched = player.preferences.schedule || null;
+    const [selectedTimes, setSelectedTimes] = useState([]);
     const location = useLocation();
 
     useEffect(() => {
-        console.log(location);
+        console.log(selectedTimes);
+    })
+
+    useEffect(() => {
+        convertDayScheduleToCombined(player?.preferences?.schedule);
     })
 
     useEffect(() => {
@@ -141,6 +144,20 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         return sched;
     }
 
+    const convertDayScheduleToCombined = (obj) => {
+        let combined = [];
+        Object.entries(obj).map((day) => {
+            if(day[1].length > 1){
+                const currDay = day[0];
+                Object.values(day[1]).map((time) => {
+                    combined.push(currDay + time.start);
+                    combined.push(currDay + time.end);
+                })
+            }
+        })
+        console.log('completed: ', combined);
+    }
+
     const handleSubmitButton = () => {
         const monScd = getDaySchedule('Mon');
         const tueScd = getDaySchedule('Tue');
@@ -181,7 +198,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                             })
                         }
                     </div>
-                    {
+                    {/* {
                         hoursOfDay.map((hour, index) => {
                             return(
                                 <div key={index} className={`h-full w-full row-start-1 grid grid-rows-8 flex items-center select-none`}>
@@ -218,7 +235,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                                 </div>
                             )
                         })
-                    }
+                    } */}
 
                     
                 </div>

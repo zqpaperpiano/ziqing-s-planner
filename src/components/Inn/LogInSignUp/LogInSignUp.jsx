@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import './LogInSignUp.css';
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import SignUp from "./SignUp/SignUp";
 import LogIn from "./LogIn/LogIn";
 import { AuthContext } from "../../../config/authContext";
@@ -13,7 +13,8 @@ import { toast, ToastContainer } from "react-toastify";
 const LogInSignUp = () => {
     const [onSignup, toggleOnSignUp] = useState(false);
     const { signIn, player } = useContext(AuthContext);
-    const [loading, setLoading] = useState(true);
+    const [ loading, setLoading ] = useState(true);
+    const [ logInLoading, setLogInLoading ] = useState(false);
     const navigate = useNavigate();
 
     const onToggleLogIn = () => {  
@@ -29,6 +30,14 @@ const LogInSignUp = () => {
             navigate('/');
         }
     }, [])
+
+    useEffect(() => {
+        console.log('loading status: ', logInLoading);
+    })
+
+    const toggleLogInLoading = (bool) => {
+        setLogInLoading(bool);
+    }
 
    
     const logGUser = async() => {
@@ -106,20 +115,20 @@ const LogInSignUp = () => {
 
     return(
         <div className="fixed inset-0 bg-gradient-to-b from-gradientStart via-gradientMid to-gradientEnd h-full w-full flex items-center justify-center">
-                <div className="relative h-full w-3/4">
+            <div className="relative h-full w-3/4">
                 <ToastContainer />
                 <div id="LogInForm"
                     className={`h-full bg-bgPink  w-50p z-40 absolute top-0 left-0 bf:z-20 bf:transition-transform duration-500
                         ${onSignup ? 'translate-x-full z-0 opacity-0 pointer-event-none' : null}`}
                 >
-                    <LogIn onSignUp={onSignup} logGUser={logGUser} failedLogin={failedLogIn} tooManylogins={tooManyLogins} successfulResetPassword={successfulResetPassword} emptyFields={emptyFields} invalidEmail={invalidEmail}/>
+                    <LogIn loading={toggleLogInLoading} onSignUp={onSignup} logGUser={logGUser} failedLogin={failedLogIn} tooManylogins={tooManyLogins} successfulResetPassword={successfulResetPassword} emptyFields={emptyFields} invalidEmail={invalidEmail}/>
                 </div>
 
                 <div id="SignUpForm"
                     className={`bg-bgPink h-full w-50p absolute bg-bgPink top-0 left-0 bf:transition-transform duration-500
                         ${onSignup  ? "translate-x-full opacity-100 z-50" : "opacity-0 z-10"}`}
                 >
-                    <SignUp onSignUp={onSignup} logGUser={logGUser} invalidEmail={invalidEmail} invalidPassword={invalidPassword} repeatedEmail={repeatedEmail} emptyFields={emptyFields} setLoading={toggleLoading}/>
+                    <SignUp onSignUp={onSignup} logGUser={logGUser} invalidEmail={invalidEmail} invalidPassword={invalidPassword} repeatedEmail={repeatedEmail} emptyFields={emptyFields} setLoading={toggleLogInLoading}/>
                 </div>
 
                 <div id="overlay-container"
@@ -154,7 +163,15 @@ const LogInSignUp = () => {
                             </div>
                         </div>
                     </div>
-            </div>
+            </div> 
+            {
+                logInLoading &&
+                <div className="inset-0 fixed z-50 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+                    <CircularProgress 
+                        size="100px"
+                    />
+                </div>
+            }
         </div>
     );
 }
