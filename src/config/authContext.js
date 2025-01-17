@@ -8,16 +8,15 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [player, setPlayer] = useState(null);
-    const storedPlayer = localStorage.getItem('player');
 
     useEffect(() => {
         if(player !== auth.currentUser && player !== null){
+            console.log('setting player');
             localStorage.setItem('player', JSON.stringify(player));
         }else if(player === auth.currentUser || (auth.currentUser && !player)){
             setPlayer(JSON.parse(localStorage.getItem('player')));
         }
     }, [player])
-
 
     useEffect(() => {
         const unsubscribe  = onAuthStateChanged(auth, (currUser) => {

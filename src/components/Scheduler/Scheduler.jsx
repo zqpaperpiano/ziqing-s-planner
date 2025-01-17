@@ -2,6 +2,8 @@ import React, {useContext, useEffect, useState} from "react";
 import { Button } from "@mui/material";
 import { AuthContext } from "../../config/authContext";
 import { useLocation } from "react-router-dom";
+import config from '../../config/config.json';
+import { auth } from "../../config/firebase";
 
 const daysOfWeek = [
     "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
@@ -14,7 +16,7 @@ const hoursOfDay = [
 ]
 
 const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => {
-    const {player} = useContext(AuthContext);
+    const { player, setPlayer } = useContext(AuthContext);
     const [isDragging, setIsDragging] = useState(false);
     const tableWidth = newWidth || "85%";
     const tableHeight = newHeight || "80%";
@@ -22,12 +24,8 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     const location = useLocation();
 
     useEffect(() => {
-        console.log(selectedTimes);
-    })
-
-    useEffect(() => {
         convertDayScheduleToCombined(player?.preferences?.schedule);
-    })
+    }, [])
 
     useEffect(() => {
         window.addEventListener("mouseup", handleMouseUp);
@@ -76,22 +74,25 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     }
 
     const next30Mins = (time) => {
-        const min = time.charAt(2);
-        const hour = parseInt(time.charAt(0) + time.charAt(1), 10);
+        const min = parseInt(time.slice(2, 4), 10);
+        const hour = parseInt(time.slice(0, 2), 10);
 
-        if(min === '3'){
-            const nextHour = parseInt(time.charAt(1)) + 1;
-            if(nextHour > 9){
-                const nextTime = nextHour + "00";
-                return nextTime;
-            }else{
-                const nextTime = "0" + nextHour + "00";
-                return nextTime
-            }
-        }else{
-            const nextTime = hour + "30";
-            return nextTime;
+        let newMin = min + 30;
+        let newHour = hour;
+
+        while(newMin >= 60){
+            newMin -= 60;
+            newHour += 1;
         }
+
+        while(newHour >= 24){
+            newHour -= 24;
+        }
+
+        const formattedHour = newHour.toString().padStart(2, "0");
+        const formattedMinutes = newMin.toString().padStart(2, "0");
+
+        return `${formattedHour}${formattedMinutes}`;
     }
 
     const findBreaks = (schedArr) => {
@@ -108,7 +109,6 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             
 
             if(diff > 30){
-                console.log(`curr is ${curr} and next is ${next} and gives us a difference of ${diff}`)
                 if(i === 0){
                     breaks.push(sortedArr[i + 1]);
                 }else{
@@ -127,7 +127,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         const sched = [];
         if(filteredDay.length > 0){
             const breaks = findBreaks(filteredDay);
-            console.log('breaks: ', breaks);
+            // console.log('breaks: ', breaks);
             for(let i = 0; i < breaks.length; i = i + 2){
                 const newSet = {
                     "start": breaks[i],
@@ -151,12 +151,21 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                 const currDay = day[0];
                 Object.values(day[1]).map((time) => {
                     combined.push(currDay + time.start);
+
+                    let currTime = time.start;
+                    
+                    while(currTime !== time.end){
+                        currTime = next30Mins(currTime);
+                        combined.push(currDay + currTime);
+                    }
+
                     combined.push(currDay + time.end);
                 })
             }
         })
-        console.log('completed: ', combined);
+        setSelectedTimes(combined);
     }
+
 
     const handleSubmitButton = () => {
         const monScd = getDaySchedule('Mon');
@@ -167,7 +176,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         const satScd = getDaySchedule('Sat');
         const sunScd = getDaySchedule('Sun');
 
-        handleSetSchedule({
+        const finSchedule = {
             "Mon": monScd,
             "Tue": tueScd,
             "Wed": wedScd,
@@ -175,8 +184,44 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             "Fri": friScd,
             "Sat": satScd,
             "Sun": sunScd
-        })
+        }
+
+        const hasSchedule = Object.values(finSchedule).some(day => day.length > 1);
+
+        if(location.pathname === "/inn"){
+            fetch(`${config.development.apiURL}users/newUserPreferences`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
+                },
+                body: JSON.stringify({
+                    "uid": auth.currentUser.uid,
+                    "displayName": player.name,
+                    "preferences": {
+                        "hasSchedule": hasSchedule,
+                        "schedule": finSchedule
+                    }
+                })
+            })
+            .then((resp) => {
+                return resp.json();
+            })
+            .then((data) => {
+                setPlayer(data);
+            })
+            .catch((err) => {
+                console.log('an error has occured in scheduler for inn updating routine: ', err);
+            })
+
+        }else{
+            handleSetSchedule({
+                finSchedule
+            })
+        }
         handleNextPage();
+
+        
     }
 
     return(
@@ -198,7 +243,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                             })
                         }
                     </div>
-                    {/* {
+                    {
                         hoursOfDay.map((hour, index) => {
                             return(
                                 <div key={index} className={`h-full w-full row-start-1 grid grid-rows-8 flex items-center select-none`}>
@@ -235,7 +280,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                                 </div>
                             )
                         })
-                    } */}
+                    }
 
                     
                 </div>
