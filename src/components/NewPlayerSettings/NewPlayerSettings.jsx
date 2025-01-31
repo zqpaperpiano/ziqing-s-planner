@@ -71,6 +71,8 @@ const NewPlayerSettings = () => {
                 categories: categories
         }
 
+        console.log('this is my preferences: ', preferences);
+
         const userToken = auth.currentUser.getIdToken();
         const uid = auth.currentUser.uid;
 
@@ -92,7 +94,7 @@ const NewPlayerSettings = () => {
         .then((data) => {
             setPlayer(data);
             localStorage.setItem('player', JSON.stringify(data));
-            navigate('/');
+            // navigate('/');
         })
     }
 

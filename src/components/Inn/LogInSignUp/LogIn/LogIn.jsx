@@ -52,7 +52,6 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
             }else if(!validateEmail(playerEmail)){
                 invalidEmail();
             }else{
-                loading(true);
                 
                 await setPersistence(auth, browserLocalPersistence);
 
@@ -76,6 +75,7 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
     }
     
     const verifyUserLogin = (token, uid) => {
+        loading(true);
         fetch(`${config.development.apiURL}users/log-in`, {
             method: 'POST',
             headers: {
@@ -94,7 +94,6 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
             return res.json();
         })
         .then((data) => {
-            console.log('data received: ', data);
             signIn(data);
             setPlayerEmail("");
             setPlayerPassword('');

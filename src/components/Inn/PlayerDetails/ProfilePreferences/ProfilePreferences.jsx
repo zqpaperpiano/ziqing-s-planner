@@ -18,9 +18,9 @@ const ProfilePreferences = () => {
     const [editMode, setEditMode] = useState(false);
     const { player } = useContext(AuthContext);
 
-    // useEffect(() => {
-    //     console.log("schedule: ", player?.preferences?.schedule);
-    // })
+    useEffect(() => {
+        console.log("schedule: ", player?.preferences?.schedule);
+    })
 
     const toggleEditSchedule = () => {
         if(editSchedule){
@@ -100,24 +100,32 @@ const ProfilePreferences = () => {
                         className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Routine</p>
                     </div>
                     <div className="h-90p w-full rounded-lg border-darkPink border-2 flex">
-                        <div className="h-full w-fit grid grid-rows-7 border-r-darkPink border-r-2 text-start p-1 gap-2 items-center ">
-                                <p>Mon</p>
-                                <p>Tue</p>
-                                <p>Wed</p>
-                                <p>Thu</p>
-                                <p>Fri</p>
-                                <p>Sat</p>
-                                <p>Sun</p>
+                        {
+                            player?.preferences?.hasSchedule ?
+                            <div className='h-full w-full flex'>
+                            <div className="h-full w-fit grid grid-rows-7 border-r-darkPink border-r-2 text-start p-1 gap-2 items-center ">
+                                    <p>Mon</p>
+                                    <p>Tue</p>
+                                    <p>Wed</p>
+                                    <p>Thu</p>
+                                    <p>Fri</p>
+                                    <p>Sat</p>
+                                    <p>Sun</p>
+                            </div>
+                            <div className="h-full w-3/4 grid grid-rows-7 flex text-start p-1 gap-2 items-center">
+                                <DayScheduleBreakdown day={player?.preferences?.schedule?.Mon}/>
+                                <DayScheduleBreakdown day={player?.preferences?.schedule?.Tue}/>
+                                <DayScheduleBreakdown day={player?.preferences?.schedule?.Wed}/>
+                                <DayScheduleBreakdown day={player?.preferences?.schedule?.Thu}/>
+                                <DayScheduleBreakdown day={player?.preferences?.schedule?.Fri}/>
+                                <DayScheduleBreakdown day={player?.preferences?.schedule?.Sat}/>
+                                <DayScheduleBreakdown day={player?.preferences?.schedule?.Sun}/>
+                            </div> 
+                        </div> :
+                        <div className="h-full w-full bg-black rounded-lg flex justify-center items-center">
+                            <p className="font-silkscreen font-5xl text-white text-center">No routine set</p>
                         </div>
-                        <div className="h-full w-3/4 grid grid-rows-7 flex text-start p-1 gap-2 items-center">
-                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Mon}/>
-                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Tue}/>
-                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Wed}/>
-                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Thu}/>
-                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Fri}/>
-                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Sat}/>
-                            <DayScheduleBreakdown day={player?.preferences?.schedule?.Sun}/>
-                        </div>
+                        }
                     </div>
                 </div>
                 <div className="h-1/2 w-full p-2 flex">
@@ -156,11 +164,19 @@ const ProfilePreferences = () => {
                             <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Salary</p>
                         </div>
                         <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-center items-center">
-                            <div className="h-1/2 w-1/2 rounded-full bg-black text-white flex justify-center items-center">
-                                <p>1000</p>
-                            </div>
+                            {
+                                player?.preferences?.hasSalary ?
+                                <div className="h-full w-full">
+                                    <div className="h-1/2 w-1/2 rounded-full bg-black text-white flex justify-center items-center">
+                                        <p>1000</p>
+                                    </div>
 
-                            <p>Monthly</p>
+                                    <p>Monthly</p>
+                                </div> :
+                                <div className="h-full w-full bg-black rounded-lg flex justify-center items-center">
+                                    <p className="font-silkscreen font-5xl text-white text-center">No salary set</p>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

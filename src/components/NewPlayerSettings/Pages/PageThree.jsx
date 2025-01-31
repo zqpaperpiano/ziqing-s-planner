@@ -23,6 +23,10 @@ const PageThree = ({ currPage, handleNextPage, handlePrevPage, handleSetSchedule
         }
     }
 
+    useEffect(() => {
+        console.log(isScheduling);
+    })
+
     return(
         <div className="relative h-full w-1/5 backgrounds whitespace-pre-line text-center">
             {

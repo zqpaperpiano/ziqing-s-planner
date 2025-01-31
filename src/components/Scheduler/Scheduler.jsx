@@ -27,6 +27,10 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         convertDayScheduleToCombined(player?.preferences?.schedule);
     }, [])
 
+    // useEffect(() => {
+    //     console.log('curr arr: ', selectedTimes);
+    // }, [selectedTimes])
+
     useEffect(() => {
         window.addEventListener("mouseup", handleMouseUp);
         
@@ -101,11 +105,15 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
 
         let breaks = [sortedArr[0]];
 
+        // console.log('sorted array: ', sortedArr);
+
         for(let i = 0; i < sortedArr.length - 1; ++i){
             const curr = convertTimeToMin(sortedArr[i]);
             const next = convertTimeToMin(sortedArr[i + 1]);
 
             const diff = next - curr;
+
+            // console.log('for curr time: ', sortedArr[i], ' the next time is: ', sortedArr[i+1], ' and their difference is: ', diff);
             
 
             if(diff > 30){
@@ -127,12 +135,18 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         const sched = [];
         if(filteredDay.length > 0){
             const breaks = findBreaks(filteredDay);
-            // console.log('breaks: ', breaks);
+
+            // console.log('breaks: ', breaks);    
+
             for(let i = 0; i < breaks.length; i = i + 2){
-                const newSet = {
+                let newSet = {
                     "start": breaks[i],
                     "end": breaks[i + 1]
+                } 
+                if(newSet.start === newSet.end){
+                    newSet.end = next30Mins(newSet.end);
                 }
+                
                 sched.push(newSet);
             }
         }
@@ -186,6 +200,8 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             "Sun": sunScd
         }
 
+        // console.log('final schedule: ', finSchedule);
+
         const hasSchedule = Object.values(finSchedule).some(day => day.length > 1);
 
         if(location.pathname === "/inn"){
@@ -215,9 +231,9 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             })
 
         }else{
-            handleSetSchedule({
+            handleSetSchedule(
                 finSchedule
-            })
+            )
         }
         handleNextPage();
 
@@ -234,9 +250,9 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
                         <div className="col-start-1 row-start-1">
                         </div>
                         {
-                            daysOfWeek.map((day) => {
+                            daysOfWeek.map((day, index) => {
                                 return(
-                                    <div className={`h-full w-full col-start-1 flex justify-center items-center `}>
+                                    <div key={index} className={`h-full w-full col-start-1 flex justify-center items-center `}>
                                         <p>{day}</p>
                                     </div>
                                 )
