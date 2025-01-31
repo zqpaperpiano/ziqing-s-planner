@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Popover } from "@mui/material";
@@ -6,7 +6,18 @@ import ColorSelector from "./ColorSelector";
 
 const CategoryBar = ({cat, onChangeName, onChangeColor, onDeleteCat}) => {
     const [anchor, setAnchor] = useState(null);
+    const [above, setAbove] = useState(false);
     const open = Boolean(anchor);
+    const barPosition = useRef(null);
+
+    useEffect(() => {
+        const position = barPosition.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - position.bottom;
+
+        if(spaceBelow < 350){
+            setAbove(true);
+        }
+    }, [])
 
     const handleClick = (e) => {
         setAnchor(e.currentTarget)
@@ -22,6 +33,7 @@ const CategoryBar = ({cat, onChangeName, onChangeColor, onDeleteCat}) => {
 
     return(
         <div 
+        ref={barPosition}
         id={cat[0]}
         key={cat[0]}
         className="h-full w-full rounded-lg bg-slate-300 flex justify-center items-center">
@@ -42,7 +54,11 @@ const CategoryBar = ({cat, onChangeName, onChangeColor, onDeleteCat}) => {
                 anchorEl={anchor}
                 onClose={handleClose}
                 anchorOrigin={{
-                    vertical: 'bottom',
+                    vertical: above ? 'top' : 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: above ? 'bottom' : 'top', // Flip transformation to align correctly
                     horizontal: 'left',
                 }}
             >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { HexColorPicker } from "react-colorful";
 import './ColorSelector.css';
 import { Button, Input } from "@mui/material";
@@ -17,7 +17,7 @@ const ColorSelector = ({ handleClose, handleColorChange }) => {
     const [hexInput, setHexInput] = useState("#F7EA48");
 
     const handleClickMore = () => {
-        setOnMore(false);
+        setOnMore(true);
     }
 
     const onColorChange = (e) => {
@@ -64,7 +64,8 @@ const ColorSelector = ({ handleClose, handleColorChange }) => {
     }
 
     return(
-        <div className={` h-48 w-36 aspect-square rounded-lg flex justify-center items-center ${onMore ? 'h-80 w-80': null}`}>
+        <div 
+        className={` h-48 w-36 aspect-square rounded-lg flex justify-center items-center ${onMore ? `h-80 w-80`: null}`}>
             {
                 onMore ? 
                 <div className="h-full w-full flex flex-col items-center">
@@ -116,7 +117,9 @@ const ColorSelector = ({ handleClose, handleColorChange }) => {
                         })
                     }
                 </div>
-                <div className="h-fit w-28 hover:bg-sky-100 hover:cursor-pointer">
+                <div 
+                onClick={handleClickMore}
+                className="h-fit w-28 hover:bg-sky-100 hover:cursor-pointer">
                     <p className="font-silkscreen text-xs text-center">More colors</p>
                 </div>
             </div>

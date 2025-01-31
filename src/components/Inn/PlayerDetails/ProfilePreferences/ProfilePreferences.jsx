@@ -129,7 +129,7 @@ const ProfilePreferences = () => {
                             className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-300">Edit Categories</p>
                         </div>
                         <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-evenly items-center p-2">
-                            <div className={`h-full w-full grid gap-1`}>
+                            <div className={`h-full w-full grid gap-1 overflow-auto`}>
                                 {
                                     Object.entries(player?.preferences?.categories).map((cat) => {
                                         return(
