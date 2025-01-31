@@ -27,9 +27,9 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         convertDayScheduleToCombined(player?.preferences?.schedule);
     }, [])
 
-    // useEffect(() => {
-    //     console.log('curr arr: ', selectedTimes);
-    // }, [selectedTimes])
+    useEffect(() => {
+        console.log('curr arr: ', selectedTimes);
+    }, [selectedTimes])
 
     useEffect(() => {
         window.addEventListener("mouseup", handleMouseUp);
@@ -136,7 +136,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         if(filteredDay.length > 0){
             const breaks = findBreaks(filteredDay);
 
-            // console.log('breaks: ', breaks);    
+            console.log('breaks: ', breaks);    
 
             for(let i = 0; i < breaks.length; i = i + 2){
                 let newSet = {
@@ -160,23 +160,27 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
 
     const convertDayScheduleToCombined = (obj) => {
         let combined = [];
+
+        // console.log('converting: ', obj);
+
         Object.entries(obj).map((day) => {
             if(day[1].length > 1){
                 const currDay = day[0];
                 Object.values(day[1]).map((time) => {
                     combined.push(currDay + time.start);
 
-                    let currTime = time.start;
+                    let currTime = next30Mins(time.start);
                     
                     while(currTime !== time.end){
-                        currTime = next30Mins(currTime);
                         combined.push(currDay + currTime);
+                        currTime = next30Mins(currTime);
+                        console.log('current list: ', combined);
                     }
-
-                    combined.push(currDay + time.end);
                 })
             }
         })
+
+        // console.log('result of our calculation: ', combined);
         setSelectedTimes(combined);
     }
 
@@ -236,8 +240,6 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             )
         }
         handleNextPage();
-
-        
     }
 
     return(
