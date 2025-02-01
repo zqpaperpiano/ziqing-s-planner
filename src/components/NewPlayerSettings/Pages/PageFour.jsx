@@ -42,7 +42,8 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
                 return;
             }
             freq = {
-                selected: dateOfSalary
+                frequency: selected,
+                day: dateOfSalary
             }
         }else if(selected === "Monthly"){
             const date = parseInt(dateOfSalary)
@@ -56,10 +57,14 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
             }
 
             freq = {
-                selected: date
+                frequency: selected,
+                day: date
             }
         }else if(selected === "Daily"){
-            freq = selected;
+            freq = {
+                frequency: selected,
+                day: 'N/A'
+            };
         }
         setSalaryFrequency(freq);
         handleNextPage();
@@ -168,67 +173,68 @@ const PageFour = ({currPage, handleNextPage, handlePrevPage, setSalary, setHasSa
                                     <p>Every</p>
                                     {
                                         selected === "Weekly" &&
-                                        <div className="h-fit w-full grid grid-cols-7 bg-[#ffcdac]">
-                                            <div 
-                                            onClick={handleSelectDay}
-                                            className={`p-1 border-yellow-900 border-2 h-full w-full flex justify-center items-center 
-                                            hover:cursor-poiner hover:bg-[#ffebde]
-                                            ${dateOfSalary === "Mon" ? "bg-[#ffebde]" : null }`}>
-                                                Mon
+                                            <div className="h-fit w-full grid grid-cols-7 bg-[#ffcdac]">
+                                                <div 
+                                                onClick={handleSelectDay}
+                                                className={`p-1 border-yellow-900 border-2 h-full w-full flex justify-center items-center 
+                                                hover:cursor-poiner hover:bg-[#ffebde]
+                                                ${dateOfSalary === "Mon" ? "bg-[#ffebde]" : null }`}>
+                                                    Mon
+                                                </div>
+                                                <div 
+                                                onClick={handleSelectDay}
+                                                className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                                hover:cursor-poiner hover:bg-[#ffebde]
+                                                ${dateOfSalary === "Tue" ? "bg-[#ffebde]" : null }`}>
+                                                    Tue
+                                                </div>
+                                                <div 
+                                                onClick={handleSelectDay}
+                                                className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                                hover:cursor-poiner hover:bg-[#ffebde]
+                                                ${dateOfSalary === "Wed" ? "bg-[#ffebde]" : null }`}>
+                                                    Wed
+                                                </div>
+                                                <div 
+                                                onClick={handleSelectDay}
+                                                className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                                hover:cursor-poiner hover:bg-[#ffebde]
+                                                ${dateOfSalary === "Thu" ? "bg-[#ffebde]" : null }`}>
+                                                    Thu
+                                                </div>
+                                                <div 
+                                                onClick={handleSelectDay}
+                                                className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                                hover:cursor-poiner hover:bg-[#ffebde]
+                                                ${dateOfSalary === "Fri" ? "bg-[#ffebde]" : null }`}>
+                                                    Fri
+                                                </div>
+                                                <div 
+                                                onClick={handleSelectDay}
+                                                className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                                hover:cursor-poiner hover:bg-[#ffebde]
+                                                ${dateOfSalary === "Sat" ? "bg-[#ffebde]" : null }`}>
+                                                    Sat
+                                                </div>
+                                                <div 
+                                                onClick={handleSelectDay}
+                                                className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
+                                                hover:cursor-poiner hover:bg-[#ffebde]
+                                                ${dateOfSalary === "Sun" ? "bg-[#ffebde]" : null }`}>
+                                                    Sun
+                                                </div>
                                             </div>
-                                            <div 
-                                            onClick={handleSelectDay}
-                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
-                                            hover:cursor-poiner hover:bg-[#ffebde]
-                                            ${dateOfSalary === "Tue" ? "bg-[#ffebde]" : null }`}>
-                                                Tue
-                                            </div>
-                                            <div 
-                                            onClick={handleSelectDay}
-                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
-                                            hover:cursor-poiner hover:bg-[#ffebde]
-                                            ${dateOfSalary === "Wed" ? "bg-[#ffebde]" : null }`}>
-                                                Wed
-                                            </div>
-                                            <div 
-                                            onClick={handleSelectDay}
-                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
-                                            hover:cursor-poiner hover:bg-[#ffebde]
-                                            ${dateOfSalary === "Thu" ? "bg-[#ffebde]" : null }`}>
-                                                Thu
-                                            </div>
-                                            <div 
-                                            onClick={handleSelectDay}
-                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
-                                            hover:cursor-poiner hover:bg-[#ffebde]
-                                            ${dateOfSalary === "Fri" ? "bg-[#ffebde]" : null }`}>
-                                                Fri
-                                            </div>
-                                            <div 
-                                            onClick={handleSelectDay}
-                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
-                                            hover:cursor-poiner hover:bg-[#ffebde]
-                                            ${dateOfSalary === "Sat" ? "bg-[#ffebde]" : null }`}>
-                                                Sat
-                                            </div>
-                                            <div 
-                                            onClick={handleSelectDay}
-                                            className={`p-1 border-yellow-900 border-2 border-l-0 h-full w-full flex justify-center items-center 
-                                            hover:cursor-poiner hover:bg-[#ffebde]
-                                            ${dateOfSalary === "Sun" ? "bg-[#ffebde]" : null }`}>
-                                                Sun
-                                            </div>
-                                        </div>
                                     }
                                     {
                                         selected === "Monthly" &&
-                                        <div className="h-full w-full bg-bgBrown flex items-center justify-center border-yellow-900 border-2">
-                                            <input 
-                                                onChange={handleSelectMonth}
-                                                className="h-full w-24 outline-none border-none bg-[#ffcdac] text-center text-3xl"
-                                                type="number"
-                                            />
-                                        </div>
+                                            <div className="h-full w-full bg-bgBrown flex items-center justify-center border-yellow-900 border-2">
+                                                <input 
+                                                    onChange={handleSelectMonth}
+                                                    className="h-full w-24 outline-none border-none bg-[#ffcdac] text-center text-3xl"
+                                                    type="number"
+                                                    placeholder="1-31"
+                                                />
+                                            </div>
                                     }
                                 </div>
 

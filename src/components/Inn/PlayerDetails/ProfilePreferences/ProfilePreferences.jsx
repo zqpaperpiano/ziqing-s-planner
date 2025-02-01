@@ -166,13 +166,22 @@ const ProfilePreferences = () => {
                         <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-center items-center">
                             {
                                 player?.preferences?.hasSalary ?
-                                <div className="h-full w-full">
-                                    <div className="h-1/2 w-1/2 rounded-full bg-black text-white flex justify-center items-center">
-                                        <p>1000</p>
+                                <div className="h-full w-full flex items-center justify-center">
+                                    <div className="h-full w-1/2 p-2 flex items-center justify-center">
+                                        <p className="font-tiny5 font-7xl">{player?.preferences?.salary}</p>
                                     </div>
 
-                                    <p>Monthly</p>
-                                </div> :
+                                    <div className="h-full w-1/2 text-xl font-silkscreen text-black font-bold">
+                                    {
+                                        player?.preferences?.salaryFrequency?.frequency === 'Daily' ?
+                                        <p className="">Daily</p> :
+                                        <p>{player?.preferences?.salaryFrequency?.day}</p>
+                                    }
+                                    </div>
+                                </div> 
+                                
+                                :
+
                                 <div className="h-full w-full bg-black rounded-lg flex justify-center items-center">
                                     <p className="font-silkscreen font-5xl text-white text-center">No salary set</p>
                                 </div>

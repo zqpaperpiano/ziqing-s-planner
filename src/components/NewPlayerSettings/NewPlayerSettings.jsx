@@ -54,11 +54,11 @@ const NewPlayerSettings = () => {
         setDisplayName(player.name);
     })
 
-    useEffect(() => {
-        if(player.completedCalibration){
-            navigate('/');
-        }
-    })
+    // useEffect(() => {
+    //     if(player.completedCalibration){
+    //         navigate('/');
+    //     }
+    // })
 
 
     const handleSubmitPreferences = () => {
@@ -71,7 +71,7 @@ const NewPlayerSettings = () => {
                 categories: categories
         }
 
-        // console.log('this is my preferences: ', preferences);
+        console.log('this is my preferences: ', preferences);
 
         const userToken = auth.currentUser.getIdToken();
         const uid = auth.currentUser.uid;
