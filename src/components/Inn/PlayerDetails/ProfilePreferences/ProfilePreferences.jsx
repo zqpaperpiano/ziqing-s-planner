@@ -1,9 +1,6 @@
 import { Button, InputAdornment, InputLabel, Tab, Tabs, TextField } from "@mui/material"; 
 import React, { useContext, useState, useEffect } from "react"; 
-import Pfp from '../../../../images/profile-pic.jpg';
-import EditIcon from '@mui/icons-material/Edit';
-import { EventContext } from "../../../WarRoom/components/EventContext";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditSalary from "../EditPopUps/EditSalary";
 import EditCat from "../EditPopUps/EditCat";
 import EditDetails from "../EditPopUps/EditDetails";
 import EditSchedule from "../EditPopUps/EditSchedule";
@@ -14,6 +11,7 @@ import DayScheduleBreakdown from "./Components/DayScheduleBreakdown";
 const ProfilePreferences = () => { 
     const [editCategories, setEditCategories] = useState(false);
     const [editSchedule, setEditSchedule] = useState(false);
+    const [editSalary, setEditSalary] = useState(false);
     const [editDetails, setEditDetails] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const { player } = useContext(AuthContext);
@@ -42,6 +40,16 @@ const ProfilePreferences = () => {
         }
     }
 
+    const toggleEditSalary = () => {
+        if(editSalary){
+            setEditSalary(false);
+            setEditMode(false);
+        }else{
+            setEditSalary(true);
+            setEditMode(true);
+        }
+    }
+
     const toggleEditCategories = () => {
         if(editCategories){
             setEditCategories(false);
@@ -57,6 +65,7 @@ const ProfilePreferences = () => {
             {editCategories && <EditCat onClose={toggleEditCategories} />}
             {editDetails && <EditDetails handleClose={toggleEditDetails}/>}
             {editSchedule && <EditSchedule onClose={toggleEditSchedule}/>}
+            {editSalary && <EditSalary onClose={toggleEditSalary}/>}
 
             {/* pfp, displayName, status */} 
             <div className={`relative h-1/4 w-full ${editMode ? 'opacity-0 z-0 pointer-events-none': 'opacity-100 z-50'}`}>
@@ -161,17 +170,19 @@ const ProfilePreferences = () => {
                     <div className="h-full flex-auto p-2">
                         <div className="relative h-fit w-full flex items-center">
                             <p className="text-sm font-bold p-0 m-0 pl-2">Salary</p>
-                            <p className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Salary</p>
+                            <p 
+                            onClick={toggleEditSalary}
+                            className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Salary</p>
                         </div>
                         <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-center items-center">
                             {
                                 player?.preferences?.hasSalary ?
                                 <div className="h-full w-full flex items-center justify-center">
                                     <div className="h-full w-1/2 p-2 flex items-center justify-center">
-                                        <p className="font-tiny5 font-7xl">{player?.preferences?.salary}</p>
+                                        <p className="font-tiny5 font-10xl font-bold">{player?.preferences?.salary}</p>
                                     </div>
 
-                                    <div className="h-full w-1/2 text-xl font-silkscreen text-black font-bold">
+                                    <div className="h-full w-1/2 text-xl font-silkscreen text-black flex justify-center items-center">
                                     {
                                         player?.preferences?.salaryFrequency?.frequency === 'Daily' ?
                                         <p className="">Daily</p> :

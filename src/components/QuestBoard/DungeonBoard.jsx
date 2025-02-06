@@ -7,13 +7,14 @@ import { StepBack, StepForward } from "lucide-react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate, useParams } from "react-router";
 import PageTracker from "./PageTracker/PageTracker";
+import config from '../../config/config.json';
+import { auth } from '../../config/firebase';
 
 const DungeonBoard = () => {
     const {'page-number': page} = useParams();
     const [totalDungeons, setTotalDungeons] = useState(0);
     const [onAddDungeon, setOnAddDungeon] = useState(false);
     const {dungeonList, setDungeonList} = useContext(DungeonContext);
-    const [nextDungeonID, setNextDungeonID] = useState(dungeonList.length);
     const [maxPages, setMaxPages] = useState(1);
     const [dungeonPp, setDungeonPp] = useState(3);
 
@@ -33,22 +34,15 @@ const DungeonBoard = () => {
         window.addEventListener("resize", updateDungeonPp);
     })
 
+    // useEffect(() => {
+    //     console.log('Dungeon list:', dungeonList);
+    // }, [dungeonList])
+
     useEffect(() => {
         const numDungeons = dungeonList.length;
         setTotalDungeons(numDungeons)
     }, [dungeonList])
 
-
-    // useEffect(() => {
-    //     console.log(dungeonList)
-    // }, [dungeonList])
-
-    useEffect(() => {
-        const length = Object.keys(dungeonList).length;
-        let nextVal = parseInt(Object.keys(dungeonList)[length - 1]) + 1;
-        if(isNaN(nextVal)) nextVal = 1;
-        setNextDungeonID(nextVal);
-    }, [dungeonList]);
 
     useEffect(() => {
         const newMax = Math.ceil(totalDungeons / 3);
@@ -60,21 +54,50 @@ const DungeonBoard = () => {
 
     //when a new quest is added
     const handleIncreaseDungeons = (newDungeon) => {
-        const dungeonArr = Object.entries(newDungeon);
-        const keys = dungeonArr[0][0];
-        const temp = dungeonArr[0][1];
-        setDungeonList((prevList) => ({
-            ...prevList,
-            [keys]: temp
+        fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
+            },
+            body: JSON.stringify({
+                "dungeon": newDungeon,
+                "userId": auth.currentUser.uid
+            })
         })
-        )
+        .then((resp) => resp.json())
+        .then(data => {
+            // console.log('my data: ', data);
+            setDungeonList((prevList) => ({
+                ...prevList, // Spread the previous list to keep existing dungeons
+                [data.dungeonId]: data // Add the new dungeon with its dungeonId as the key
+            }));
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
-    const handleRemoveDungeons = (dungeonID) => {
-       setDungeonList((prevList) => {
-        const { [dungeonID]: _ , ...newData} = prevList;
-        return newData;
-       })
+    const handleDeleteDungeon = (dungeonId) => {
+        fetch(`${config.url}/dungeon/delete-dungeon`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
+            },
+            body: JSON.stringify({
+                dungeonId: dungeonId
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                const updatedDungeonList = dungeonList.filter(dungeon => dungeon.dungeonId !== dungeonId);
+                setDungeonList(updatedDungeonList);
+                console.log('Dungeon deleted');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        })
     }
 
     const handleOnClickAddDungeons = () => {
@@ -124,7 +147,7 @@ const DungeonBoard = () => {
                     onClick={handleOnClickAddDungeons}>Post a Dungeon</Button>
                 </div>
                 <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
-                    <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleRemoveDungeons}/>
+                    <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleDeleteDungeon} />
 
                 </div>
                 <div className="h-5p w-full mb-0.5">
@@ -141,7 +164,6 @@ const DungeonBoard = () => {
                 <DungeonDetailInput
                     handleExitAddDungeon={handleExitAddDungeon}
                     handleIncreaseDungeons={handleIncreaseDungeons}
-                    dungeonID={nextDungeonID}
                 />
             }
         </div>

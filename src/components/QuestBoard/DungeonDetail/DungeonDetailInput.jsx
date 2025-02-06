@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Background from '../../../images/hip-square.webp';
 
 
-const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dungeonID }) => {
+const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => {
 
     const [checkpointList, setCheckpointList] = useState([
         {"C1": {
@@ -16,14 +16,12 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
         }}
     ]);
     const [dungeonDetails, setDungeonDetails] = useState({
-                                                [dungeonID]: {
                                                     dungeonName: '',
                                                     dungeonDescription: '',
                                                     dungeonCheckpoints: checkpointList,
                                                     completionPercentage: 0,
                                                     dungeonCompleted: false
-                                                }
-                                            });
+                                                });
 
 
     //when there is a change in the checkpoint list, change quest details as well
@@ -44,11 +42,8 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
 
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, 
-            [dungeonID]: {
-                ...prevDeets[dungeonID],
-                dungeonCheckpoints: checkpointList,
-                completionPercentage: completionPercentage
-            }
+            dungeonCheckpoints: checkpointList,
+            completionPercentage: completionPercentage
         }))
     }, [checkpointList]);
 
@@ -61,16 +56,13 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons, dunge
     const handleDungeonDetailsChange = (e, parameterName) => {
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, 
-            [dungeonID]: {
-                ...prevDeets[dungeonID],
-                [parameterName]: e.target.value
-            }
+            [parameterName]: e.target.value
         }))
     }
 
 
     const handlePostQuest = () => {
-        const curr = dungeonDetails[dungeonID];
+        const curr = dungeonDetails
 
         // do necessary verification of all inputs first
         if (curr.dungeonName === ''){

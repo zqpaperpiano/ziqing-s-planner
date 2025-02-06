@@ -21,10 +21,10 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe  = onAuthStateChanged(auth, (currUser) => {
             if(currUser){
-                console.log('reinstated user');
+                // console.log('reinstated user');
                 setPlayer(currUser);
             }else{
-                console.log('removing user');
+                // console.log('removing user');
                 setPlayer(null);
             }
             setLoading(false);
@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
     const logOut = async () => {
         await signOut(auth);
         setPlayer(null);  
+        localStorage.removeItem('dungeonList');
         localStorage.removeItem('player');  
     }
 
