@@ -34,12 +34,12 @@ const DungeonBoard = () => {
         window.addEventListener("resize", updateDungeonPp);
     })
 
-    // useEffect(() => {
-    //     console.log('Dungeon list:', dungeonList);
-    // }, [dungeonList])
+    useEffect(() => {
+        console.log('curr number of dungeons: ', totalDungeons);
+    }, [totalDungeons])
 
     useEffect(() => {
-        const numDungeons = dungeonList.length;
+        const numDungeons = Object.keys(dungeonList).length;
         setTotalDungeons(numDungeons)
     }, [dungeonList])
 
@@ -112,7 +112,7 @@ const DungeonBoard = () => {
         const maxPage = Math.ceil(totalDungeons / 3);
         const newPage = parseInt(page) + 1
         if(newPage <= maxPage){
-            navigate(`/quest-board/quest-page/${newPage}`);
+            navigate(`/dungeon-board/${newPage}`);
         }else{
             toast.error('There is no next page!');
         }
@@ -121,7 +121,7 @@ const DungeonBoard = () => {
     const handleClickBack = () => {
         const newPage = page - 1;
         if(newPage >= 1){
-            navigate(`/quest-board/quest-page/${newPage}`)
+            navigate(`/dungeon-board/${newPage}`)
         }else{
             toast.error('There is no previous page!');
         }

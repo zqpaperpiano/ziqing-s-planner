@@ -22,7 +22,7 @@ const PageTracker = ({ maxPages, currPage }) => {
     // }, [tracking])
 
     const handleClickedNavigator = (num) => {
-        navigate(`/quest-board/quest-page/${num}`)
+        navigate(`/dungeon-board/${num}`)
     }
 
     return(
