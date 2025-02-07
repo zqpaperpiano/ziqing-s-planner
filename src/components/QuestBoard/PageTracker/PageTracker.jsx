@@ -17,10 +17,6 @@ const PageTracker = ({ maxPages, currPage }) => {
         setTracking(tempArr);
     }, [maxPages])
 
-    // useEffect(() => {
-    //     console.log(tracking);
-    // }, [tracking])
-
     const handleClickedNavigator = (num) => {
         navigate(`/dungeon-board/${num}`)
     }

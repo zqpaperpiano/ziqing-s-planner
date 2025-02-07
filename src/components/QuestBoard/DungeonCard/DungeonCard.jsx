@@ -29,7 +29,7 @@ const DungeonCard = ({dungeon, page, handleRemoveDungeon}) => {
                 duration: 1.5,
                 rotateY: {delay: 0.1, duration: 0.75}
             }}
-            className="relative h-full overflow-hidden  backface-hidden dungeon-card rounded-lg bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1]">
+            className={`relative h-full overflow-hidden  backface-hidden dungeon-card rounded-lg bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] ${selected ? 'z-50' : 'z-10'}`}>
                 <div 
                 className="absolute inset-0 flex flex-col items-center tf:p-4">
                     <div className="h-full w-full text-center flex flex-col pointer-event-none justify-center items-center font-silkscreen py-2">

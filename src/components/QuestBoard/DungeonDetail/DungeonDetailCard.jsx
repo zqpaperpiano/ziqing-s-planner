@@ -6,19 +6,8 @@ import { motion } from "framer-motion";
 import Checkpoints from "./Checkpoints";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { ToastContainer, toast } from "react-toastify";
-
-// completionPercentage
-// : 
-// "0.00"
-// dungeonCheckpoints
-// : 
-// [{…}]
-// dungeonDescription
-// : 
-// "sadcsxc"
-// dungeonName
-// : 
-// "sacx"
+import config from "../../../config/config.json";
+import { auth } from "../../../config/firebase";
 
 const DungeonDetailCard = () => {
     const { dungeonID } = useParams();
@@ -44,6 +33,8 @@ const DungeonDetailCard = () => {
 
     //auto updae completion percentages
     useEffect(() => {
+        if(!dungeon?.dungeonCheckpoints) return;
+
         const numItems = dungeon.dungeonCheckpoints.length;
         let numCompleted = 0;
         const list = dungeon.dungeonCheckpoints;
@@ -64,9 +55,8 @@ const DungeonDetailCard = () => {
             }));
         }
     
-    }, [dungeon])
+    }, [dungeon.dungeonCheckpoints])
 
-    
 
     const handleNewCheckpointList = (newList) => {
         setDungeon((prev) => ({
@@ -104,13 +94,6 @@ const DungeonDetailCard = () => {
     }
 
     const exitEditMode = (param, result) => {
-        if(result){
-            callSuccessNotif(param);
-            
-        }else{
-            callNoSaveNotif();
-        }
-
         if(param === 'name'){
             setEditName(false);
         }else{
@@ -129,12 +112,40 @@ const DungeonDetailCard = () => {
         setEditDescription(true);
     }
 
+    const handleSubmitChanges = () => {
+        // setDungeonList((prevList) => ({
+        //     ...prevList,
+        //     [dungeonID]: dungeon
+        // }));
+        console.log('clicked');
+        auth.currentUser.getIdToken().then(token => {fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                dungeonId: dungeonID,
+                dungeonName: dungeon.dungeonName,
+                dungeonDescription: dungeon.dungeonDescription,
+                dungeonCheckpoints: dungeon.dungeonCheckpoints,
+                completionPercentage: dungeon.completionPercentage,
+            })
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log('received: ', data)
+        })
+        .catch(err => {
+            console.log('An error has occured. Please try again later.');
+        })
+    })
+        // navigate(`/dungeon-board/${page}`)
+    }
+
     const exitDetailCard = () => {
-        setDungeonList((prevList) => ({
-            ...prevList,
-            [dungeonID]: dungeon
-        }));
-        navigate(`/dungeon-board/${page}`)
+        callNoSaveNotif();
+        navigate(`/dungeon-board/${page}`);
     }
 
     return(
@@ -166,7 +177,7 @@ const DungeonDetailCard = () => {
                                             ref={nameRef}
                                             onChange={(e) => {handleChange(e, "dungeonName")}}
                                             className="h-8 w-4/5 border-none rounded-lg font-silkscreen p-1 text-center"
-                                            placeholder={dungeon.dungeonName}
+                                            value={dungeon.dungeonName}
                                             onKeyDown={(e) => {
                                                 if(e.key === 'Enter'){
                                                     exitEditMode('name', true);
@@ -215,7 +226,7 @@ const DungeonDetailCard = () => {
                                         multiline
                                         fullWidth
                                         maxRows={4}
-                                        placeholder={dungeon.dungeonDescription}
+                                        value={dungeon.dungeonDescription}
                                         onChange={(e) => {handleChange(e, "dungeonDescription")}}
                                         sx={{
                                             '& .MuiOutlinedInput-root': {
@@ -245,6 +256,14 @@ const DungeonDetailCard = () => {
                                 <Checkpoints checkpoints={dungeon.dungeonCheckpoints} handleSubmit={handleNewCheckpointList} btnColor={"black"} />
                            </div>
                         </div>
+                    </div>
+                    <div className="absolute bottom-2 left-0 right-0 mx-auto w-fit">
+                        <Button
+                        onClick={handleSubmitChanges}
+                        sx={{
+                            fontFamily: 'silkscreen',
+                            color: 'black'
+                        }}>Save and Exit</Button>
                     </div>
                 </div>
             }

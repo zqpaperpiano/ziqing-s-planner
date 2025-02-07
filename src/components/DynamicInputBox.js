@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
-const DynamicInputBox = ({ placeholderText, handleChange, index }) => {
+const DynamicInputBox = ({ value, handleChange, index }) => {
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
 
@@ -31,7 +31,7 @@ const DynamicInputBox = ({ placeholderText, handleChange, index }) => {
             ref={inputRef}
             type="text"
             onChange={handleInputChange}
-            placeholder={placeholderText}
+            value={value}
             style={{
                 fontFamily: 'PatrickHand',
                 width: inputWidth,

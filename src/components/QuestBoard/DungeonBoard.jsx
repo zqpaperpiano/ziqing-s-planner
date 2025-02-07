@@ -45,7 +45,7 @@ const DungeonBoard = () => {
 
 
     useEffect(() => {
-        const newMax = Math.ceil(totalDungeons / 3);
+        const newMax = Math.ceil(totalDungeons / dungeonPp);
         if(newMax !== maxPages){
             //ensure that there is always a minimum maxPage value of 1
             setMaxPages(Math.max(newMax, 1));
@@ -109,9 +109,8 @@ const DungeonBoard = () => {
     }
 
     const handleClickNext = () => {
-        const maxPage = Math.ceil(totalDungeons / 3);
         const newPage = parseInt(page) + 1
-        if(newPage <= maxPage){
+        if(newPage <= maxPages){
             navigate(`/dungeon-board/${newPage}`);
         }else{
             toast.error('There is no next page!');
