@@ -9,7 +9,7 @@ export const DungeonProvider = ({children}) => {
 
     useEffect(() => {
         auth.currentUser.getIdToken(true).then(token => {
-            console.log('my token: ', token);
+            // console.log('my token: ', token);
             fetch(`${config.development.apiURL}dungeon/get-all-dungeons/${auth.currentUser.uid}`, {
                 method: 'GET',
                 headers: {

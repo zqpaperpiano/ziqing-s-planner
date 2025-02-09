@@ -12,6 +12,8 @@ import { auth } from '../../config/firebase';
 
 const DungeonBoard = () => {
     const {'page-number': page} = useParams();
+    const [onClickDelete, setOnClickDelete] = useState(false);
+    const [toDel, setToDel] = useState('');
     const [totalDungeons, setTotalDungeons] = useState(0);
     const [onAddDungeon, setOnAddDungeon] = useState(false);
     const {dungeonList, setDungeonList} = useContext(DungeonContext);
@@ -33,10 +35,6 @@ const DungeonBoard = () => {
 
         window.addEventListener("resize", updateDungeonPp);
     })
-
-    useEffect(() => {
-        console.log('curr number of dungeons: ', totalDungeons);
-    }, [totalDungeons])
 
     useEffect(() => {
         const numDungeons = Object.keys(dungeonList).length;
@@ -78,26 +76,38 @@ const DungeonBoard = () => {
         })
     }
 
-    const handleDeleteDungeon = (dungeonId) => {
-        fetch(`${config.url}/dungeon/delete-dungeon`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
-            },
-            body: JSON.stringify({
-                dungeonId: dungeonId
+    const handleClickAbandon = (dungeonId) => {
+        setOnClickDelete(true);
+        setToDel(dungeonId);
+    }
+
+    const handleDeleteDungeon = () => {
+        auth.currentUser.getIdToken()
+        .then(token => {
+            fetch(`${config.development.apiURL}dungeon/delete-dungeon`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    dungeonId: toDel
+                })
             })
-            .then(resp => resp.json())
-            .then(data => {
-                const updatedDungeonList = dungeonList.filter(dungeon => dungeon.dungeonId !== dungeonId);
-                setDungeonList(updatedDungeonList);
-                console.log('Dungeon deleted');
-            })
-            .catch(err => {
-                console.log(err);
-            })
+                .then(resp => {
+                    if(resp.status === 204){
+                        setDungeonList(prevDungeonList => {
+                            const { [toDel]: _, ...updatedDungeonList } = prevDungeonList;
+                            return updatedDungeonList;
+                        });
+                        setToDel('');
+                    }
+                })
+                .catch(err => {
+                    console.log('an error has occured: ', err);
+                })
         })
+        
     }
 
     const handleOnClickAddDungeons = () => {
@@ -146,7 +156,7 @@ const DungeonBoard = () => {
                     onClick={handleOnClickAddDungeons}>Post a Dungeon</Button>
                 </div>
                 <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
-                    <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleDeleteDungeon} />
+                    <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleClickAbandon} />
 
                 </div>
                 <div className="h-5p w-full mb-0.5">
@@ -164,6 +174,26 @@ const DungeonBoard = () => {
                     handleExitAddDungeon={handleExitAddDungeon}
                     handleIncreaseDungeons={handleIncreaseDungeons}
                 />
+            }
+            {
+                onClickDelete &&
+                <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
+                    <div className="bg-white p-4 rounded-lg font-silkscreen">
+                        <p>Are you sure you want to delete this dungeon?</p>
+                        <Button
+                            onClick={() => {
+                                handleDeleteDungeon();
+                                setOnClickDelete(false);
+                            }}
+                        >Yes</Button>
+                        <Button
+                            onClick={() => {
+                                setToDel('');
+                                setOnClickDelete(false);
+                            }}
+                        >No</Button>
+                    </div>
+                </div>
             }
         </div>
     );

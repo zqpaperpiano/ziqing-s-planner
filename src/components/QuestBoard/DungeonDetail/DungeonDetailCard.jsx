@@ -113,11 +113,6 @@ const DungeonDetailCard = () => {
     }
 
     const handleSubmitChanges = () => {
-        // setDungeonList((prevList) => ({
-        //     ...prevList,
-        //     [dungeonID]: dungeon
-        // }));
-        console.log('clicked');
         auth.currentUser.getIdToken().then(token => {fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
             method: 'POST',
             headers: {
@@ -134,13 +129,18 @@ const DungeonDetailCard = () => {
         })
         .then(resp => resp.json())
         .then(data => {
-            console.log('received: ', data)
+            callSuccessNotif(dungeon.dungeonName);
+            setDungeonList((prevList) => ({
+                ...prevList,
+                data
+            }))
+            navigate(`/dungeon-board/${page}`)
         })
         .catch(err => {
             console.log('An error has occured. Please try again later.');
         })
     })
-        // navigate(`/dungeon-board/${page}`)
+        
     }
 
     const exitDetailCard = () => {
