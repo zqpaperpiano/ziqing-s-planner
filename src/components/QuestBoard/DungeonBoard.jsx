@@ -52,27 +52,38 @@ const DungeonBoard = () => {
 
     //when a new quest is added
     const handleIncreaseDungeons = (newDungeon) => {
-        fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
-            },
-            body: JSON.stringify({
-                "dungeon": newDungeon,
-                "userId": auth.currentUser.uid
+        auth.currentUser.getIdToken()
+        .then(token => {
+            fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    "dungeon": newDungeon,
+                    "userId": auth.currentUser.uid
+                })
             })
-        })
-        .then((resp) => resp.json())
-        .then(data => {
-            // console.log('my data: ', data);
-            setDungeonList((prevList) => ({
-                ...prevList, // Spread the previous list to keep existing dungeons
-                [data.dungeonId]: data // Add the new dungeon with its dungeonId as the key
-            }));
-        })
-        .catch(err => {
-            console.log(err);
+            .then((resp) => resp.json())
+            .then(data => {
+                console.log('received data: ', data);
+                console.log('data id: ', Object.keys(data));
+                
+                const dungeonId = Object.keys(data)[0];
+                const dungeonData = Object.values(data)[0];
+                console.log('other stuff: ', Object.values(data)[0])
+                setDungeonList((prevList) => ({
+                    ...prevList, // Spread the previous list to keep existing dungeons
+                    [dungeonId]: dungeonData // Add the new dungeon with its dungeonId as the key
+                }));
+            })
+            .then(() => {
+                console.log('my changed dungeon list: ', dungeonList);
+            })
+            .catch(err => {
+                console.log(err);
+            })
         })
     }
 
@@ -138,7 +149,7 @@ const DungeonBoard = () => {
 
 
     return(
-        <div className={`h-full w-full flex ${onAddDungeon} ? 'z-10' : 'z-50'`}>
+        <div className={`h-full w-full flex ${onAddDungeon} ? 'z-0' : 'z-50'`}>
             <ToastContainer />
             <div className="flex items-center justify-center mx-auto">
                 <Button
@@ -155,7 +166,7 @@ const DungeonBoard = () => {
                     className="absolute  w-auto left-0"
                     onClick={handleOnClickAddDungeons}>Post a Dungeon</Button>
                 </div>
-                <div className="relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
+                <div className={`relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden ${onAddDungeon ? 'z-0' : 'z-50'}`}>
                     <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleClickAbandon} />
 
                 </div>

@@ -8,25 +8,27 @@ export const DungeonProvider = ({children}) => {
     const [dungeonList, setDungeonList] = useState({});
 
     useEffect(() => {
-        auth.currentUser.getIdToken(true).then(token => {
-            // console.log('my token: ', token);
-            fetch(`${config.development.apiURL}dungeon/get-all-dungeons/${auth.currentUser.uid}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+        if(auth.currentUser){
+            auth.currentUser.getIdToken(true).then(token => {
+                // console.log('my token: ', token);
+                fetch(`${config.development.apiURL}dungeon/get-all-dungeons/${auth.currentUser.uid}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log('in dungeon context, data received: ', data);
+                    setDungeonList(data);
+                    localStorage.setItem('dungeonList', JSON.stringify(data));
+                })
+                .catch(err => {
+                    console.log(err);
+                })
             })
-            .then(resp => resp.json())
-            .then(data => {
-                console.log('in dungeon context, data received: ', data);
-                setDungeonList(data);
-                localStorage.setItem('dungeonList', JSON.stringify(data));
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        })
+        }
         
     }, [])
     
