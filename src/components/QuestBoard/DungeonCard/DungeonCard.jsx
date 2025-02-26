@@ -9,9 +9,9 @@ const DungeonCard = ({dungeon, page, handleRemoveDungeon}) => {
     const [selected, setSelected] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log('from dungeon card received: ', dungeon);
-    }, [])
+    // useEffect(() => {
+    //     console.log('from dungeon card received: ', dungeon);
+    // }, [])
 
     return(
             <motion.div   

@@ -23,7 +23,7 @@ export default function BreakdownChart() {
         let tempArr = []
 
         mapping.forEach((val, key) => {
-            console.log(shopCategories[key].categoryColor);
+            // console.log(shopCategories[key].categoryColor);
             let temp = {
                 id: key,
                 value: val,
@@ -36,9 +36,9 @@ export default function BreakdownChart() {
         setChartData(tempArr);
     }, [purchaseHistory])
 
-    useEffect(() => {
-        console.log(chartData);
-    }, [chartData])
+    // useEffect(() => {
+    //     console.log(chartData);
+    // }, [chartData])
 
   return (
     <div className="h-full w-full flex items-center justify-center">

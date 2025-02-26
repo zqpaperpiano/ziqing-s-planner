@@ -20,7 +20,7 @@ export const DungeonProvider = ({children}) => {
                 })
                 .then(resp => resp.json())
                 .then(data => {
-                    console.log('in dungeon context, data received: ', data);
+                    // console.log('in dungeon context, data received: ', data);
                     setDungeonList(data);
                     localStorage.setItem('dungeonList', JSON.stringify(data));
                 })

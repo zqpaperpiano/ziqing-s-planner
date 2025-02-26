@@ -7,6 +7,9 @@ import DungeonSelector from "../../DungeonSelector/DungeonSelector";
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { ToastContainer, toast } from 'react-toastify';
 import { EventContext } from "./EventContext";
+import { AuthContext } from "../../../config/authContext";
+import { auth } from "../../../config/firebase";
+import config from '../../../config/config.json';
 
 const EventCreator = ({toggleCreatingEvent, time}) => {
     const [cat, setCat] = useState("cat2");
@@ -14,8 +17,12 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
     const [defStart, setDefStart] = useState(time[0]);
     const [defEnd, setDefEnd] = useState(time[1]);
     const [eventDescription, setEventDescription] = useState("");
-    const {eventList, setEventList, categories} = useContext(EventContext);
+    const {eventList, setEventList} = useContext(EventContext);
+    const { player } = useContext(AuthContext);
+    const categories = player?.preferences?.categories;
     const [dungeon, setDungeon] = useState(null);
+
+
 
     const onDungeonChange = (e) => {
         setDungeon(e.target.value);
@@ -48,16 +55,46 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
             return;
         }
 
-        const eventId = eventList.length + 1;
+        const playerId = auth.currentUser.uid;
+
         const newEvent = {
-            id: eventId,
             title: eventName,
             start: defStart.toDate(),
             end: defEnd.toDate(),
-            color: categories[cat].color
+            color: categories[cat].color,
+            category: cat, 
+            description: eventDescription,
+            createdBy: playerId
         }
-        setEventList((prevList) => [...prevList, newEvent])
-        handleClickExit();
+
+        auth.currentUser.getIdToken()
+        .then(token => {
+            fetch(`${config.development.apiURL}event/createNewEvent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    event: newEvent
+                })
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                const formatEvent = {
+                    ...data,
+                    start: new Date(data.start),
+                    end: new Date(data.end)
+                }
+
+
+                setEventList((prevList) => [...prevList, formatEvent]);
+                handleClickExit();
+            })
+            .catch(err => {
+                console.log('An error has occured with the server. Please try again');
+            })
+        })
     }
 
     return(
@@ -113,9 +150,10 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
                                     }}
                                 >
                                     {
-                                        Object.entries(categories).map((cat) => {
+                                        Object.entries(categories).map((cat, index) => {
                                             return(
                                                 <MenuItem
+                                                    key={index}
                                                     sx={{
                                                         fontFamily: 'PatrickHand'
                                                     }}

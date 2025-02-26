@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if(player !== auth.currentUser && player !== null){
-            console.log('setting player');
+            // console.log('setting player');
             localStorage.setItem('player', JSON.stringify(player));
         }else if(player === auth.currentUser || (auth.currentUser && !player)){
             setPlayer(JSON.parse(localStorage.getItem('player')));
