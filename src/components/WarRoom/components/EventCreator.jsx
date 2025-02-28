@@ -61,45 +61,53 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
             desc = "No description provided";
         }
 
-        const newEvent = {
-            title: eventName,
-            start: defStart.toDate(),
-            end: defEnd.toDate(),
-            color: categories[cat].color,
-            category: cat, 
-            dungeon: dungeon,
-            description: desc,
-            createdBy: playerId
-        }
+        if(hasEvent){
 
-        auth.currentUser.getIdToken()
-        .then(token => {
-            fetch(`${config.development.apiURL}event/createNewEvent`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    event: newEvent
+            // write the fetch to update the specific event
+
+        }else{
+            const newEvent = {
+                title: eventName,
+                start: defStart.toDate(),
+                end: defEnd.toDate(),
+                color: categories[cat].color,
+                category: cat, 
+                dungeon: dungeon,
+                description: desc,
+                createdBy: playerId
+            }
+    
+            auth.currentUser.getIdToken()
+            .then(token => {
+                fetch(`${config.development.apiURL}event/createNewEvent`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        event: newEvent
+                    })
+                })
+                .then(resp => resp.json())
+                .then(data => {
+                    const formatEvent = {
+                        ...data,
+                        start: new Date(data.start),
+                        end: new Date(data.end)
+                    }
+    
+    
+                    setEventList((prevList) => [...prevList, formatEvent]);
+                    handleClickExit();
+                })
+                .catch(err => {
+                    console.log('An error has occured with the server. Please try again');
                 })
             })
-            .then(resp => resp.json())
-            .then(data => {
-                const formatEvent = {
-                    ...data,
-                    start: new Date(data.start),
-                    end: new Date(data.end)
-                }
+        }
 
-
-                setEventList((prevList) => [...prevList, formatEvent]);
-                handleClickExit();
-            })
-            .catch(err => {
-                console.log('An error has occured with the server. Please try again');
-            })
-        })
+        
     }
 
     return(
