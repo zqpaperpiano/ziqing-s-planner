@@ -41,6 +41,7 @@ const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {
                 >
                     {
                         Object.entries(dungeonList).map((dungeon, index) => {
+                            // console.log('dungeon being mapped: ', dungeon);
                             return(
                                 <MenuItem
                                 key={index}

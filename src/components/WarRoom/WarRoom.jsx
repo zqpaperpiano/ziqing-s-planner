@@ -3,7 +3,6 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import EventCreator from "./components/EventCreator";
 import dayjs from "dayjs";
-import { DungeonContext } from "../QuestBoard/DungeonContext/DungeonContext";
 import { EventContext } from "./components/EventContext";
 
 
@@ -13,6 +12,7 @@ const WarRoom = () => {
     const localizer = momentLocalizer(moment);
     const [time, setTime] = useState(null);
     const {eventList} = useContext(EventContext);
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
     // useEffect(() => {
     //     console.log(eventList);
@@ -26,8 +26,17 @@ const WarRoom = () => {
         setCreatingEvent(true);
     }, []);
 
+    const handleClickEvent = (event) => {
+        setSelectedEvent(event);
+        console.log('clicked event: ', event);
+    }
+
     const toggleCreatingEvent = () => {
         setCreatingEvent(false);
+    }
+
+    const toggleSelectEvent = () => {
+        setSelectedEvent(null);
     }
 
     return(
@@ -45,14 +54,21 @@ const WarRoom = () => {
                         return {style: { backgroundColor}}
                     }}
                     onSelectSlot={handleClick}
+                    onSelectEvent={handleClickEvent}
 
                 />
             </div>
 
             {   
                 creatingEvent &&
-                <EventCreator toggleCreatingEvent={toggleCreatingEvent} time={time}/>
+                <EventCreator toggleCreatingEvent={toggleCreatingEvent} time={time} hasEvent={false}/>
             }
+            {
+                selectedEvent &&
+                <EventCreator event={selectedEvent} time={time} toggleCreatingEvent={toggleSelectEvent} hasEvent={true}/>
+            }
+
+
             
         </div>
     );

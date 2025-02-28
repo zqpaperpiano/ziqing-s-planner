@@ -10,22 +10,21 @@ import { EventContext } from "./EventContext";
 import { AuthContext } from "../../../config/authContext";
 import { auth } from "../../../config/firebase";
 import config from '../../../config/config.json';
+import dayjs from "dayjs";
 
-const EventCreator = ({toggleCreatingEvent, time}) => {
-    const [cat, setCat] = useState("cat2");
-    const [eventName, setEventName] = useState("");
-    const [defStart, setDefStart] = useState(time[0]);
-    const [defEnd, setDefEnd] = useState(time[1]);
-    const [eventDescription, setEventDescription] = useState("");
+const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
+    const [cat, setCat] = useState(event?.category || "cat2");
+    const [eventName, setEventName] = useState(event?.title || "");
+    const [defStart, setDefStart] = useState(dayjs(event?.start) || time[0]);
+    const [defEnd, setDefEnd] = useState(dayjs(event?.end)|| time[1]);
+    const [eventDescription, setEventDescription] = useState(event?.description || "");
     const {eventList, setEventList} = useContext(EventContext);
     const { player } = useContext(AuthContext);
     const categories = player?.preferences?.categories;
-    const [dungeon, setDungeon] = useState(null);
+    const [dungeon, setDungeon] = useState(event?.dungeon || null);
 
-
-
-    const onDungeonChange = (e) => {
-        setDungeon(e.target.value);
+    const onDungeonChange = (dungeonId) => {
+        setDungeon(dungeonId);
     }
 
     const onChangeEventName = (e) => {
@@ -57,13 +56,19 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
 
         const playerId = auth.currentUser.uid;
 
+        let desc = eventDescription;
+        if(desc === ""){
+            desc = "No description provided";
+        }
+
         const newEvent = {
             title: eventName,
             start: defStart.toDate(),
             end: defEnd.toDate(),
             color: categories[cat].color,
             category: cat, 
-            description: eventDescription,
+            dungeon: dungeon,
+            description: desc,
             createdBy: playerId
         }
 
@@ -98,11 +103,11 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
     }
 
     return(
-        <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+        <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <ToastContainer />
             <div className="relative h-90p w-4/5 flex flex-col items-center gap-0 bg-white overflow-y-auto">
                 <div className="h-fit w-full font-grapeNuts text-3xl text-center">
-                    <p>New Event</p>
+                    <p>{eventName === "" ? "New Event" : eventName}</p>
                 </div>
                 <div 
                 onClick={handleClickExit}
@@ -276,7 +281,8 @@ const EventCreator = ({toggleCreatingEvent, time}) => {
                     />
                     <Button
                         onClick={onClickSave}
-                    >Save</Button>
+                    >{hasEvent ? "Save Changes" : "Create Event"}
+                    </Button>
                 </div>
             </div>
         </div>

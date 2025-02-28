@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
         setPlayer(null);  
         localStorage.removeItem('dungeonList');
         localStorage.removeItem('player');  
+        localStorage.removeItem('eventList');
     }
 
     return(

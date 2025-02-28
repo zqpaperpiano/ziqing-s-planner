@@ -8,6 +8,10 @@ export const EventContext = createContext();
 export const EventProvider = ({children}) => {
     const [eventList, setEventList] = useState([]);
 
+    // useEffect(() => {
+    //     console.log('from event context: ', eventList)
+    // }, [eventList])
+
     useEffect(() => {
         const fetchEventList = async() => {
             if(auth.currentUser){
