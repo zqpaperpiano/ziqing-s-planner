@@ -15,10 +15,10 @@ import dayjs from "dayjs";
 const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     const [cat, setCat] = useState(event?.category || "cat2");
     const [eventName, setEventName] = useState(event?.title || "");
-    const [defStart, setDefStart] = useState(dayjs(event?.start) || time[0]);
-    const [defEnd, setDefEnd] = useState(dayjs(event?.end)|| time[1]);
+    const [defStart, setDefStart] = useState(event?.start ? dayjs(event?.start) : time[0]);
+    const [defEnd, setDefEnd] = useState(event?.end ? dayjs(event?.end): time[1]);
     const [eventDescription, setEventDescription] = useState(event?.description || "");
-    const {eventList, setEventList} = useContext(EventContext);
+    const {eventList, setEventList, eventMap} = useContext(EventContext);
     const { player } = useContext(AuthContext);
     const categories = player?.preferences?.categories;
     const [dungeon, setDungeon] = useState(event?.dungeon || null);
@@ -62,8 +62,72 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         }
 
         if(hasEvent){
+            let updates = {};
 
-            // write the fetch to update the specific event
+            if(event.title !== eventName){
+                console.log('name has been updated');
+                updates.title = eventName;
+            }
+
+            if(event.start.getTime()!== defStart.toDate().getTime()){
+                console.log('start time has been updated')
+                updates.start = defStart.toDate();
+            }
+
+            if(event.end.getTime() !== defEnd.toDate().getTime()){
+                console.log('end time has been updated')
+                updates.end = defEnd.toDate();
+            }
+
+            if(event.category !== cat){
+                console.log('category has been updated')
+                updates.category = cat;
+            }
+
+            if(event.dungeon !== dungeon){
+                console.log('dungeon has been updated')
+                updates.dungeon = dungeon;
+            }
+
+            if(event.description !== desc){
+                console.log('description has been updated')
+                updates.description = desc;
+            }
+
+            auth.currentUser.getIdToken()
+            .then(token => {
+                fetch(`${config.development.apiURL}event/updateEvent`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        eventId: event.eventId,
+                        updates: updates
+                    })
+                })
+                .then(resp => resp.json())
+                .then(data => {
+                    const formatEvent = {
+                        ...data,
+                        start: new Date(data.start),
+                        end: new Date(data.end)
+                    }
+
+                    const index = eventMap.get(event.eventId);
+                    setEventList(prevList => {
+                        let newList = [...prevList];
+                        newList[index] = formatEvent;
+                        return newList;
+                    })
+                    handleClickExit();
+                })
+            })
+            .catch(err => {
+                console.log('An error has occured with the server. Please try again');
+            })
+
 
         }else{
             const newEvent = {
@@ -96,7 +160,6 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
                         start: new Date(data.start),
                         end: new Date(data.end)
                     }
-    
     
                     setEventList((prevList) => [...prevList, formatEvent]);
                     handleClickExit();

@@ -1,43 +1,49 @@
 import React, {createContext, useState, useEffect, useMemo} from "react";
 import { auth } from "../../../config/firebase";
 import config from "../../../config/config";
-import { Key } from "lucide-react";
+
 
 export const EventContext = createContext();
 
 export const EventProvider = ({children}) => {
     const [eventList, setEventList] = useState([]);
-
-    // useEffect(() => {
-    //     console.log('from event context: ', eventList)
-    // }, [eventList])
+    const eventMap = useMemo(() => {
+        const map = new Map();
+        eventList.forEach((event, index) => {
+            map.set(event.eventId, index);
+        })
+        return map;
+    }, [eventList])
 
     useEffect(() => {
         const fetchEventList = async() => {
-            if(auth.currentUser){
-                auth.currentUser.getIdToken(true).then(token => {
-                    fetch(`${config.development.apiURL}event/getAllEvents/${auth.currentUser.uid}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                    .then(resp => resp.json())
-                    .then(data => {
-                        const formattedEventList = data.map(event => {
-                            event.start = new Date(event.start);
-                            event.end = new Date(event.end);
-                            return event;
-                        })
-                        setEventList(formattedEventList);
-                        localStorage.setItem('eventList', JSON.stringify(formattedEventList));
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
+            if(!auth.currentUser) return;
+
+            const token = await auth.currentUser.getIdToken();
+            const controller = new AbortController();
+
+            try{
+                const resp = await fetch(`${config.development.apiURL}event/getAllEvents/${auth.currentUser.uid}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    signal: controller.signal
+                });
+                const data = await resp.json();
+                const formattedEventList = data.map((event) => {
+                    event.start = new Date(event.start);
+                    event.end = new Date(event.end);
+                    return event;
                 })
+                setEventList(formattedEventList);
+                localStorage.setItem('eventList', JSON.stringify(formattedEventList));
+            }catch(err){
+                console.log('an error has occured: ', err);
             }
+
+            return () => controller.abort();
         }
 
         fetchEventList();
@@ -53,13 +59,9 @@ export const EventProvider = ({children}) => {
         }
     }, [eventList])
 
-
-
-
-
     return(
         <EventContext.Provider
-        value={{eventList, setEventList}}>
+        value={{eventList, setEventList, eventMap}}>
             {children}
         </EventContext.Provider>
     )

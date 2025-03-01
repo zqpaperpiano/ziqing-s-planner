@@ -15,8 +15,16 @@ const WarRoom = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
 
     // useEffect(() => {
-    //     console.log(eventList);
+    //     console.log('warRoom event list; ', eventList);
     // }, [eventList])
+
+    // useEffect(() => {
+    //     console.log('rerendered')
+    // }, [])
+
+    useEffect(() => {
+        console.log('time at warroom: ', time);
+    }, [time])
 
     const handleClick = useCallback((slotInfo) => {
         setTime([
@@ -28,7 +36,7 @@ const WarRoom = () => {
 
     const handleClickEvent = (event) => {
         setSelectedEvent(event);
-        console.log('clicked event: ', event);
+        // console.log('clicked event: ', event);
     }
 
     const toggleCreatingEvent = () => {
