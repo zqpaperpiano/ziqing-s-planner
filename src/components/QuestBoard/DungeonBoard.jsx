@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router";
 import PageTracker from "./PageTracker/PageTracker";
 import config from '../../config/config.json';
 import { auth } from '../../config/firebase';
+import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
 
 const DungeonBoard = () => {
     const {'page-number': page} = useParams();
@@ -67,12 +68,12 @@ const DungeonBoard = () => {
             })
             .then((resp) => resp.json())
             .then(data => {
-                console.log('received data: ', data);
-                console.log('data id: ', Object.keys(data));
+                // console.log('received data: ', data);
+                // console.log('data id: ', Object.keys(data));
                 
                 const dungeonId = Object.keys(data)[0];
                 const dungeonData = Object.values(data)[0];
-                console.log('other stuff: ', Object.values(data)[0])
+                // console.log('other stuff: ', Object.values(data)[0])
                 setDungeonList((prevList) => ({
                     ...prevList, // Spread the previous list to keep existing dungeons
                     [dungeonId]: dungeonData // Add the new dungeon with its dungeonId as the key
@@ -147,6 +148,16 @@ const DungeonBoard = () => {
         }
     }
 
+    const undoDelete = () => {
+        setToDel('');
+        setOnClickDelete(false);
+    }
+
+    const confirmDelete = () => {
+        handleDeleteDungeon();
+        setOnClickDelete(false);
+    }
+
 
     return(
         <div className={`h-full w-full flex ${onAddDungeon} ? 'z-0' : 'z-50'`}>
@@ -188,23 +199,7 @@ const DungeonBoard = () => {
             }
             {
                 onClickDelete &&
-                <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
-                    <div className="bg-white p-4 rounded-lg font-silkscreen">
-                        <p>Are you sure you want to delete this dungeon?</p>
-                        <Button
-                            onClick={() => {
-                                handleDeleteDungeon();
-                                setOnClickDelete(false);
-                            }}
-                        >Yes</Button>
-                        <Button
-                            onClick={() => {
-                                setToDel('');
-                                setOnClickDelete(false);
-                            }}
-                        >No</Button>
-                    </div>
-                </div>
+                <DeleteConfirmation event={"dungeon"} onClickDelete={confirmDelete} onClickUndo={undoDelete}/>
             }
         </div>
     );

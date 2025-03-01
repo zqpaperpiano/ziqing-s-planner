@@ -14,17 +14,9 @@ const WarRoom = () => {
     const {eventList} = useContext(EventContext);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
-    useEffect(() => {
-        console.log('warRoom event list; ', eventList);
-    }, [eventList])
-
-    useEffect(() => {
-        console.log('rerendered')
-    }, [])
-
-    useEffect(() => {
-        console.log('time at warroom: ', time);
-    }, [time])
+    // useEffect(() => {
+    //     console.log('warRoom event list; ', eventList);
+    // }, [eventList])
 
     const handleClick = useCallback((slotInfo) => {
         setTime([

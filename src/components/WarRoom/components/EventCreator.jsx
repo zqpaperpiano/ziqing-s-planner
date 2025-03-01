@@ -11,6 +11,7 @@ import { AuthContext } from "../../../config/authContext";
 import { auth } from "../../../config/firebase";
 import config from '../../../config/config.json';
 import dayjs from "dayjs";
+import DeleteConfirmation from "../../DeleteConfirmation/DeleteConfirmation";
 
 const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     const [cat, setCat] = useState(event?.category || "cat2");
@@ -22,6 +23,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     const { player } = useContext(AuthContext);
     const categories = player?.preferences?.categories;
     const [dungeon, setDungeon] = useState(event?.dungeon || null);
+    const [deleteEvent, setDeleteEvent] = useState(false);
 
     const onDungeonChange = (dungeonId) => {
         setDungeon(dungeonId);
@@ -114,6 +116,35 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         }
     }
 
+    const onClickDelete =  async() => {
+        const token = await auth.currentUser.getIdToken();
+        const eventId = event.eventId;
+
+        try{
+            const resp = await fetch(`${config.development.apiURL}event/deleteEvent/${eventId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            const index = eventMap.get(eventId);
+            setEventList(prevList => {
+                let newList = [...prevList];
+                newList.splice(index, 1);
+                return newList;
+            })
+            setDeleteEvent(false);
+            handleClickExit();
+        }catch(err){
+            console.log('An error has occured: ', err);
+        }
+    }
+
+    const onUndoDelete = () => {
+        setDeleteEvent(false);
+    }
+
     const onClickSave = () => {
         if(!eventName){
             toast.error("Please fill in an event name!");  
@@ -185,8 +216,8 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     return(
         <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <ToastContainer />
-            <div className="relative h-90p w-4/5 flex flex-col items-center gap-0 bg-white overflow-y-auto">
-                <div className="h-fit w-full font-grapeNuts text-3xl text-center">
+            <div className="relative h-90p w-4/5 flex flex-col justify-center items-center gap-0 bg-white overflow-y-auto">
+                <div className="h-fit w-full font-grapeNuts text-3xl text-center mt-4">
                     <p>{eventName === "" ? "New Event" : eventName}</p>
                 </div>
                 <div 
@@ -359,10 +390,33 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
                         onChange={onChangeEventDescription}
                         
                     />
-                    <Button
-                        onClick={onClickSave}
-                    >{hasEvent ? "Save Changes" : "Create Event"}
-                    </Button>
+                    <div className="flex justify-center gap-4 items-center h-fit">
+                        <div className="w-1/2 flex justify-center items-center">
+                            <Button
+                                onClick={onClickSave}
+                            >{hasEvent ? "Save Changes" : "Create Event"}
+                            </Button>
+                        </div>
+                        <div className="w-1/2 flex justify-center items-center">
+                        {
+                            hasEvent &&
+                            <Button
+                                onClick={() => setDeleteEvent(true)}
+                                sx={{
+                                    color: 'red',
+                                    '&:hover': {
+                                        backgroundColor: 'red',
+                                        color: 'white'
+                                    }
+                                }}
+                            >Delete</Button>
+                        }
+                        </div>
+                    </div>
+                    {
+                        deleteEvent &&
+                        <DeleteConfirmation event={"event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>
+                    }
                 </div>
             </div>
         </div>
