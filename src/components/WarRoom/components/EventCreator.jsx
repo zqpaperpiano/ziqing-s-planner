@@ -43,13 +43,84 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         toggleCreatingEvent();
     }
 
+    //check which parts of the event Object has been updated and add into updated object to be passed in API call
+    const checkUpdates = (desc) => {
+        let updates = {};
+
+        if(event.title !== eventName){
+            console.log('name has been updated');
+            updates.title = eventName;
+        }
+
+        if(event.start.getTime()!== defStart.toDate().getTime()){
+            console.log('start time has been updated')
+            updates.start = defStart.toDate();
+        }
+
+        if(event.end.getTime() !== defEnd.toDate().getTime()){
+            console.log('end time has been updated')
+            updates.end = defEnd.toDate();
+        }
+
+        if(event.category !== cat){
+            console.log('category has been updated')
+            updates.category = cat;
+        }
+
+        if(event.dungeon !== dungeon){
+            console.log('dungeon has been updated')
+            updates.dungeon = dungeon;
+        }
+
+        if(event.description !== desc){
+            console.log('description has been updated')
+            updates.description = desc;
+        }
+
+        return updates;
+    }
+
+    const updateChanges = async(updates) => {
+        const token = await auth.currentUser.getIdToken();
+        try{
+            const resp = await fetch(`${config.development.apiURL}event/updateEvent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    eventId: event.eventId,
+                    updates: updates
+                })
+            });
+            const data = await resp.json();
+            const formatEvent = {
+                ...data,
+                start: new Date(data.start),
+                end: new Date(data.end)
+            }
+
+            const index = eventMap.get(event.eventId);
+            setEventList(prevList => {
+                let newList = [...prevList];
+                newList[index] = formatEvent;
+                return newList;
+            })
+            handleClickExit();
+
+        }catch(err) {
+            console.log('An error has occured with the server. Please try again: ', err);
+        }
+    }
+
     const onClickSave = () => {
         if(!eventName){
             toast.error("Please fill in an event name!");  
             return; 
         }
 
-        if(defEnd.toDate().getTime() <= defStart.toDate().getTime()){
+        if(defEnd.toDate().getTime() < defStart.toDate().getTime()){
             toast.error("Please ensure that end time is after the start time!")
             return;
         }
@@ -62,72 +133,10 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         }
 
         if(hasEvent){
-            let updates = {};
-
-            if(event.title !== eventName){
-                console.log('name has been updated');
-                updates.title = eventName;
+            const update = checkUpdates(desc);
+            if(Object.keys(update).length > 0){
+                updateChanges(update);
             }
-
-            if(event.start.getTime()!== defStart.toDate().getTime()){
-                console.log('start time has been updated')
-                updates.start = defStart.toDate();
-            }
-
-            if(event.end.getTime() !== defEnd.toDate().getTime()){
-                console.log('end time has been updated')
-                updates.end = defEnd.toDate();
-            }
-
-            if(event.category !== cat){
-                console.log('category has been updated')
-                updates.category = cat;
-            }
-
-            if(event.dungeon !== dungeon){
-                console.log('dungeon has been updated')
-                updates.dungeon = dungeon;
-            }
-
-            if(event.description !== desc){
-                console.log('description has been updated')
-                updates.description = desc;
-            }
-
-            auth.currentUser.getIdToken()
-            .then(token => {
-                fetch(`${config.development.apiURL}event/updateEvent`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        eventId: event.eventId,
-                        updates: updates
-                    })
-                })
-                .then(resp => resp.json())
-                .then(data => {
-                    const formatEvent = {
-                        ...data,
-                        start: new Date(data.start),
-                        end: new Date(data.end)
-                    }
-
-                    const index = eventMap.get(event.eventId);
-                    setEventList(prevList => {
-                        let newList = [...prevList];
-                        newList[index] = formatEvent;
-                        return newList;
-                    })
-                    handleClickExit();
-                })
-            })
-            .catch(err => {
-                console.log('An error has occured with the server. Please try again');
-            })
-
 
         }else{
             const newEvent = {
