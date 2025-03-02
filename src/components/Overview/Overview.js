@@ -1,14 +1,28 @@
 import './Overview.css';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { format, startOfWeek, addDays, isToday, addWeeks } from 'date-fns';
-
-import { Tooltip } from '@mui/material';
+import { EventContext } from '../WarRoom/components/EventContext';
 import DaySelector from './components/DaySelector';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
   const anchorDate = new Date();
   const [selectedDate, setSelectedDate] = useState(anchorDate);
+  const { eventList } = useContext(EventContext);
+  const dayString = useMemo(() => {
+    const convertedTime = new Date(selectedDate.toUTCString()) + (8 * 60 * 60 * 1000);
+    const arr = convertedTime.split(' ');
+    return `${arr[0]} ${arr[1]} ${arr[2]} ${arr[3]}`;
+  }, [selectedDate])
+  // const validSchedule = useMemo(() => {
+  //   const selectedDaySchedule = eventList.filter((event) => {
+  //     console.log(event.start)
+  //   })
+  // });
+
+  useEffect(() => {
+    console.log(dayString);
+  }, [dayString])
 
   const startDate = useMemo(() => {
     return startOfWeek(addWeeks(anchorDate, offset), {weekStartsOn: 1});
@@ -29,7 +43,7 @@ const Overview = () => {
 
   return(
     <div className="h-full w-full flex">
-      <div className="h-full w-1/3 border-r-2 px-2 py-4 border-darkPink flex flex-col items-center justify-between gap-2">
+      <div className="h-full w-1/3  px-2 py-4 border-darkPink flex flex-col items-center justify-between gap-2">
         
         {/* top part where can see the overview of the week */}
       <div className="w-95p h-1/4 p-2 relative rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between">
@@ -50,8 +64,12 @@ const Overview = () => {
           </div>
       </div>
 
+      {/* bottom part where can see the day schedule */}
       <div className="relative w-95p flex-1 p-2 rounded-lg bg-deepPink flex flex-col font-silkscreen">
-        
+              <p className="h-6 left-2 top-2">{dayString}</p>
+              <div className="flex-1 w-full bg-bgPink rounded-lg p-2">
+
+              </div>
       </div>
 
 
