@@ -18,6 +18,10 @@ const EditCat = ({ onClose }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
 
+    useEffect(() => {
+        console.log(tempList);
+    })
+
     const handleDialogOpen = () => {
         setDialogOpen(true);
     }
@@ -62,6 +66,8 @@ const EditCat = ({ onClose }) => {
                 })
             });
             const data = await resp.json();
+
+            // console.log('received data: ', data);
             setPlayer(data);
             onClose();
         }catch(err){
@@ -75,7 +81,7 @@ const EditCat = ({ onClose }) => {
         let count = parseInt(lastKey[lastKey.length - 1]) + 1;
         setTempList((prevList) => ({
             ...prevList,
-            [`custom${count}`]:{
+            [`cat${count}`]: {
                 name: "",
                 color: "#FFFFFF"
             }

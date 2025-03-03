@@ -16,9 +16,9 @@ const ProfilePreferences = () => {
     const [editMode, setEditMode] = useState(false);
     const { player } = useContext(AuthContext);
 
-    useEffect(() => {
-        console.log("schedule: ", player?.preferences?.schedule);
-    })
+    // useEffect(() => {
+    //     console.log("schedule: ", player?.preferences?.schedule);
+    // })
 
     const toggleEditSchedule = () => {
         if(editSchedule){
@@ -70,21 +70,6 @@ const ProfilePreferences = () => {
             {/* pfp, displayName, status */} 
             <div className={`relative h-1/4 w-full ${editMode ? 'opacity-0 z-0 pointer-events-none': 'opacity-100 z-50'}`}>
                 <div className="h-full w-70p p-2 flex">
-                    {/* <div className="relative h-full aspect-square">
-                        <img src={Pfp} 
-                            className={`h-full w-full object-fit`}
-                        />
-                        <div className={`absolute inset-0 bg-black opacity-0 backdrop-blur-sm color-black 
-                            flex flex-col justify-center items-center hover:opacity-50 hover:cursor-pointer`}>
-                            <EditIcon sx={{
-                                color: "white",
-                            }} />
-                            <p
-                            className="text-gray-300"
-                            >Edit Picture</p>
-                            
-                        </div>
-                    </div> */}
                     <div className="relative h-full w-full flex flex-col pl-2 justify-center">
                         <p className="font-bold text-xl">{player.name}</p>
                         <p className="text-sm italic">

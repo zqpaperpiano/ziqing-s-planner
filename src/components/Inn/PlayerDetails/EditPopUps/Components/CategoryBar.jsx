@@ -28,7 +28,7 @@ const CategoryBar = ({cat, onChangeName, onChangeColor, onDeleteCat}) => {
     }
 
     const handleColorChange = (color) => {
-        console.log('color received: ', color);
+        // console.log('color received: ', color);
         onChangeColor(color, cat[0]);
     }
 

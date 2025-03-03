@@ -9,6 +9,8 @@ export const EventProvider = ({children}) => {
     const [eventList, setEventList] = useState([]);
     const eventMap = useMemo(() => {
         const map = new Map();
+        if(!eventList) return map;
+
         eventList.forEach((event, index) => {
             map.set(event.eventId, index);
         })
@@ -32,13 +34,16 @@ export const EventProvider = ({children}) => {
                     signal: controller.signal
                 });
                 const data = await resp.json();
-                const formattedEventList = data.map((event) => {
-                    event.start = new Date(event.start);
-                    event.end = new Date(event.end);
-                    return event;
-                })
-                setEventList(formattedEventList);
-                localStorage.setItem('eventList', JSON.stringify(formattedEventList));
+                if(data){
+                    const formattedEventList = data.map((event) => {
+                        event.start = new Date(event.start);
+                        event.end = new Date(event.end);
+                        return event;
+                    })
+                    setEventList(formattedEventList);
+                    localStorage.setItem('eventList', JSON.stringify(formattedEventList));
+                }
+                
             }catch(err){
                 console.log('an error has occured: ', err);
             }
@@ -51,9 +56,9 @@ export const EventProvider = ({children}) => {
 
     useEffect(() => {
         if(auth.currentUser){
-            if(eventList.length === 0){
+            if(eventList){
                 setEventList(JSON.parse(localStorage.getItem('eventList')));
-            }else if(eventList.length > 0){
+            }else{
                 localStorage.setItem('eventList', JSON.stringify(eventList));
             }
         }

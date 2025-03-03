@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 const DayScheduleBreakdown = ({ day }) => {
 
     useEffect(() => {
-        console.log('from day schedule breakdown: ', day);
+        // console.log('from day schedule breakdown: ', day);
         // console.log('rest? ', day[0] === 'Rest');
     }, [])
 

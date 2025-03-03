@@ -161,6 +161,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     const convertDayScheduleToCombined = (obj) => {
         let combined = [];
 
+        if(!obj) return combined;
         // console.log('converting: ', obj);
 
         Object.entries(obj).map((day) => {
@@ -203,8 +204,6 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             "Sat": satScd,
             "Sun": sunScd
         }
-
-        // console.log('final schedule: ', finSchedule);
 
         const hasSchedule = Object.values(finSchedule).some(day => day.length > 1);
 

@@ -33,14 +33,21 @@ export const DungeonProvider = ({children}) => {
     }, [])
     
     useEffect(() => {
-        if(auth.currentUser){
-            if(Object.keys(dungeonList).length === 0){
-                setDungeonList(JSON.parse(localStorage.getItem('dungeonList')));
-            }else if(Object.keys(dungeonList).length > 0){
-                localStorage.setItem('dungeonList', JSON.stringify(dungeonList));
+        if (auth.currentUser) {
+            const storedDungeonList = localStorage.getItem('dungeonList');
+    
+            // Only load from localStorage if dungeonList is empty
+            if (Object.keys(dungeonList).length === 0 && storedDungeonList) {
+                setDungeonList(JSON.parse(storedDungeonList));
             }
         }
-    }, [dungeonList])
+    }, [auth.currentUser]);
+
+    useEffect(() => {
+        if (auth.currentUser && Object.keys(dungeonList).length > 0) {
+            localStorage.setItem('dungeonList', JSON.stringify(dungeonList));
+        }
+    }, [dungeonList]);
 
 
     return (
