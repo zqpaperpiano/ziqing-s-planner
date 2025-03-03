@@ -18,51 +18,65 @@ export const EventProvider = ({children}) => {
     }, [eventList])
 
     useEffect(() => {
+        const controller = new AbortController();
         const fetchEventList = async() => {
             if(!auth.currentUser) return;
 
-            const token = await auth.currentUser.getIdToken();
-            const controller = new AbortController();
-
-            try{
-                const resp = await fetch(`${config.development.apiURL}event/getAllEvents/${auth.currentUser.uid}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    signal: controller.signal
-                });
-                const data = await resp.json();
-                if(data){
-                    const formattedEventList = data.map((event) => {
-                        event.start = new Date(event.start);
-                        event.end = new Date(event.end);
-                        return event;
-                    })
-                    setEventList(formattedEventList);
-                    localStorage.setItem('eventList', JSON.stringify(formattedEventList));
-                }
+            const cachedEventList = JSON.parse(localStorage.getItem('eventList'));
+            if(cachedEventList && cachedEventList.length > 0){
+                setEventList(cachedEventList);  
+            }else{
+                const token = await auth.currentUser.getIdToken();
                 
-            }catch(err){
-                console.log('an error has occured: ', err);
-            }
 
-            return () => controller.abort();
+                try{
+                    const resp = await fetch(`${config.development.apiURL}event/getAllEvents/${auth.currentUser.uid}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        signal: controller.signal
+                    });
+                    const data = await resp.json();
+                    if(data && Object.entries(data).length > 0){
+                        const formattedEventList = data.map((event) => {
+                            event.start = new Date(event.start);
+                            event.end = new Date(event.end);
+                            return event;
+                        })
+                        setEventList(formattedEventList);
+                        localStorage.setItem('eventList', JSON.stringify(formattedEventList));
+                    }else{
+                        setEventList([]);
+                    }
+                    
+                }catch(err){
+                    console.log('an error has occured: ', err);
+                }
+            }
         }
 
         fetchEventList();
+
+        return () => controller.abort();
     }, [])
 
     useEffect(() => {
-        if(auth.currentUser){
-            if(eventList){
-                setEventList(JSON.parse(localStorage.getItem('eventList')));
-            }else{
-                localStorage.setItem('eventList', JSON.stringify(eventList));
-            }
+        if(auth.currentUser && eventList.length > 0){
+            localStorage.setItem('eventList', JSON.stringify(eventList));
         }
     }, [eventList])
+
+    // useEffect(() => {
+    //     if(auth.currentUser){
+    //         if(eventList.length === 0){
+    //             setEventList(JSON.parse(localStorage.getItem('eventList')));
+    //         }else{
+    //             localStorage.setItem('eventList', JSON.stringify(eventList));
+    //         }
+    //     }
+    // }, [eventList])
 
     return(
         <EventContext.Provider

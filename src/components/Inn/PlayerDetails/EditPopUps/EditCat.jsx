@@ -18,10 +18,6 @@ const EditCat = ({ onClose }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
 
-    useEffect(() => {
-        console.log(tempList);
-    })
-
     const handleDialogOpen = () => {
         setDialogOpen(true);
     }
