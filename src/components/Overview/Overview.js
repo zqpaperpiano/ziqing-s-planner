@@ -14,11 +14,11 @@ const Overview = () => {
     const arr = convertedTime.split(' ');
     return `${arr[0]} ${arr[1]} ${arr[2]} ${arr[3]}`;
   }, [selectedDate])
-  // const validSchedule = useMemo(() => {
-  //   const selectedDaySchedule = eventList.filter((event) => {
-  //     console.log(event.start)
-  //   })
-  // });
+  const validSchedule = useMemo(() => {
+    const selectedDaySchedule = eventList.filter((event) => {
+      console.log(event.start)
+    })
+  });
 
   useEffect(() => {
     console.log(dayString);

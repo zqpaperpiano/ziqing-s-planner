@@ -16,6 +16,10 @@ const ColorSelector = ({ handleClose, handleColorChange }) => {
     const [defColor, setDefColor] = useState("#F7EA48");
     const [hexInput, setHexInput] = useState("#F7EA48");
 
+    useEffect(() => {
+        handleColorChange(defColor);
+    }, [defColor])
+
     const handleClickMore = () => {
         setOnMore(true);
     }
@@ -59,7 +63,7 @@ const ColorSelector = ({ handleClose, handleColorChange }) => {
 
     const onClickPreColor = (e) => {
         setDefColor(e.target.id);
-        handleColorChange(defColor);
+        // handleColorChange(defColor);
         handleClose();
     }
 

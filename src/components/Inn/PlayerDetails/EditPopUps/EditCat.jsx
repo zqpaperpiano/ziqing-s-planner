@@ -47,28 +47,26 @@ const EditCat = ({ onClose }) => {
         }));
     }
 
-    const onSaveChanges = () => {
-        fetch(`${config.development.apiURL}users/updateUserEventCategories`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
-            },
-            body: JSON.stringify({
-                uid: auth.currentUser.uid,
-                categories: tempList
-            })
-        })
-        .then((resp) => {
-            resp.json();
-        })
-        .then((data) => {
+    const onSaveChanges = async () => {
+        const token = await auth.currentUser.getIdToken();
+        try{
+            const resp = await fetch(`${config.development.apiURL}users/updateUserEventCategories`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    uid: auth.currentUser.uid,
+                    categories: tempList
+                })
+            });
+            const data = await resp.json();
             setPlayer(data);
             onClose();
-        })
-        .catch((err) => {
+        }catch(err){
             console.log('an error has occured: ', err);
-        })
+        }
     }
 
     const onAddCategory = (e) => {
