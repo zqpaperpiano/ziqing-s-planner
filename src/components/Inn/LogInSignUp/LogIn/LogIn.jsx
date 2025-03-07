@@ -85,6 +85,7 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
             },
             body: JSON.stringify({
                 uid: uid,
+                // token: token
             })
         })
         .then( async (res) => {
