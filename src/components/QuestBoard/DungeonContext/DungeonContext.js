@@ -10,21 +10,20 @@ export const DungeonProvider = ({children}) => {
     useEffect(() => {
         const controller = new AbortController();
         const fetchDungeonList = async() => {
+            // console.log('fetching dungeons....');
+
             if(auth.currentUser){
                 const cachedDungeonList = JSON.parse(localStorage.getItem('dungeonList'));
     
                 if(cachedDungeonList && Object.keys(cachedDungeonList).length > 0){
                     setDungeonList(cachedDungeonList);
                 }else{
-                    const token = await auth.currentUser.getIdToken();
-                    
-
                     try{
                         const resp = await fetch(`${config.development.apiURL}dungeon/get-all-dungeons/${auth.currentUser.uid}`, {
                             method: 'GET',
+                            credentials: 'include',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`
                             },
                             signal: controller.signal
                         });
@@ -38,7 +37,7 @@ export const DungeonProvider = ({children}) => {
             }
         }
         
-        fetchDungeonList();
+        if(auth.currentUser) fetchDungeonList();
 
         return () => controller.abort();
     }, [])

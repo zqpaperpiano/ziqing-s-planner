@@ -1,12 +1,15 @@
-import React, {createContext, useState, useEffect, useMemo} from "react";
+import React, {createContext, useState, useEffect, useMemo, useContext} from "react";
 import { auth } from "../../../config/firebase";
 import config from "../../../config/config";
+import { AuthContext } from "../../../config/authContext";
 
 
 export const EventContext = createContext();
 
 export const EventProvider = ({children}) => {
     const [eventList, setEventList] = useState([]);
+    const {tokenRefresh} = useContext(AuthContext);
+    const [retries, setRetries] = useState(0);
     const eventMap = useMemo(() => {
         const map = new Map();
         if(!eventList) return map;
@@ -18,46 +21,67 @@ export const EventProvider = ({children}) => {
     }, [eventList])
 
     useEffect(() => {
+        console.log('my number of retries: ', retries);
+    }, [retries])
+    
+
+    useEffect(() => {
         const controller = new AbortController();
         const fetchEventList = async() => {
             if(!auth.currentUser) return;
 
             const cachedEventList = JSON.parse(localStorage.getItem('eventList'));
             if(cachedEventList && cachedEventList.length > 0){
-                setEventList(cachedEventList);  
-            }else{
-                const token = await auth.currentUser.getIdToken();
-                
 
+                const formattedEventList = cachedEventList.map((event) => {
+                    event.start = new Date(event.start);
+                    event.end = new Date(event.end);
+                    return event;
+                })
+
+                setEventList(formattedEventList);  
+            }else{               
                 try{
                     const resp = await fetch(`${config.development.apiURL}event/getAllEvents/${auth.currentUser.uid}`, {
                         method: 'GET',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
+                            // 'Authorization': `Bearer ${token}`
                         },
                         signal: controller.signal
                     });
-                    const data = await resp.json();
-                    if(data && Object.entries(data).length > 0){
-                        const formattedEventList = data.map((event) => {
-                            event.start = new Date(event.start);
-                            event.end = new Date(event.end);
-                            return event;
-                        })
-                        setEventList(formattedEventList);
-                        localStorage.setItem('eventList', JSON.stringify(formattedEventList));
-                    }else{
-                        setEventList([]);
+
+                            // if(resp.status === 401 && retries === 0){
+                            //     setRetries(retries + 1);
+                            //     await tokenRefresh();
+                            //     fetchEventList();
+                            // }
+
+                    if(resp.ok){
+                        const data = await resp.json();
+                        if(data && Object.entries(data).length > 0){
+                            const formattedEventList = data.map((event) => {
+                                event.start = new Date(event.start);
+                                event.end = new Date(event.end);
+                                return event;
+                            })
+                            
+                            setEventList(formattedEventList);
+                            localStorage.setItem('eventList', JSON.stringify(formattedEventList));
+                        }else{
+                            setEventList([]);
+                        }
                     }
                     
+                    
                 }catch(err){
-                    console.log('an error has occured: ', err);
+                    console.log('an error has occured for events: ', err);
                 }
             }
         }
 
-        fetchEventList();
+        if(auth.currentUser) fetchEventList();
 
         return () => controller.abort();
     }, [])

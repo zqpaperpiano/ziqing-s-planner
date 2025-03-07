@@ -31,10 +31,6 @@ const LogInSignUp = () => {
         }
     }, [])
 
-    useEffect(() => {
-        console.log('loading status: ', logInLoading);
-    })
-
     const toggleLogInLoading = (bool) => {
         setLogInLoading(bool);
     }
@@ -52,6 +48,7 @@ const LogInSignUp = () => {
 
             fetch(`${config.development.apiURL}users/googleUser`, {
                 method: 'POST',
+                // credentials: 'include',
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${respID}`

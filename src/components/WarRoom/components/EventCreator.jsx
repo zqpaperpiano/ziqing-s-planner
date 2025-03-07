@@ -67,6 +67,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         if(event.category !== cat){
             console.log('category has been updated')
             updates.category = cat;
+            updates.color = categories[cat].color;
         }
 
         if(event.dungeon !== dungeon){
@@ -79,11 +80,16 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
             updates.description = desc;
         }
 
+        console.log('updates: ', updates);
+
         return updates;
     }
 
     const updateChanges = async(updates) => {
         const token = await auth.currentUser.getIdToken();
+        const eventId = event.eventId;
+        // console.log('my eventId: ', event);
+
         try{
             const resp = await fetch(`${config.development.apiURL}event/updateEvent`, {
                 method: 'POST',
@@ -119,6 +125,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     const onClickDelete =  async() => {
         const token = await auth.currentUser.getIdToken();
         const eventId = event.eventId;
+        // console.log('eventId: ', eventId);
 
         try{
             const resp = await fetch(`${config.development.apiURL}event/deleteEvent/${eventId}`, {

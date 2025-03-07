@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         });
         return () => unsubscribe();
-    }, [auth])
+    }, [])
 
     const signIn = (playerData) => {
         setPlayer(playerData);
@@ -44,9 +44,26 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('eventList');
     }
 
+    const tokenRefresh = async() => {
+        const token = await auth.currentUser.getIdToken(true);
+        try{
+            const resp = await fetch(`${config.development.apiURL}users/setAuthCookie`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            body: JSON.stringify({
+                token: token
+            })
+            })
+        }catch(err){
+            console.log('an error has occured with refreshing token: ', err);
+        }
+    }
+
     return(
         <AuthContext.Provider
-            value = {{ player, signIn, logOut, setPlayer}}>
+            value = {{ player, signIn, logOut, setPlayer, tokenRefresh}}>
             { !loading && children }
         </AuthContext.Provider>
     )

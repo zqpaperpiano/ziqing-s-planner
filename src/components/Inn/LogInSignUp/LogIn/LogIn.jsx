@@ -78,12 +78,13 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
         loading(true);
         fetch(`${config.development.apiURL}users/log-in`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                uid: uid
+                uid: uid,
             })
         })
         .then( async (res) => {

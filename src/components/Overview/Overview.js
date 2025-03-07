@@ -3,6 +3,7 @@ import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { format, startOfWeek, addDays, isToday, addWeeks } from 'date-fns';
 import { EventContext } from '../WarRoom/components/EventContext';
 import DaySelector from './components/DaySelector';
+import DayScheduleOverview from './components/DayScheduleOverview';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
@@ -14,15 +15,20 @@ const Overview = () => {
     const arr = convertedTime.split(' ');
     return `${arr[0]} ${arr[1]} ${arr[2]} ${arr[3]}`;
   }, [selectedDate])
-  // const validSchedule = useMemo(() => {
-  //   const selectedDaySchedule = eventList.filter((event) => {
-  //     console.log(event.start)
-  //   })
-  // });
 
-  useEffect(() => {
-    console.log(dayString);
-  }, [dayString])
+  const validSchedule = useMemo(() => {
+    if(eventList.length > 0){
+      const selectedDaySchedule = eventList.filter((event) => {
+        return event.start.toDateString() === selectedDate.toDateString();
+      })
+      return selectedDaySchedule;
+    }
+  });
+
+  // useEffect(() => {
+  //   console.log(validSchedule);
+  // }, [validSchedule])
+
 
   const startDate = useMemo(() => {
     return startOfWeek(addWeeks(anchorDate, offset), {weekStartsOn: 1});
@@ -68,7 +74,15 @@ const Overview = () => {
       <div className="relative w-95p flex-1 p-2 rounded-lg bg-deepPink flex flex-col font-silkscreen">
               <p className="h-6 left-2 top-2">{dayString}</p>
               <div className="flex-1 w-full bg-bgPink rounded-lg p-2">
-
+                <div className="h-3/4 w-full flex flex-col gap-2 items-center">
+                {
+                  validSchedule && validSchedule.length > 0 ?
+                  validSchedule.map((event, index) => {
+                    return <DayScheduleOverview key={index} event={event} />
+                  }) :
+                  <p>You have nothing scheduled today!</p>
+                }
+                </div>
               </div>
       </div>
 
