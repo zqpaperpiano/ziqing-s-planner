@@ -81,11 +81,11 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
             credentials: 'include',
             headers: {
                 'Content-type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                // 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                uid: uid,
-                // token: token
+                // uid: uid,
+                token: token
             })
         })
         .then( async (res) => {

@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+
     return(
         <AuthContext.Provider
             value = {{ player, signIn, logOut, setPlayer, tokenRefresh}}>

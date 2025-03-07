@@ -18,8 +18,9 @@ const NewPlayerSettings = () => {
     const [salary, setSalary] = useState(0);
     const [hasSalary, setHasSalary] = useState(false);
     const [salaryFrequency, setSalaryFrequency] = useState(null);
-    const { player, setPlayer } = useContext(AuthContext);
+    const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
     const [displayName, setDisplayName] = useState(null);
+    const [retry, setRetry] = useState(false);
 
     const categories = {
         cat1: {
@@ -60,6 +61,43 @@ const NewPlayerSettings = () => {
     //     }
     // })
 
+    const postNewPreferences = async(uid, preferences) => {
+        try{
+            const resp = await fetch(`${config.development.apiURL}users/newUserPreferences`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'uid': uid,
+                    'displayName': displayName,
+                    'preferences': preferences
+                })
+            });
+
+            if(resp.status === 401){
+                if(!retry){
+                    setRetry(true);
+                    await tokenRefresh();
+                    postNewPreferences();
+                }else{
+                    throw new Error('Unauthorized');
+                }
+            }
+
+            if(resp.ok){
+                setRetry(false);
+                const data = await resp.json();
+                setPlayer(data);
+                localStorage.setItem('player', JSON.stringify(data));
+                navigate('/');
+            }
+        }catch(err){
+            console.log('an error has occured: ', err);
+        }
+    }
+
 
     const handleSubmitPreferences = () => {
         let preferences = {
@@ -71,31 +109,9 @@ const NewPlayerSettings = () => {
                 categories: categories
         }
 
-        console.log('this is my preferences: ', preferences);
-
-        const userToken = auth.currentUser.getIdToken();
+        // console.log('this is my preferences: ', preferences);
         const uid = auth.currentUser.uid;
-
-        fetch(`${config.development.apiURL}users/newUserPreferences`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': `Bearer ${userToken}`
-            },
-            body: JSON.stringify({
-                'uid': uid,
-                'displayName': displayName,
-                'preferences': preferences
-            })
-        })
-        .then((res) => {
-            return res.json();
-        })
-        .then((data) => {
-            setPlayer(data);
-            localStorage.setItem('player', JSON.stringify(data));
-            navigate('/');
-        })
+        postNewPreferences(uid, preferences);
     }
 
     const handleSetSchedule = (schedule) => {

@@ -10,6 +10,7 @@ import PageTracker from "./PageTracker/PageTracker";
 import config from '../../config/config.json';
 import { auth } from '../../config/firebase';
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
+import { AuthContext } from "../../config/authContext";
 
 const DungeonBoard = () => {
     const {'page-number': page} = useParams();
@@ -20,6 +21,8 @@ const DungeonBoard = () => {
     const {dungeonList, setDungeonList} = useContext(DungeonContext);
     const [maxPages, setMaxPages] = useState(1);
     const [dungeonPp, setDungeonPp] = useState(3);
+    const [retries, setRetries] = useState(false);
+    const { tokenRefresh } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
@@ -52,40 +55,44 @@ const DungeonBoard = () => {
     }, [totalDungeons])
 
     //when a new quest is added
-    const handleIncreaseDungeons = (newDungeon) => {
-        auth.currentUser.getIdToken()
-        .then(token => {
-            fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
+    const handleIncreaseDungeons = async (newDungeon) => {
+        try{
+            const resp =  await fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     "dungeon": newDungeon,
                     "userId": auth.currentUser.uid
                 })
-            })
-            .then((resp) => resp.json())
-            .then(data => {
-                // console.log('received data: ', data);
-                // console.log('data id: ', Object.keys(data));
-                
+            });
+
+            if(resp.status === 401){
+                if(!retries){
+                    setRetries(true);
+                    await tokenRefresh();
+                    handleIncreaseDungeons(newDungeon);
+                }else{
+                    setRetries(false);
+                    throw new Error('Unauthorized');
+                }
+            }
+
+            if(resp.ok){
+                setRetries(false);
+                const data = await resp.json();
                 const dungeonId = Object.keys(data)[0];
                 const dungeonData = Object.values(data)[0];
-                // console.log('other stuff: ', Object.values(data)[0])
                 setDungeonList((prevList) => ({
-                    ...prevList, // Spread the previous list to keep existing dungeons
-                    [dungeonId]: dungeonData // Add the new dungeon with its dungeonId as the key
+                    ...prevList,
+                    [dungeonId]: dungeonData
                 }));
-            })
-            .then(() => {
-                console.log('my changed dungeon list: ', dungeonList);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        })
+            }
+        }catch(err){
+            console.log(err);
+        }
     }
 
     const handleClickAbandon = (dungeonId) => {
@@ -93,33 +100,44 @@ const DungeonBoard = () => {
         setToDel(dungeonId);
     }
 
-    const handleDeleteDungeon = () => {
-        auth.currentUser.getIdToken()
-        .then(token => {
-            fetch(`${config.development.apiURL}dungeon/delete-dungeon`, {
+    const handleDeleteDungeon = async () => {
+        try{
+            const resp = await fetch(`${config.development.apiURL}dungeon/delete-dungeon`, {
                 method: 'DELETE',
+                credentials: 'include', 
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     dungeonId: toDel
                 })
-            })
-                .then(resp => {
-                    if(resp.status === 204){
-                        setDungeonList(prevDungeonList => {
-                            const { [toDel]: _, ...updatedDungeonList } = prevDungeonList;
-                            return updatedDungeonList;
-                        });
-                        setToDel('');
-                    }
-                })
-                .catch(err => {
-                    console.log('an error has occured: ', err);
-                })
-        })
-        
+            });
+
+            if(resp.status === 401){
+                if(!retries){
+                    setRetries(true);
+                    await tokenRefresh();
+                    handleDeleteDungeon();
+                }else{
+                    setRetries(false);
+                    throw new Error('Unauthorized');
+                }
+            }
+
+            if(resp.ok){
+                setRetries(false);
+                const data = await resp.json();
+                if(data.status === 204){
+                    setDungeonList(prevDungeonList => {
+                        const { [toDel]: _, ...updatedDungeonList } = prevDungeonList;
+                        return updatedDungeonList;
+                    });
+                    setToDel('');
+                }
+            }
+        }catch(err){
+            console.log('an error has occured: ', err);
+        }
     }
 
     const handleOnClickAddDungeons = () => {

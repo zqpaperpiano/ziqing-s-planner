@@ -37,12 +37,12 @@ const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, 
         fetch(`${config.development.apiURL}users/new-user`, {
             method: 'POST',
             headers: {
-                'Content-type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-type': 'application/json'
             },
             body: JSON.stringify({
                 email: email,
-                name: name
+                name: name,
+                token: token
             })
         })
         .then(async (res) => {

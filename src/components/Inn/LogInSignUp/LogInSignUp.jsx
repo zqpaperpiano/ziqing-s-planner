@@ -44,19 +44,18 @@ const LogInSignUp = () => {
             const displayName = resp.user.displayName;
             const email = resp.user.email;
             const uid = resp.user.uid;
-            const respID = await resp.user.getIdToken();
+            const token = await resp.user.getIdToken();
 
             fetch(`${config.development.apiURL}users/googleUser`, {
                 method: 'POST',
-                // credentials: 'include',
                 headers: {
-                    'Content-type': 'application/json',
-                    'Authorization': `Bearer ${respID}`
+                    'Content-type': 'application/json'
                 },
                 body: JSON.stringify({
                     uid: uid,
                     email: email,
-                    name: displayName
+                    name: displayName,
+                    token: token
                 })
             })
             .then((res) => {

@@ -20,10 +20,11 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     const [defEnd, setDefEnd] = useState(event?.end ? dayjs(event?.end): time[1]);
     const [eventDescription, setEventDescription] = useState(event?.description || "");
     const {eventList, setEventList, eventMap} = useContext(EventContext);
-    const { player } = useContext(AuthContext);
+    const { player, tokenRefresh } = useContext(AuthContext);
     const categories = player?.preferences?.categories;
     const [dungeon, setDungeon] = useState(event?.dungeon || null);
     const [deleteEvent, setDeleteEvent] = useState(false);
+    const [retries, setRetries] = useState(false);
 
     const onDungeonChange = (dungeonId) => {
         setDungeon(dungeonId);
@@ -93,30 +94,44 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         try{
             const resp = await fetch(`${config.development.apiURL}event/updateEvent`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     eventId: event.eventId,
                     updates: updates
                 })
             });
-            const data = await resp.json();
-            const formatEvent = {
-                ...data,
-                start: new Date(data.start),
-                end: new Date(data.end)
+
+            if(resp.status===401){
+                if(!retries){
+                    setRetries(true);
+                    await tokenRefresh();
+                    updateChanges(updates);
+                }else{
+                    setRetries(false);
+                    throw new Error('Unauthorized');
+                }
             }
 
-            const index = eventMap.get(event.eventId);
-            setEventList(prevList => {
-                let newList = [...prevList];
-                newList[index] = formatEvent;
-                return newList;
-            })
-            handleClickExit();
-
+            if(resp.ok){
+                setRetries(false);
+                const data = await resp.json();
+                const formatEvent = {
+                    ...data,
+                    start: new Date(data.start),
+                    end: new Date(data.end)
+                }
+    
+                const index = eventMap.get(event.eventId);
+                setEventList(prevList => {
+                    let newList = [...prevList];
+                    newList[index] = formatEvent;
+                    return newList;
+                })
+                handleClickExit();
+            }
         }catch(err) {
             console.log('An error has occured with the server. Please try again: ', err);
         }
@@ -130,19 +145,34 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         try{
             const resp = await fetch(`${config.development.apiURL}event/deleteEvent/${eventId}`, {
                 method: 'DELETE',
+                credentials: 'include', 
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
             });
-            const index = eventMap.get(eventId);
-            setEventList(prevList => {
-                let newList = [...prevList];
-                newList.splice(index, 1);
-                return newList;
-            })
-            setDeleteEvent(false);
-            handleClickExit();
+
+            if(resp.status === 401){
+                if(!retries){
+                    setRetries(true);
+                    await tokenRefresh();
+                    onClickDelete();
+                }else{
+                    setRetries(false);
+                    throw new Error('Unauthorized');
+                }
+            }
+
+
+            if(resp.ok){
+                const index = eventMap.get(eventId);
+                setEventList(prevList => {
+                    let newList = [...prevList];
+                    newList.splice(index, 1);
+                    return newList;
+                })
+                setDeleteEvent(false);
+                handleClickExit();
+            }
         }catch(err){
             console.log('An error has occured: ', err);
         }

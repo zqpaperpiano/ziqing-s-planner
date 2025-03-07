@@ -9,7 +9,7 @@ export const EventContext = createContext();
 export const EventProvider = ({children}) => {
     const [eventList, setEventList] = useState([]);
     const {tokenRefresh} = useContext(AuthContext);
-    const [retries, setRetries] = useState(0);
+    const [retries, setRetries] = useState(false);
     const eventMap = useMemo(() => {
         const map = new Map();
         if(!eventList) return map;
@@ -52,13 +52,17 @@ export const EventProvider = ({children}) => {
                         signal: controller.signal
                     });
 
-                            // if(resp.status === 401 && retries === 0){
-                            //     setRetries(retries + 1);
-                            //     await tokenRefresh();
-                            //     fetchEventList();
-                            // }
+                    if(resp.status === 401 && !retries){
+                        setRetries(true);
+                        await tokenRefresh();
+                        fetchEventList();
+                    }else if(resp.status === 401){
+                        setRetries(false);
+                        throw new Error('Unauthorized');
+                    }
 
                     if(resp.ok){
+                        setRetries(false);
                         const data = await resp.json();
                         if(data && Object.entries(data).length > 0){
                             const formattedEventList = data.map((event) => {

@@ -12,11 +12,12 @@ import { AuthContext } from "../../../../config/authContext";
 import { auth } from "../../../../config/firebase";
 
 const EditCat = ({ onClose }) => {
-    const { player, setPlayer } = useContext(AuthContext);
+    const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
     const [currInput, setCurrInput] = useState(null);
     const [tempList, setTempList] = useState(player?.preferences?.categories);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
+    const [retry, setRetry] = useState(false);
 
     const handleDialogOpen = () => {
         setDialogOpen(true);
@@ -48,24 +49,39 @@ const EditCat = ({ onClose }) => {
     }
 
     const onSaveChanges = async () => {
-        const token = await auth.currentUser.getIdToken();
         try{
             const resp = await fetch(`${config.development.apiURL}users/updateUserEventCategories`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     uid: auth.currentUser.uid,
                     categories: tempList
                 })
             });
-            const data = await resp.json();
 
-            // console.log('received data: ', data);
-            setPlayer(data);
-            onClose();
+            if(resp.status === 401){
+                if(!retry){
+                    setRetry(true);
+                    await tokenRefresh();
+                    onSaveChanges();
+                }else{
+                    setRetry(false);
+                    throw new Error('Unauthorized');
+                }
+                
+            }
+
+            if(resp.ok){
+                setRetry(false);
+                const data = await resp.json();
+                setPlayer(data);
+                onClose();
+            }
+
+            
         }catch(err){
             console.log('an error has occured: ', err);
         }

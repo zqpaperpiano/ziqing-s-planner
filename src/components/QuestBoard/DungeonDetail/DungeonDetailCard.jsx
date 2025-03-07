@@ -8,6 +8,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { ToastContainer, toast } from "react-toastify";
 import config from "../../../config/config.json";
 import { auth } from "../../../config/firebase";
+import { AuthContext } from "../../../config/authContext";
 
 const DungeonDetailCard = () => {
     const { dungeonID } = useParams();
@@ -20,6 +21,8 @@ const DungeonDetailCard = () => {
     const nameRef = useRef(null);
     const descriptionRef = useRef(null);
     const navigate = useNavigate(); 
+    const [retries, setRetries] = useState(false);
+    const { tokenRefresh } = useContext(AuthContext);
 
     //auto focus onto input box for dungeonName
     useEffect(() => {
@@ -112,36 +115,49 @@ const DungeonDetailCard = () => {
         setEditDescription(true);
     }
 
-    const handleSubmitChanges = () => {
-        auth.currentUser.getIdToken().then(token => {fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                dungeonId: dungeonID,
-                dungeonName: dungeon.dungeonName,
-                dungeonDescription: dungeon.dungeonDescription,
-                dungeonCheckpoints: dungeon.dungeonCheckpoints,
-                completionPercentage: dungeon.completionPercentage,
+    const handleSubmitChanges = async () => {
+        try{
+            const resp = fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    dungeonId: dungeonID,
+                    dungeonName: dungeon.dungeonName,
+                    dungeonDescription: dungeon.dungeonDescription,
+                    dungeonCheckpoints: dungeon.dungeonCheckpoints,
+                    completionPercentage: dungeon.completionPercentage,
+                })
             })
-        })
-        .then(resp => resp.json())
-        .then(data => {
-            callSuccessNotif(dungeon.dungeonName);
-            setDungeonList((prevList) => ({
-                ...prevList,
-                data
-            }))
-            navigate(`/dungeon-board/${page}`)
-        })
-        .catch(err => {
+
+            if(resp.status === 401){
+                if(!retries){
+                    setRetries(true);
+                    await tokenRefresh();
+                    handleSubmitChanges();
+                }else{
+                    setRetries(false);
+                    throw new Error('Unauthorized');
+                }
+            }
+
+            if(resp.ok){
+                setRetries(false);
+                const data = await resp.json();
+                callSuccessNotif(dungeon.dungeonName);
+                setDungeonList((prevList) => ({
+                    ...prevList,
+                    data
+                }))
+                navigate(`/dungeon-board/${page}`)
+            }
+        }catch(err){
             console.log('An error has occured. Please try again later.');
-        })
-    })
-        
+        }
     }
+        
 
     const exitDetailCard = () => {
         callNoSaveNotif();

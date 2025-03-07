@@ -16,12 +16,13 @@ const hoursOfDay = [
 ]
 
 const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => {
-    const { player, setPlayer } = useContext(AuthContext);
+    const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
     const [isDragging, setIsDragging] = useState(false);
     const tableWidth = newWidth || "85%";
     const tableHeight = newHeight || "80%";
     const [selectedTimes, setSelectedTimes] = useState([]);
     const location = useLocation();
+    const [retries, setRetries] = useState(false);
 
     useEffect(() => {
         convertDayScheduleToCombined(player?.preferences?.schedule);
@@ -185,6 +186,44 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         setSelectedTimes(combined);
     }
 
+    const postNewSchedule = async (hasSchedule, finSchedule) => {
+        try{
+            const resp = await  fetch(`${config.development.apiURL}users/newUserPreferences`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "uid": auth.currentUser.uid,
+                    "displayName": player.name,
+                    "preferences": {
+                        "hasSchedule": hasSchedule,
+                        "schedule": finSchedule
+                    }
+                })
+            });
+
+            if(resp.status === 401){
+                if(!retries){
+                    setRetries(true);
+                    await tokenRefresh();
+                    postNewSchedule(hasSchedule, finSchedule);
+                }else{
+                    setRetries(false);
+                    throw new Error('Unauthorized');
+                }
+            }
+
+            if(resp.ok){
+                setRetries(false);
+                const data = await resp.json();
+                setPlayer(data);
+            }
+        }catch(err){
+            console.log('an error has occured: ', err);
+        }
+    }
 
     const handleSubmitButton = () => {
         const monScd = getDaySchedule('Mon');
@@ -208,30 +247,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         const hasSchedule = Object.values(finSchedule).some(day => day.length > 1);
 
         if(location.pathname === "/inn"){
-            fetch(`${config.development.apiURL}users/newUserPreferences`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${auth.currentUser.getIdToken()}`
-                },
-                body: JSON.stringify({
-                    "uid": auth.currentUser.uid,
-                    "displayName": player.name,
-                    "preferences": {
-                        "hasSchedule": hasSchedule,
-                        "schedule": finSchedule
-                    }
-                })
-            })
-            .then((resp) => {
-                return resp.json();
-            })
-            .then((data) => {
-                setPlayer(data);
-            })
-            .catch((err) => {
-                console.log('an error has occured in scheduler for inn updating routine: ', err);
-            })
+            postNewSchedule(hasSchedule, finSchedule)
 
         }else{
             handleSetSchedule(

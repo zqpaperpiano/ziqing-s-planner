@@ -1,11 +1,18 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 import config from '../../../config/config';
 import { auth } from '../../../config/firebase';
+import { AuthContext } from "../../../config/authContext";
 
 export const DungeonContext = createContext();
 
 export const DungeonProvider = ({children}) => {
     const [dungeonList, setDungeonList] = useState({});
+    const {tokenRefresh} = useContext(AuthContext);
+    const [retries, setRetries] = useState(false);
+
+    useEffect(() => {
+        console.log('dungeonList: ', dungeonList);
+    })
 
     useEffect(() => {
         const controller = new AbortController();
@@ -27,9 +34,24 @@ export const DungeonProvider = ({children}) => {
                             },
                             signal: controller.signal
                         });
-                        const data = await resp.json();
-                        setDungeonList(data);
-                        localStorage.setItem('dungeonList', JSON.stringify(data));
+
+                        if(resp.status === 401){
+                            if(!retries){
+                                setRetries(true);
+                                await tokenRefresh();
+                                fetchDungeonList();
+                            }else{
+                                setRetries(false);
+                                throw new Error('Unauthorized');
+                            }
+                        }
+
+                        if(resp.ok){
+                            setRetries(false);
+                            const data = await resp.json();
+                            setDungeonList(data);
+                            localStorage.setItem('dungeonList', JSON.stringify(data));
+                        }
                     }catch(err){
                         console.log('an error has occured: ', err);
                     }
