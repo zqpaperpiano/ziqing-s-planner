@@ -43,7 +43,7 @@ const DungeonCard = ({dungeon, page, handleRemoveDungeon}) => {
                         <div className="flex flex-col">
                             <p className="text-xs tf:text-xl">{dungeon[1].dungeonName}</p>
                             <p className="text-xs italic text-slate-700 font-grapeNuts hidden h-sm:block">{dungeon.dungeonDescription}</p>
-                            <p className="text-xs tf:text-l h-sm:text-l">Completed: {(dungeon[1].completionPercentage * 100).toFixed(1)}%</p>
+                            <p className="text-xs tf:text-l h-sm:text-l">Completed: {(dungeon[1].completionProgress * 100).toFixed(1)}%</p>
                         </div>
                     </div>
                     <div className="absolute bottom-0 h-fit w-full font-silkscreen p-2 flex flex-col tf:flex-row justify-around">

@@ -21,7 +21,6 @@ const DungeonDetailCard = () => {
     const nameRef = useRef(null);
     const descriptionRef = useRef(null);
     const navigate = useNavigate(); 
-    const [retries, setRetries] = useState(false);
     const { tokenRefresh } = useContext(AuthContext);
 
     //auto focus onto input box for dungeonName
@@ -33,6 +32,10 @@ const DungeonDetailCard = () => {
     useEffect(() => {
         if(editDescription) descriptionRef.current.focus();
     }, [editDescription])
+
+    // useEffect(() => {
+    //     console.log('my checkpoints: ', dungeon.dungeonCheckpoints)
+    // }, [dungeon.dungeonCheckpoints])
 
     //auto updae completion percentages
     useEffect(() => {
@@ -54,7 +57,7 @@ const DungeonDetailCard = () => {
         if(newPercetage !== dungeon.completionPercetage){
             setDungeon((prevDungeon) => ({
                 ...prevDungeon,
-                completionPercentage: newPercetage
+                completionProgress: newPercetage
             }));
         }
     
@@ -115,9 +118,10 @@ const DungeonDetailCard = () => {
         setEditDescription(true);
     }
 
-    const handleSubmitChanges = async () => {
+    const handleSubmitChanges = async (retry) => {
         try{
-            const resp = fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
+
+            const resp = await fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -128,28 +132,28 @@ const DungeonDetailCard = () => {
                     dungeonName: dungeon.dungeonName,
                     dungeonDescription: dungeon.dungeonDescription,
                     dungeonCheckpoints: dungeon.dungeonCheckpoints,
-                    completionPercentage: dungeon.completionPercentage,
+                    completionProgress: dungeon.completionProgress,
                 })
             })
 
             if(resp.status === 401){
-                if(!retries){
-                    setRetries(true);
+                if(!retry){
                     await tokenRefresh();
-                    handleSubmitChanges();
+                    handleSubmitChanges(true);
+                    return;
                 }else{
-                    setRetries(false);
                     throw new Error('Unauthorized');
                 }
             }
 
             if(resp.ok){
-                setRetries(false);
                 const data = await resp.json();
+
+                console.log('data received: ', data);
                 callSuccessNotif(dungeon.dungeonName);
                 setDungeonList((prevList) => ({
                     ...prevList,
-                    data
+                    ...data
                 }))
                 navigate(`/dungeon-board/${page}`)
             }
@@ -265,7 +269,7 @@ const DungeonDetailCard = () => {
                         <div className="h-full w-1/2 flex flex-col items-center justify-center">
                         <div className="h-1/3 w-full w-full flex flex-col items-center justify-center">
                                     <p className="text-xl">Completion Progress:</p>
-                                    <p>{(dungeon.completionPercentage * 100).toFixed(2)}%</p>
+                                    <p>{(dungeon.completionProgress * 100).toFixed(2)}%</p>
                                 </div>
                            <div className="h-2/3 w-full flex flex-col items-center ">
                                 <p className="text-xl">Checkpoints</p>
@@ -275,7 +279,7 @@ const DungeonDetailCard = () => {
                     </div>
                     <div className="absolute bottom-2 left-0 right-0 mx-auto w-fit">
                         <Button
-                        onClick={handleSubmitChanges}
+                        onClick={() => {handleSubmitChanges(false)}}
                         sx={{
                             fontFamily: 'silkscreen',
                             color: 'black'

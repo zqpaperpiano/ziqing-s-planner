@@ -8,7 +8,6 @@ const EditDetails = ({handleClose}) => {
     const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
     const [displayName, setDisplayName] = useState(player.name);
     const [status, setStatus] = useState(player.status);
-    const [retry, setRetry] = useState(false);
 
     const handleEditDisplayName = (e) => {
         setDisplayName(e.target.value);
@@ -18,7 +17,7 @@ const EditDetails = ({handleClose}) => {
         setStatus(e.target.value);
     }
 
-    const onClickSave = async () => {
+    const onClickSave = async (retry) => {
         try{
             const resp = await fetch(`${config.development.apiURL}users/updateDisplayInfo`,{
                 method: 'POST',
@@ -35,18 +34,16 @@ const EditDetails = ({handleClose}) => {
 
             if(resp.status === 401){
                 if(!retry){
-                    setRetry(true);
                     await tokenRefresh();
-                    onClickSave();
+                    onClickSave(true);
+                    return;
                 }else{
-                    setRetry(false);
                     throw new Error('Unauthorized');
                 }
             }
 
             if(resp.ok){
                 const data = await resp.json();
-                setRetry(false);
                 setPlayer(data);
                 handleClose();
             }
@@ -93,7 +90,7 @@ const EditDetails = ({handleClose}) => {
 
                 <div className="flex-1 w-1/4">
                         <Button
-                        onClick={onClickSave}
+                        onClick={() => {onClickSave(false)}}
                             sx={{
                                 color: 'black',
                                 fontFamily: 'silkscreen',

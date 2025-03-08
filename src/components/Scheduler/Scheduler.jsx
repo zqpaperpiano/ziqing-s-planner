@@ -22,7 +22,6 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
     const tableHeight = newHeight || "80%";
     const [selectedTimes, setSelectedTimes] = useState([]);
     const location = useLocation();
-    const [retries, setRetries] = useState(false);
 
     useEffect(() => {
         convertDayScheduleToCombined(player?.preferences?.schedule);
@@ -186,7 +185,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         setSelectedTimes(combined);
     }
 
-    const postNewSchedule = async (hasSchedule, finSchedule) => {
+    const postNewSchedule = async (hasSchedule, finSchedule, retry) => {
         try{
             const resp = await  fetch(`${config.development.apiURL}users/newUserPreferences`, {
                 method: 'POST',
@@ -205,18 +204,16 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
             });
 
             if(resp.status === 401){
-                if(!retries){
-                    setRetries(true);
+                if(!retry){
                     await tokenRefresh();
-                    postNewSchedule(hasSchedule, finSchedule);
+                    postNewSchedule(hasSchedule, finSchedule, true);
+                    return;
                 }else{
-                    setRetries(false);
                     throw new Error('Unauthorized');
                 }
             }
 
             if(resp.ok){
-                setRetries(false);
                 const data = await resp.json();
                 setPlayer(data);
             }
@@ -247,7 +244,7 @@ const Scheduler = ({handleSetSchedule, handleNextPage, newWidth, newHeight}) => 
         const hasSchedule = Object.values(finSchedule).some(day => day.length > 1);
 
         if(location.pathname === "/inn"){
-            postNewSchedule(hasSchedule, finSchedule)
+            postNewSchedule(hasSchedule, finSchedule, false)
 
         }else{
             handleSetSchedule(

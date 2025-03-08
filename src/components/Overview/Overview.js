@@ -4,12 +4,15 @@ import { format, startOfWeek, addDays, isToday, addWeeks } from 'date-fns';
 import { EventContext } from '../WarRoom/components/EventContext';
 import DaySelector from './components/DaySelector';
 import DayScheduleOverview from './components/DayScheduleOverview';
+import { Button } from '@mui/material';
+import {AuthContext}  from '../../config/authContext';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
   const anchorDate = new Date();
   const [selectedDate, setSelectedDate] = useState(anchorDate);
   const { eventList } = useContext(EventContext);
+  const { tokenRefresh } = useContext(AuthContext);
   const dayString = useMemo(() => {
     const convertedTime = new Date(selectedDate.toUTCString()) + (8 * 60 * 60 * 1000);
     const arr = convertedTime.split(' ');
@@ -85,7 +88,9 @@ const Overview = () => {
                 </div>
               </div>
       </div>
-
+                <Button
+                onClick={tokenRefresh}
+                >Press</Button>
 
       </div>  
     </div>

@@ -20,7 +20,6 @@ const NewPlayerSettings = () => {
     const [salaryFrequency, setSalaryFrequency] = useState(null);
     const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
     const [displayName, setDisplayName] = useState(null);
-    const [retry, setRetry] = useState(false);
 
     const categories = {
         cat1: {
@@ -61,7 +60,7 @@ const NewPlayerSettings = () => {
     //     }
     // })
 
-    const postNewPreferences = async(uid, preferences) => {
+    const postNewPreferences = async(uid, preferences, retry) => {
         try{
             const resp = await fetch(`${config.development.apiURL}users/newUserPreferences`, {
                 method: 'POST',
@@ -78,16 +77,14 @@ const NewPlayerSettings = () => {
 
             if(resp.status === 401){
                 if(!retry){
-                    setRetry(true);
                     await tokenRefresh();
-                    postNewPreferences();
+                    postNewPreferences(uid, preferences, true);
                 }else{
                     throw new Error('Unauthorized');
                 }
             }
 
             if(resp.ok){
-                setRetry(false);
                 const data = await resp.json();
                 setPlayer(data);
                 localStorage.setItem('player', JSON.stringify(data));
@@ -111,7 +108,7 @@ const NewPlayerSettings = () => {
 
         // console.log('this is my preferences: ', preferences);
         const uid = auth.currentUser.uid;
-        postNewPreferences(uid, preferences);
+        postNewPreferences(uid, preferences, false);
     }
 
     const handleSetSchedule = (schedule) => {

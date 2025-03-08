@@ -21,7 +21,6 @@ const DungeonBoard = () => {
     const {dungeonList, setDungeonList} = useContext(DungeonContext);
     const [maxPages, setMaxPages] = useState(1);
     const [dungeonPp, setDungeonPp] = useState(3);
-    const [retries, setRetries] = useState(false);
     const { tokenRefresh } = useContext(AuthContext);
 
     const navigate = useNavigate();
@@ -55,7 +54,7 @@ const DungeonBoard = () => {
     }, [totalDungeons])
 
     //when a new quest is added
-    const handleIncreaseDungeons = async (newDungeon) => {
+    const handleIncreaseDungeons = async (newDungeon, retry) => {
         try{
             const resp =  await fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
                 method: 'POST',
@@ -70,18 +69,16 @@ const DungeonBoard = () => {
             });
 
             if(resp.status === 401){
-                if(!retries){
-                    setRetries(true);
+                if(!retry){
                     await tokenRefresh();
-                    handleIncreaseDungeons(newDungeon);
+                    handleIncreaseDungeons(newDungeon, true);
+                    return;
                 }else{
-                    setRetries(false);
                     throw new Error('Unauthorized');
                 }
             }
 
             if(resp.ok){
-                setRetries(false);
                 const data = await resp.json();
                 const dungeonId = Object.keys(data)[0];
                 const dungeonData = Object.values(data)[0];
@@ -100,7 +97,7 @@ const DungeonBoard = () => {
         setToDel(dungeonId);
     }
 
-    const handleDeleteDungeon = async () => {
+    const handleDeleteDungeon = async (retry) => {
         try{
             const resp = await fetch(`${config.development.apiURL}dungeon/delete-dungeon`, {
                 method: 'DELETE',
@@ -114,18 +111,16 @@ const DungeonBoard = () => {
             });
 
             if(resp.status === 401){
-                if(!retries){
-                    setRetries(true);
+                if(!retry){
                     await tokenRefresh();
-                    handleDeleteDungeon();
+                    handleDeleteDungeon(true);
+                    return;
                 }else{
-                    setRetries(false);
                     throw new Error('Unauthorized');
                 }
             }
 
             if(resp.ok){
-                setRetries(false);
                 const data = await resp.json();
                 if(data.status === 204){
                     setDungeonList(prevDungeonList => {
@@ -172,7 +167,7 @@ const DungeonBoard = () => {
     }
 
     const confirmDelete = () => {
-        handleDeleteDungeon();
+        handleDeleteDungeon(false);
         setOnClickDelete(false);
     }
 

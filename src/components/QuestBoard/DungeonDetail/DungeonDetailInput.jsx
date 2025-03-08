@@ -19,7 +19,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
                                                     dungeonName: '',
                                                     dungeonDescription: '',
                                                     dungeonCheckpoints: checkpointList,
-                                                    completionPercentage: 0,
+                                                    completionProgress: 0,
                                                     dungeonCompleted: false
                                                 });
 
@@ -35,15 +35,15 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
         }, 0);
         
         let len = checkpointList.length;
-        let completionPercentage = (completedCount / len).toFixed(4);
-        if(isNaN(completionPercentage)){
-            completionPercentage = 0;
+        let completionProgress = (completedCount / len).toFixed(4);
+        if(isNaN(completionProgress)){
+            completionProgress = 0;
         }
 
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, 
             dungeonCheckpoints: checkpointList,
-            completionPercentage: completionPercentage
+            completionProgress: completionProgress
         }))
     }, [checkpointList]);
 
@@ -72,7 +72,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
         }else if(curr.dungeonCheckpoints[0].length === 0){
             notifyEmptyCheckpoint();
         }else{
-            handleIncreaseDungeons(dungeonDetails);
+            handleIncreaseDungeons(dungeonDetails, false);
             handleExitAddDungeon();
         }
     }

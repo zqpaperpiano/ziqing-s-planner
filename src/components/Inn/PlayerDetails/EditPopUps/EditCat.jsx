@@ -17,7 +17,6 @@ const EditCat = ({ onClose }) => {
     const [tempList, setTempList] = useState(player?.preferences?.categories);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
-    const [retry, setRetry] = useState(false);
 
     const handleDialogOpen = () => {
         setDialogOpen(true);
@@ -48,7 +47,7 @@ const EditCat = ({ onClose }) => {
         }));
     }
 
-    const onSaveChanges = async () => {
+    const onSaveChanges = async (retry) => {
         try{
             const resp = await fetch(`${config.development.apiURL}users/updateUserEventCategories`, {
                 method: 'POST',
@@ -64,18 +63,16 @@ const EditCat = ({ onClose }) => {
 
             if(resp.status === 401){
                 if(!retry){
-                    setRetry(true);
                     await tokenRefresh();
-                    onSaveChanges();
+                    onSaveChanges(true);
+                    return;
                 }else{
-                    setRetry(false);
                     throw new Error('Unauthorized');
                 }
                 
             }
 
             if(resp.ok){
-                setRetry(false);
                 const data = await resp.json();
                 setPlayer(data);
                 onClose();
@@ -192,7 +189,7 @@ const EditCat = ({ onClose }) => {
                         onClick={onAddCategory}
                     >+ Add Categories</Button>
                     <Button
-                    onClick={onSaveChanges}
+                    onClick={() => {onSaveChanges(false)}}
                     >Save</Button>
                 </div>
             }

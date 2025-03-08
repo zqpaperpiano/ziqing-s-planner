@@ -8,8 +8,7 @@ export const EventContext = createContext();
 
 export const EventProvider = ({children}) => {
     const [eventList, setEventList] = useState([]);
-    const {tokenRefresh} = useContext(AuthContext);
-    const [retries, setRetries] = useState(false);
+    const {tokenRefresh, player} = useContext(AuthContext);
     const eventMap = useMemo(() => {
         const map = new Map();
         if(!eventList) return map;
@@ -19,15 +18,11 @@ export const EventProvider = ({children}) => {
         })
         return map;
     }, [eventList])
-
-    useEffect(() => {
-        console.log('my number of retries: ', retries);
-    }, [retries])
     
 
     useEffect(() => {
         const controller = new AbortController();
-        const fetchEventList = async() => {
+        const fetchEventList = async(retry) => {
             if(!auth.currentUser) return;
 
             const cachedEventList = JSON.parse(localStorage.getItem('eventList'));
@@ -52,17 +47,15 @@ export const EventProvider = ({children}) => {
                         signal: controller.signal
                     });
 
-                    if(resp.status === 401 && !retries){
-                        setRetries(true);
+                    if(resp.status === 401 && !retry){
                         await tokenRefresh();
-                        fetchEventList();
+                        fetchEventList(true);
+                        return;
                     }else if(resp.status === 401){
-                        setRetries(false);
                         throw new Error('Unauthorized');
                     }
 
                     if(resp.ok){
-                        setRetries(false);
                         const data = await resp.json();
                         if(data && Object.entries(data).length > 0){
                             const formattedEventList = data.map((event) => {
@@ -85,10 +78,10 @@ export const EventProvider = ({children}) => {
             }
         }
 
-        if(auth.currentUser) fetchEventList();
+        if(auth.currentUser) fetchEventList(false);
 
         return () => controller.abort();
-    }, [])
+    }, [player])
 
     useEffect(() => {
         if(auth.currentUser && eventList.length > 0){
