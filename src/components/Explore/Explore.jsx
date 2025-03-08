@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdventureDetails from "./Components/AdventureDetails";
 import Exploration from "./Components/Exploration";
+import { config } from "process";
 
 const Explore = () => {
     const [adventureDeets, setAdventureDeets] = useState(null);
@@ -21,6 +22,8 @@ const Explore = () => {
         }
         setInExploration(true);
     }
+
+
 
     const exitExplortaion = () => {
         setInExploration(false);

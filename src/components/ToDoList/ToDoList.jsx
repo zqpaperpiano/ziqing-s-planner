@@ -57,10 +57,10 @@ const ToDoList = () => {
         <div className="h-full w-full flex flex-col items-center justify-center text-white overflow-auto">
             <p>To-Do List</p>
             {
-                listItems.map((item) => {
+                listItems.map((item, index) => {
                     // console.log(item);
                     return(
-                        <ListItems item={item} onRenameChecklist={onChangeChecklistName} onKeyPress={handleKeyPress} onDeleteChecklist={deleteChecklist}/>
+                        <ListItems key={index} item={item} onRenameChecklist={onChangeChecklistName} onKeyPress={handleKeyPress} onDeleteChecklist={deleteChecklist}/>
                     )
                 })
             }
