@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import config from "../../../../config/config.json";
 import CategoryBar from "./Components/CategoryBar";
-import { AuthContext } from "../../../../config/authContext";
+import { AuthContext } from "../../../../contexts/authContext";
 import { auth } from "../../../../config/firebase";
 
 const EditCat = ({ onClose }) => {

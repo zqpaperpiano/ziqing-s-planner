@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { ShopContext } from "./ShopContext";
+import { ShopContext } from "../../../contexts/ShopContext";
 import BreakdownChart from "./PurchaseLogComponents/BreakdownChart";
 
 const PurchaseLogTab = ({ tabColor, onSelectTab }) => {

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { DungeonContext } from "../QuestBoard/DungeonContext/DungeonContext";
+import { DungeonContext } from "../../contexts/DungeonContext";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {

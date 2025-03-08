@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
-import { DungeonContext } from "../DungeonContext/DungeonContext";
+import { DungeonContext } from "../../../contexts/DungeonContext";
 import { CircularProgress, TextField, Button } from "@mui/material";
 import { motion } from "framer-motion";
 import Checkpoints from "./Checkpoints";
@@ -8,7 +8,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { ToastContainer, toast } from "react-toastify";
 import config from "../../../config/config.json";
 import { auth } from "../../../config/firebase";
-import { AuthContext } from "../../../config/authContext";
+import { AuthContext } from "../../../contexts/authContext";
 
 const DungeonDetailCard = () => {
     const { dungeonID } = useParams();
@@ -149,7 +149,7 @@ const DungeonDetailCard = () => {
             if(resp.ok){
                 const data = await resp.json();
 
-                console.log('data received: ', data);
+                // console.log('data received: ', data);
                 callSuccessNotif(dungeon.dungeonName);
                 setDungeonList((prevList) => ({
                     ...prevList,

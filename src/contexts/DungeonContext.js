@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, useContext } from "react";
-import config from '../../../config/config';
-import { auth } from '../../../config/firebase';
-import { AuthContext } from "../../../config/authContext";
+import config from '../config/config.json';
+import { auth } from '../config/firebase';
+import { AuthContext } from "./authContext";
 
 export const DungeonContext = createContext();
 

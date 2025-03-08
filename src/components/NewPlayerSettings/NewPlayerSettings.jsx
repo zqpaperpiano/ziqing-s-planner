@@ -6,7 +6,7 @@ import PageThree from "./Pages/PageThree";
 import PageFour from "./Pages/PageFour";
 import PageFive from "./Pages/PageFive";
 import { useNavigate } from "react-router";
-import { AuthContext } from "../../config/authContext";
+import { AuthContext } from "../../contexts/authContext";
 import config from '../../config/config.json';
 import { auth } from "../../config/firebase";
 

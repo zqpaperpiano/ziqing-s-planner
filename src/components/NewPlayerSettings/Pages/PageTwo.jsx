@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { Button, TextField } from "@mui/material";
 import { ReactTyped } from "react-typed";
 import BackArrow from "../../BackArrow/BackArrow";
-import { AuthContext } from "../../../config/authContext";
+import { AuthContext } from "../../../contexts/authContext";
 
 
 const PageTwo = ({currPage, handleNextPage, changeDisplayName, displayName}) => {

@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { LockKeyhole, Mail, User } from 'lucide-react'
 import Google from '../../../../images/google-plus.png';
 import { useNavigate } from "react-router";
-import { AuthContext } from "../../../../config/authContext";
+import { AuthContext } from "../../../../contexts/authContext";
 import { browserLocalPersistence, deleteUser, setPersistence } from "firebase/auth";
 import config from '../../../../config/config.json';
 import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebase";
@@ -31,11 +31,14 @@ const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, 
         }
     }, [onSignUp, userName, userEmail, userPassword])
 
+    
+
 
     const verifyUserToken = (token, email, name) => {
         setLoading(true);
         fetch(`${config.development.apiURL}users/new-user`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-type': 'application/json'
             },

@@ -3,7 +3,7 @@ import './LogInSignUp.css';
 import { Button, CircularProgress } from "@mui/material";
 import SignUp from "./SignUp/SignUp";
 import LogIn from "./LogIn/LogIn";
-import { AuthContext } from "../../../config/authContext";
+import { AuthContext } from "../../../contexts/authContext";
 import { auth, signUpWithGPopUp } from "../../../config/firebase";
 import { setPersistence, browserLocalPersistence } from "firebase/auth";
 import { redirect, useNavigate } from "react-router";
@@ -34,7 +34,6 @@ const LogInSignUp = () => {
     const toggleLogInLoading = (bool) => {
         setLogInLoading(bool);
     }
-
    
     const logGUser = async() => {
         try{

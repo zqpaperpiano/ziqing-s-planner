@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { ShopContext } from '../ShopContext'
+import { ShopContext } from '../../../../contexts/ShopContext'
 import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function BreakdownChart() {

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import TimePicker from "../../TimePicker/TimePicker";
 import { FormControl, InputLabel, MenuItem, Select, Button } from "@mui/material";
 import DungeonSelector from "../../DungeonSelector/DungeonSelector";
-import { DungeonContext } from "../../QuestBoard/DungeonContext/DungeonContext";
+import { DungeonContext } from "../../../contexts/DungeonContext";
 import { ToastContainer, toast } from 'react-toastify';
 
 const AdventureDetails = ({ onStartExploration }) => {

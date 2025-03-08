@@ -1,11 +1,11 @@
 import './Overview.css';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { format, startOfWeek, addDays, isToday, addWeeks } from 'date-fns';
-import { EventContext } from '../WarRoom/components/EventContext';
+import { EventContext } from '../../contexts/EventContext';
 import DaySelector from './components/DaySelector';
 import DayScheduleOverview from './components/DayScheduleOverview';
 import { Button } from '@mui/material';
-import {AuthContext}  from '../../config/authContext';
+import {AuthContext}  from '../../contexts/authContext';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);

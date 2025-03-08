@@ -3,7 +3,7 @@ import PlayerStats from "./PlayerStats/PlayerStats";
 import AccountSettings from "./AccountSettings/AccountSettings";
 import ProfilePreferences from "./ProfilePreferences/ProfilePreferences";
 import NewPlayerSettings from "../../NewPlayerSettings/NewPlayerSettings";
-import { AuthContext } from "../../../config/authContext";
+import { AuthContext } from "../../../contexts/authContext";
 
 const PlayerDetails = () => {
     const [selectedPage, setSelectedPage] = useState("Profile Preferences");

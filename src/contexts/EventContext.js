@@ -1,7 +1,7 @@
 import React, {createContext, useState, useEffect, useMemo, useContext} from "react";
-import { auth } from "../../../config/firebase";
-import config from "../../../config/config";
-import { AuthContext } from "../../../config/authContext";
+import { auth } from "../config/firebase";
+import config from '../config/config.json'
+import { AuthContext } from "./authContext";
 
 
 export const EventContext = createContext();

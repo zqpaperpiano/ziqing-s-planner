@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import { Button } from "@mui/material";
-import { AuthContext } from "../../config/authContext";
+import { AuthContext } from "../../contexts/authContext";
 import { useLocation } from "react-router-dom";
 import config from '../../config/config.json';
 import { auth } from "../../config/firebase";

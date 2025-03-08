@@ -3,7 +3,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import EventCreator from "./components/EventCreator";
 import dayjs from "dayjs";
-import { EventContext } from "./components/EventContext";
+import { EventContext } from "../../contexts/EventContext";
 
 
 

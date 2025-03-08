@@ -1,6 +1,6 @@
 import { TextField, Button } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../../../../config/authContext";
+import { AuthContext } from "../../../../contexts/authContext";
 import config from '../../../../config/config.json';
 import { auth } from "../../../../config/firebase";
 

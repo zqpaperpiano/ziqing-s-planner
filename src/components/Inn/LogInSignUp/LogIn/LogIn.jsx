@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {Mail, LockKeyhole } from 'lucide-react';
 import Google from '../../../../images/google-plus.png';
 import './LogIn.css';
-import { AuthContext } from "../../../../config/authContext";
+import { AuthContext } from "../../../../contexts/authContext";
 import { auth } from "../../../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import config from '../../../../config/config.json'

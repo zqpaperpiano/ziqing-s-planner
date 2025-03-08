@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from "react";
 import Button from '@mui/material/Button';
 import DungeonDetailInput from "./DungeonDetail/DungeonDetailInput";
-import { DungeonContext } from "./DungeonContext/DungeonContext";
+import { DungeonContext } from "../../contexts/DungeonContext";
 import DungeonPage from "./DungeonPage/DungeonPage";
 import { StepBack, StepForward } from "lucide-react";
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,7 +10,7 @@ import PageTracker from "./PageTracker/PageTracker";
 import config from '../../config/config.json';
 import { auth } from '../../config/firebase';
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
-import { AuthContext } from "../../config/authContext";
+import { AuthContext } from "../../contexts/authContext";
 
 const DungeonBoard = () => {
     const {'page-number': page} = useParams();

@@ -4,7 +4,7 @@ import EditSalary from "../EditPopUps/EditSalary";
 import EditCat from "../EditPopUps/EditCat";
 import EditDetails from "../EditPopUps/EditDetails";
 import EditSchedule from "../EditPopUps/EditSchedule";
-import { AuthContext } from "../../../../config/authContext";
+import { AuthContext } from "../../../../contexts/authContext";
 import DayScheduleBreakdown from "./Components/DayScheduleBreakdown";
 
 

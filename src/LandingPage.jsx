@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Overview from "./components/Overview/Overview";
 import Inn from "./components/Inn/Inn";
 import DungeonBoard from "./components/QuestBoard/DungeonBoard";
-import { DungeonProvider } from "./components/QuestBoard/DungeonContext/DungeonContext";
+import { DungeonProvider } from "./contexts/DungeonContext";
 import HamburgerMenu from "./components/AdventureLog/HamburgerMenu/HamburgerMenu";
 import FullNavBar from "./components/AdventureLog/FullNavBar/FullNavBar";
 import NewPlayerSettings from "./components/NewPlayerSettings/NewPlayerSettings";
@@ -12,13 +12,14 @@ import Shop from "./components/Shop/Shop";
 import WarRoom from "./components/WarRoom/WarRoom";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { AuthProvider } from "./config/authContext";
+import { AuthProvider } from "./contexts/authContext";
 import LogInSignUp from "./components/Inn/LogInSignUp/LogInSignUp";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import { EventProvider } from "./components/WarRoom/components/EventContext";
+import { EventProvider } from "./contexts/EventContext";
 import Explore from "./components/Explore/Explore";
 import DungeonDetailCard from "./components/QuestBoard/DungeonDetail/DungeonDetailCard";
-import { ShopProvider } from "./components/Shop/shopComponents/ShopContext";
+import { ShopProvider } from "./contexts/ShopContext";
+import { UserStatProvider } from "./contexts/userStatContext";
 
 const LandingPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -38,6 +39,7 @@ const LandingPage = () => {
             <AuthProvider>
             <EventProvider>
             <DungeonProvider>
+            <UserStatProvider>
             <Router>
                     <div className="relative h-screen w-screen flex md:flex-col md:justify-center md:items-center overflow-hidden ">
                         <div className="md:w-85vw md:h-7vh hidden md:block">
@@ -74,6 +76,7 @@ const LandingPage = () => {
                     </div>
                 </div>
             </Router>
+            </UserStatProvider>
             </DungeonProvider>
             </EventProvider>
             </AuthProvider>

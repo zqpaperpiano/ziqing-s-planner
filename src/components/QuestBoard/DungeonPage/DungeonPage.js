@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useLocation, useParams } from "react-router";
 import DungeonCard from "../DungeonCard/DungeonCard";
-import { DungeonContext } from "../DungeonContext/DungeonContext";
+import { DungeonContext } from "../../../contexts/DungeonContext";
 
 const DungeonPage = ({ page, dungeonPp, handleRemoveDungeon}) => {
     const { dungeonList } = useContext(DungeonContext);
