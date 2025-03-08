@@ -10,9 +10,9 @@ export const DungeonProvider = ({children}) => {
     const {tokenRefresh} = useContext(AuthContext);
     const { player } = useContext(AuthContext);
 
-    useEffect(() => {
-        console.log('dungeonList: ', dungeonList);
-    })
+    // useEffect(() => {
+    //     console.log('dungeonList: ', dungeonList);
+    // })
 
     useEffect(() => {
         const controller = new AbortController();

@@ -47,8 +47,10 @@ export const AuthProvider = ({ children }) => {
     const tokenRefresh = async() => {
         const token = await auth.currentUser.getIdToken(true);
         try{
+            // console.log("refreshing token");
             const resp = await fetch(`${config.development.apiURL}users/setAuthCookie`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -56,6 +58,8 @@ export const AuthProvider = ({ children }) => {
                 token: token
             })
             })
+            return resp.status;
+
         }catch(err){
             console.log('an error has occured with refreshing token: ', err);
         }

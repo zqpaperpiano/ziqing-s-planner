@@ -120,7 +120,7 @@ const DungeonDetailCard = () => {
 
     const handleSubmitChanges = async (retry) => {
         try{
-
+            console.log('my retry status:', retry);
             const resp = await fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
                 method: 'POST',
                 credentials: 'include',
@@ -177,7 +177,7 @@ const DungeonDetailCard = () => {
             {
                 !dungeon ? 
                 <CircularProgress /> :
-                <div className={`h-4/5 w-3/4 relative transform rotate-y-180 pt-8 bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg overflow-x-hidden ${hasNotif ? 'overflow-y-hidden': 'overflow-y-auto}'}`}>
+                <div className={`h-4/5 w-3/4 relative transform rotate-y-180 pt-8 bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg`}>
                     <ToastContainer />
                     <div className=" h-full w-full flex items-center justify-center font silkscreen">
                     <Button
@@ -223,7 +223,7 @@ const DungeonDetailCard = () => {
                                     }
                                 </div>
                             </div>
-                            <div className="h-2/3 w-full flex flex-col items-center px-2">
+                            <div className="h-2/3 w-full flex flex-col items-center px-2 relative">
                                 <div className="h-16 w-2/3 flex items-center justify-center">
                                     <p className="text-xl">Description</p>
                                     <BorderColorIcon 
@@ -263,28 +263,30 @@ const DungeonDetailCard = () => {
                                     <p className="italic text-center">{dungeon.dungeonDescription}</p>
                                 }
                                 </div>
+                                <div className="absolute bottom-2 mx-auto">
+                                    <Button
+                                    onClick={() => {handleSubmitChanges(false)}}
+                                    sx={{
+                                        fontFamily: 'silkscreen',
+                                        color: 'green'
+                                    }}>Save and Exit</Button>
+                                </div>
                                 
                             </div>
                         </div>
-                        <div className="h-full w-1/2 flex flex-col items-center justify-center">
-                        <div className="h-1/3 w-full w-full flex flex-col items-center justify-center">
+                        <div className="h-full w-1/2 flex flex-col items-center justify-center overflow-y-auto">
+                        <div className="h-1/4 w-full w-full flex flex-col items-center justify-center">
                                     <p className="text-xl">Completion Progress:</p>
                                     <p>{(dungeon.completionProgress * 100).toFixed(2)}%</p>
                                 </div>
-                           <div className="h-2/3 w-full flex flex-col items-center ">
+                           <div className="h-3/4 w-full flex flex-col items-center ">
                                 <p className="text-xl">Checkpoints</p>
                                 <Checkpoints checkpoints={dungeon.dungeonCheckpoints} handleSubmit={handleNewCheckpointList} btnColor={"black"} />
                            </div>
                         </div>
                     </div>
-                    <div className="absolute bottom-2 left-0 right-0 mx-auto w-fit">
-                        <Button
-                        onClick={() => {handleSubmitChanges(false)}}
-                        sx={{
-                            fontFamily: 'silkscreen',
-                            color: 'black'
-                        }}>Save and Exit</Button>
-                    </div>
+                    
+                    
                 </div>
             }
         </motion.div>

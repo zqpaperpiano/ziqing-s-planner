@@ -103,6 +103,7 @@ const Checkpoints = ({ checkpoints, handleSubmit, btnColor }) => {
                             sx={{
                                 height: '20px',
                                 width: '20px',
+                                flexShrink: 0,
                                 '&:hover': {
                                     cursor: 'pointer',
                                     color: 'red'

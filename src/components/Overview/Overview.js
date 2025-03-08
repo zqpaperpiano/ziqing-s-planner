@@ -28,9 +28,9 @@ const Overview = () => {
     }
   });
 
-  // useEffect(() => {
-  //   console.log(validSchedule);
-  // }, [validSchedule])
+  useEffect(() => {
+    console.log(validSchedule);
+  }, [validSchedule])
 
 
   const startDate = useMemo(() => {
@@ -87,11 +87,7 @@ const Overview = () => {
                 }
                 </div>
               </div>
-      </div>
-                <Button
-                onClick={tokenRefresh}
-                >Press</Button>
-
+          </div>
       </div>  
     </div>
   );

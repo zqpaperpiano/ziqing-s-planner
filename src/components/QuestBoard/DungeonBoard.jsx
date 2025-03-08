@@ -121,14 +121,11 @@ const DungeonBoard = () => {
             }
 
             if(resp.ok){
-                const data = await resp.json();
-                if(data.status === 204){
-                    setDungeonList(prevDungeonList => {
-                        const { [toDel]: _, ...updatedDungeonList } = prevDungeonList;
-                        return updatedDungeonList;
-                    });
-                    setToDel('');
-                }
+                setDungeonList(prevDungeonList => {
+                    const { [toDel]: _, ...updatedDungeonList } = prevDungeonList;
+                    return updatedDungeonList;
+                });
+                setToDel('');
             }
         }catch(err){
             console.log('an error has occured: ', err);
