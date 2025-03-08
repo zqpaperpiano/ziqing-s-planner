@@ -218,36 +218,46 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
                 createdBy: playerId
             }
     
-            auth.currentUser.getIdToken()
-            .then(token => {
-                fetch(`${config.development.apiURL}event/createNewEvent`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        event: newEvent
-                    })
-                })
-                .then(resp => resp.json())
-                .then(data => {
-                    const formatEvent = {
-                        ...data,
-                        start: new Date(data.start),
-                        end: new Date(data.end)
-                    }
-    
-                    setEventList((prevList) => [...prevList, formatEvent]);
-                    handleClickExit();
-                })
-                .catch(err => {
-                    console.log('An error has occured with the server. Please try again');
-                })
-            })
+            postNewEvent(newEvent, false);
         }
+    }
 
-        
+    const postNewEvent = async(newEvent, retry) =>{
+        try{
+            const resp = await fetch(`${config.development.apiURL}event/createNewEvent`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    event: newEvent
+                })
+            });
+
+            if(resp.status === 401){
+                if(!retry){
+                    await tokenRefresh();
+                    postNewEvent(newEvent, true);
+                    return;
+                }
+                throw new Error('Unauthorized')
+            }
+
+            if(resp.ok){
+                const data = await resp.json();
+                const formatEvent = {
+                    ...data,
+                    start: new Date(data.start),
+                    end: new Date(data.end)
+                }
+
+                setEventList((prevList) => [...prevList, formatEvent]);
+                handleClickExit();
+            }
+        }catch(err){
+            console.log('An error has occured in posting a new event: ', err);
+        }
     }
 
     return(

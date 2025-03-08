@@ -59,7 +59,7 @@ export const DungeonProvider = ({children}) => {
             }
         }
         
-        fetchDungeonList();
+        fetchDungeonList(false);
 
         return () => controller.abort();
     }, [player])

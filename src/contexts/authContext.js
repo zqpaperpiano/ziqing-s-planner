@@ -37,11 +37,28 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logOut = async () => {
-        await signOut(auth);
-        setPlayer(null);  
-        localStorage.removeItem('dungeonList');
-        localStorage.removeItem('player');  
-        localStorage.removeItem('eventList');
+        try{
+            const resp = fetch(`${config.development.apiURL}users/logout`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(resp.status);
+
+            await signOut(auth);
+            setPlayer(null);  
+            localStorage.removeItem('dungeonList');
+            localStorage.removeItem('player');  
+            localStorage.removeItem('eventList');
+            localStorage.removeItem('userStats');
+        }catch(err){
+            console.log("an error occured when logging out");
+        }
+
+        
     }
 
     const tokenRefresh = async() => {
