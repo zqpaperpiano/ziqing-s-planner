@@ -39,6 +39,7 @@ export const UserStatProvider = ({ children }) => {
 
                         if(resp.ok){
                             const data = await resp.json();
+                            // console.log('data received: ', data);
                             setUserStats(data);
                             localStorage.setItem('userStats', JSON.stringify(data));
                         }
@@ -54,6 +55,12 @@ export const UserStatProvider = ({ children }) => {
 
         return () => controller.abort();
     }, [auth.currentUser]);
+
+    useEffect(() => {
+        if(auth.currentUser && userStats){
+            localStorage.setItem('userStats', JSON.stringify(userStats));
+        }
+    })
 
 
     return(

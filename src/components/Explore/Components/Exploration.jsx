@@ -54,7 +54,7 @@ const Exploration = ({ details, handleExitExploration }) => {
     })
 
     const onExitFocus = () => {
-        console.log('exiting...');
+        // console.log('exiting...');
         updateUserFocusTimeStats(false);
         handleExitExploration();
     }

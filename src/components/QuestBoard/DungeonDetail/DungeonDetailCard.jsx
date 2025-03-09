@@ -120,7 +120,7 @@ const DungeonDetailCard = () => {
 
     const handleSubmitChanges = async (retry) => {
         try{
-            console.log('my retry status:', retry);
+            // console.log('my retry status:', retry);
             const resp = await fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
                 method: 'POST',
                 credentials: 'include',
@@ -135,6 +135,8 @@ const DungeonDetailCard = () => {
                     completionProgress: dungeon.completionProgress,
                 })
             })
+
+            // console.log('resp: ', resp.status);
 
             if(resp.status === 401){
                 if(!retry){

@@ -1,11 +1,13 @@
 import './Overview.css';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import { format, startOfWeek, addDays, isToday, addWeeks } from 'date-fns';
 import { EventContext } from '../../contexts/EventContext';
 import DaySelector from './components/DaySelector';
 import DayScheduleOverview from './components/DayScheduleOverview';
 import { Button } from '@mui/material';
 import {AuthContext}  from '../../contexts/authContext';
+import { UserStatContext } from '../../contexts/userStatContext';
+import BraindumpTab from './components/BraindumpTab';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
@@ -13,24 +15,37 @@ const Overview = () => {
   const [selectedDate, setSelectedDate] = useState(anchorDate);
   const { eventList } = useContext(EventContext);
   const { tokenRefresh } = useContext(AuthContext);
+  const { userStats } = useContext(UserStatContext);
   const dayString = useMemo(() => {
-    const convertedTime = new Date(selectedDate.toUTCString()) + (8 * 60 * 60 * 1000);
-    const arr = convertedTime.split(' ');
+  const convertedTime = new Date(selectedDate.toUTCString()) + (8 * 60 * 60 * 1000);
+  const arr = convertedTime.split(' ');
     return `${arr[0]} ${arr[1]} ${arr[2]} ${arr[3]}`;
   }, [selectedDate])
+
+  const expBarWidth = useMemo(() => {
+      return `${(userStats.xp / userStats.toNextLevel) * 100}%`;
+  }, [userStats.xp])
 
   const validSchedule = useMemo(() => {
     if(eventList.length > 0){
       const selectedDaySchedule = eventList.filter((event) => {
         return event.start.toDateString() === selectedDate.toDateString();
       })
-      return selectedDaySchedule;
+      const sortedSchedule = selectedDaySchedule.sort((a, b) => 
+        new Date(a.start) - new Date(b.start)
+      )
+      return sortedSchedule;
     }
   });
 
+  const braindumpDiv = useRef(null);
+
   useEffect(() => {
-    console.log(validSchedule);
-  }, [validSchedule])
+    if(braindumpDiv.current){
+      const rect = braindumpDiv.current.getBoundingClientRect();
+      console.log('the parent div parameters: ', rect);
+    }
+  }, [])
 
 
   const startDate = useMemo(() => {
@@ -52,8 +67,9 @@ const Overview = () => {
 
   return(
     <div className="h-full w-full flex">
-      <div className="h-full w-1/3  px-2 py-4 border-darkPink flex flex-col items-center justify-between gap-2">
-        
+
+      {/* left side of overview page */}
+      <div className="h-full w-1/4  px-2 py-4 border-darkPink flex flex-col items-center justify-between gap-2">
         {/* top part where can see the overview of the week */}
       <div className="w-95p h-1/4 p-2 relative rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between">
           <div className="h-1/5 w-full relative ">
@@ -77,18 +93,64 @@ const Overview = () => {
       <div className="relative w-95p flex-1 p-2 rounded-lg bg-deepPink flex flex-col font-silkscreen">
               <p className="h-6 left-2 top-2">{dayString}</p>
               <div className="flex-1 w-full bg-bgPink rounded-lg p-2">
-                <div className="h-3/4 w-full flex flex-col gap-2 items-center">
+                <div className="h-3/4 w-full flex flex-col overflow-y-auto">
                 {
                   validSchedule && validSchedule.length > 0 ?
                   validSchedule.map((event, index) => {
                     return <DayScheduleOverview key={index} event={event} />
                   }) :
-                  <p>You have nothing scheduled today!</p>
+                  <div className="h-full w-full items-center justify-center">
+                    <p className="text-center">You have nothing scheduled today!</p>
+                  </div>
                 }
+                <div className="mt-2 flex justify-center items-center">
+                  {
+                    validSchedule && validSchedule.length > 0 &&
+                    <p className="text-slate-400">End of Schedule</p> 
+                  }
+                </div>
                 </div>
               </div>
           </div>
       </div>  
+
+      {/* middle of overview page */}
+      <div className="h-full w-1/2 items-center px-2 py-4 justify-between flex flex-col gap-2">
+
+          {/* top part to see level overview/progress */}
+          <div 
+          style={{
+            backgroundImage: `url("https://i.pinimg.com/736x/f1/32/d1/f132d1696d40df8cb4a762d63dc80bc6.jpg")`,
+            backgroundSize: 'contain',
+          }}
+          className='h-1/3 w-full p-2 rounded-lg '>
+              <div className="h-full w-full font-silkscreen flex flex-col gap-2 justify-center items-center">
+                <p className="text-xl">Adventurer Level {userStats.level}</p>
+                <div className="h-2 w-2/3 bg-white rounded-lg p-2">
+                  <div className="h-1 bg-white rounded-lg" style={{width: expBarWidth}}>
+                  </div>  
+                </div>
+              </div>
+          </div>
+
+          {/* bottom part as a brain dump area */}
+          <div 
+          ref={braindumpDiv}
+          className="h-2/3 w-full p-2 rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between p-4">
+            <div className="h-3/4 w-full">
+            <BraindumpTab />
+            </div>
+            
+            
+          </div>
+
+
+      </div>
+
+      {/* right of overview page */}
+      <div className="h-full w-1/4 flex items-center justify-between gap-2">
+      </div>
+
     </div>
   );
 }

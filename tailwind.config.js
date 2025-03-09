@@ -100,7 +100,7 @@ module.exports = {
         grapeNuts: ['GrapeNuts', 'sans-serif'],
         reenieBeenie: ['ReenieBeanie', 'sans-serif'],
         patrickHand: ['PatrickHand', 'sans-serif'],
-
+        roboto: ['Roboto', 'sans-serif'],
       },
     },
   },

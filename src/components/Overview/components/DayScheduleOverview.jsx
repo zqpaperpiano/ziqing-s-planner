@@ -1,10 +1,43 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
-const DayScheduleOverview = ({ day }) => {
+const DayScheduleOverview = ({ event }) => {
+    const timeStartString = useMemo(() => {
+        const timeOnlyString = event.start.toTimeString().split(' ')[0];
+        const hourAndMin = timeOnlyString.split(':')[0] + ':' +timeOnlyString.split(':')[1];
+        return hourAndMin;
+    })
+    const timeEndString = useMemo(() => {
+        const timeOnlyString = event.end.toTimeString().split(' ')[0];
+        const hourAndMin = timeOnlyString.split(':')[0] + ':' +timeOnlyString.split(':')[1];
+        return hourAndMin;
+    })
+    
+    // useEffect(() => {
+    //     console.log(event);
+    // })
+
     return(
-        <div className="h-full w-full flex flex-col">
-            <div className="h-20 border-t border-b border-black">
-                
+        <div className="h-fit w-full flex flex-col" id={event.eventId}> 
+            <div className="h-18 py-2 border-b border-black">
+                <div className="relative flex w-full">
+                    <div className="flex-col h-full items-start gap-2">
+                        <div 
+                        className="h-8 w-full flex items-start">
+                            <p
+                            className="rounded-lg px-2 py-1"
+                            style={{
+                                backgroundColor: event.color,   
+                            }}
+                            >{timeStartString} - {timeEndString}</p>
+                        </div>
+                        <p>{event.title}</p>
+                    </div>
+                    {/* <div 
+                    style={{
+                        backgroundColor: event.color,
+                    }} */}
+                    {/* // className={`h-16 w-4 rounded-r-lg`}></div> */}
+                </div>
             </div>
         </div>
     );

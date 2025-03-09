@@ -66,6 +66,18 @@ code {
   format('truetype');
 }
 
+@font-face{
+  font-family: 'Roboto';
+  src: url('../public/fonts/Roboto-VariableFont_wdth\,wght.ttf')
+  format('truetype');
+}
+
+@font-face{
+  font-family: 'source-code-pro';
+  src: url('../public/fonts/SourceCodePro-VariableFont_wght.ttf')
+  format('truetype');
+}
+
 
 
 
