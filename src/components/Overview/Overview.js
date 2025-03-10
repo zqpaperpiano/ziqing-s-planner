@@ -1,6 +1,6 @@
 import './Overview.css';
 import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
-import { format, startOfWeek, addDays, isToday, addWeeks } from 'date-fns';
+import { format, startOfWeek, addDays, isToday, addWeeks, max, set } from 'date-fns';
 import { EventContext } from '../../contexts/EventContext';
 import DaySelector from './components/DaySelector';
 import DayScheduleOverview from './components/DayScheduleOverview';
@@ -16,6 +16,7 @@ const Overview = () => {
   const { eventList } = useContext(EventContext);
   const { tokenRefresh } = useContext(AuthContext);
   const { userStats } = useContext(UserStatContext);
+
   const dayString = useMemo(() => {
   const convertedTime = new Date(selectedDate.toUTCString()) + (8 * 60 * 60 * 1000);
   const arr = convertedTime.split(' ');
@@ -39,13 +40,120 @@ const Overview = () => {
   });
 
   const braindumpDiv = useRef(null);
+  const [braindumps, setBraindumps] = useState(
+    {
+      0: {title: 'Braindump 1', content: '', start: {x: 0, y:0}, open: true}
+    }
+  );
+  const [parentWidth, setParentWidth] = useState(0);
+  const [parentHeight, setParentHeight] = useState(0);
 
   useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      setParentWidth(braindumpDiv.current?.clientWidth - 16 || 0);
+      setParentHeight(braindumpDiv.current?.clientHeight -16 || 0);
+    });
+
     if(braindumpDiv.current){
-      const rect = braindumpDiv.current.getBoundingClientRect();
-      console.log('the parent div parameters: ', rect);
+      observer.observe(braindumpDiv.current);
+    };
+
+    return() => observer.disconnect();
+  })
+
+  const maxBraindumpsPerRow = useMemo(() => {
+    return parentWidth ? Math.floor(parentWidth / 20) : 5
+  }, [parentWidth])
+
+
+  const onAddTabs = () => {
+    const arrLen = Object.keys(braindumps).length;
+    const nextKey = Number.parseInt(Object.keys(braindumps)[arrLen - 1] )+ 1;
+    const lastBraindump = Object.values(braindumps)[arrLen - 1];
+
+    let newX = lastBraindump.start.x + 20;
+    let newY = lastBraindump.start.y + 10;
+
+    if(arrLen >= maxBraindumpsPerRow){
+      if(arrLen / maxBraindumpsPerRow > 2){
+        console.log('You have too many tabs open! Pleasse close some before opening new ones');
+        return;
+      }
+
+      newX = 0;
+      newY = lastBraindump.start.y + (parentHeight / 2);
     }
-  }, [])
+    
+    const newBraindump = {
+      title: `Braindump ${Number.parseInt(arrLen + 1)}`,
+      content: '',
+      start: {x: newX, y: newY},
+      open: true
+    }
+
+    setBraindumps((prev) => ({
+      ...prev,
+      [nextKey]: newBraindump
+    }));
+    localStorage.setItem('braindumps', JSON.stringify({...braindumps, [nextKey]: newBraindump}));
+  }
+
+  const onDeleteTabs = (index) => {
+    const filteredList =  Object.keys(braindumps).filter(key => key !== index).reduce((obj, key) => {
+      obj[key] = braindumps[key];
+      return obj;
+    }, {});
+    setBraindumps(filteredList);
+    localStorage.setItem('braindumps', JSON.stringify(filteredList));
+  }
+
+  const onChangeName = (index, newName) => {
+    setBraindumps((prev) => {
+      const updatedBraindump = {
+        ...prev,
+        [index]: {
+          ...prev[index],
+          title: newName
+        }
+      };
+
+      localStorage.setItem('braindumps', JSON.stringify(updatedBraindump));
+      return updatedBraindump;
+    })
+  }
+
+  const onChangeContent = (index, newContent) => {
+    setBraindumps((prev) => {
+      const updatedBraindump = {
+        ...prev,
+        [index]: {
+          ...prev[index],
+          content: newContent
+        }
+      };
+
+      localStorage.setItem('braindumps', JSON.stringify(updatedBraindump));
+      return updatedBraindump;
+    })
+    
+  }
+
+  useEffect(() => {
+    console.log('getting from localStorage: ');
+    const cached = localStorage.getItem('braindumps');
+    if (cached) {
+      console.log('loaded from localStorage:', cached);
+      setBraindumps(JSON.parse(cached));
+    } else {
+      console.log('no cached braindumps found');
+    }
+  }, []);
+
+
+  useEffect(() => {
+    console.log('my braindumps: ', braindumps);
+  }, [braindumps])
+
 
 
   const startDate = useMemo(() => {
@@ -137,8 +245,16 @@ const Overview = () => {
           <div 
           ref={braindumpDiv}
           className="h-2/3 w-full p-2 rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between p-4">
-            <div className="h-3/4 w-full">
-            <BraindumpTab />
+            <div className="h-95p w-full relative overflow-hidden">
+              {
+                Object.entries(braindumps).map((braindump) => {
+                  return <BraindumpTab tab={braindump} key={braindump[0]}  onAddTabs={onAddTabs} onDeleteTabs={onDeleteTabs}
+                    onChangeContent={onChangeContent} onChangeName={onChangeName}
+                  />
+
+                })
+              }
+              
             </div>
             
             
