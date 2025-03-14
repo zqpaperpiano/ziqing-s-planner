@@ -8,6 +8,8 @@ import { Button } from '@mui/material';
 import {AuthContext}  from '../../contexts/authContext';
 import { UserStatContext } from '../../contexts/userStatContext';
 import BraindumpTab from './components/BraindumpTab';
+import TabBar from './components/TabBar';
+import {SmileIcon, MehIcon, FrownIcon } from 'raster-react'
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
@@ -39,6 +41,7 @@ const Overview = () => {
     }
   });
 
+
   const braindumpDiv = useRef(null);
   const [braindumps, setBraindumps] = useState(
     {
@@ -47,6 +50,17 @@ const Overview = () => {
   );
   const [parentWidth, setParentWidth] = useState(0);
   const [parentHeight, setParentHeight] = useState(0);
+
+  useEffect(() => {
+    if(!braindumps || Object.keys(braindumps).length < 1){
+      setBraindumps({
+        0: {title: 'Braindump', content: '', start: {x: 0, y: 0}, open: true}
+      })
+      localStorage.setItem('braindumps', JSON.stringify({
+        0: {title: 'Braindump', content: '', start: {x: 0, y: 0}, open: true}
+      }));
+    } 
+  }, [braindumps])
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -64,6 +78,37 @@ const Overview = () => {
   const maxBraindumpsPerRow = useMemo(() => {
     return parentWidth ? Math.floor(parentWidth / 20) : 5
   }, [parentWidth])
+  const openTabList = useMemo(() => {
+    const newList =  Object.entries(braindumps).filter((tab) => tab[1].open).reduce((obj, [key, value]) => {
+      obj[key] = value;
+      return obj;
+    }, {});
+
+    return newList;
+  }, [braindumps])
+
+  const minimisedTabList = useMemo(() => {
+    const newList =  Object.entries(braindumps).filter((tab) => !tab[1].open).reduce((obj, [key, value]) => {
+      obj[key] = value;
+      return obj;
+    }, {});
+
+    return newList;
+
+  }, [braindumps])
+  const tabBar = useRef(null);
+  const tabWidth = useMemo(() => {
+    const noOfTabs = Object.keys(minimisedTabList).length;
+    const fullWidth = tabBar.current?.clientWidth;
+    const supposedWidth = fullWidth / noOfTabs;
+
+    if(supposedWidth < 2){
+      return 2;
+    }else if(supposedWidth > fullWidth / 5){
+      return fullWidth / 5;
+    }
+    return supposedWidth;
+  }, [minimisedTabList])
 
 
   const onAddTabs = () => {
@@ -85,7 +130,7 @@ const Overview = () => {
     }
     
     const newBraindump = {
-      title: `Braindump ${Number.parseInt(arrLen + 1)}`,
+      title: `Braindump`,
       content: '',
       start: {x: newX, y: newY},
       open: true
@@ -99,12 +144,51 @@ const Overview = () => {
   }
 
   const onDeleteTabs = (index) => {
-    const filteredList =  Object.keys(braindumps).filter(key => key !== index).reduce((obj, key) => {
+    console.log('deleting tab: ', index);
+    if(Object.keys(braindumps).length <= 1){
+      console.log('You cannot delete the last tab!');
+      return;
+    }
+
+    const filteredList =  Object.keys(braindumps).filter(key => key !== index)
+    .reduce((obj, key) => {
       obj[key] = braindumps[key];
       return obj;
     }, {});
+    // console.log('the filtered list: ', filteredList);
     setBraindumps(filteredList);
     localStorage.setItem('braindumps', JSON.stringify(filteredList));
+  }
+
+  const onMinimiseTabs = (index) => {
+    console.log('minimising tabs');
+    setBraindumps((prev) => {
+      const updatedBraindump = {
+        ...prev,
+        [index]: {
+          ...prev[index],
+          open: false
+        }
+      };
+
+      localStorage.setItem('braindumps', JSON.stringify(updatedBraindump));
+      return updatedBraindump;
+    })
+  }
+
+  const onMaximiseTabs = (index) => {
+    setBraindumps((prev) => {
+      const updatedBraindump = {
+        ...prev,
+        [index]: {
+          ...prev[index],
+          open: true
+        }
+      };
+
+      localStorage.setItem('braindumps', JSON.stringify(updatedBraindump));
+      return updatedBraindump;
+    })
   }
 
   const onChangeName = (index, newName) => {
@@ -139,20 +223,15 @@ const Overview = () => {
   }
 
   useEffect(() => {
-    console.log('getting from localStorage: ');
+    // console.log('getting from localStorage: ');
     const cached = localStorage.getItem('braindumps');
     if (cached) {
-      console.log('loaded from localStorage:', cached);
+      // console.log('loaded from localStorage:', cached);
       setBraindumps(JSON.parse(cached));
     } else {
       console.log('no cached braindumps found');
     }
   }, []);
-
-
-  useEffect(() => {
-    console.log('my braindumps: ', braindumps);
-  }, [braindumps])
 
 
 
@@ -177,7 +256,7 @@ const Overview = () => {
     <div className="h-full w-full flex">
 
       {/* left side of overview page */}
-      <div className="h-full w-1/4  px-2 py-4 border-darkPink flex flex-col items-center justify-between gap-2">
+      <div className="h-full w-1/4  pl-2 py-4 border-darkPink flex flex-col items-center justify-between gap-2">
         {/* top part where can see the overview of the week */}
       <div className="w-95p h-1/4 p-2 relative rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between">
           <div className="h-1/5 w-full relative ">
@@ -244,17 +323,25 @@ const Overview = () => {
           {/* bottom part as a brain dump area */}
           <div 
           ref={braindumpDiv}
-          className="h-2/3 w-full p-2 rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between p-4">
-            <div className="h-95p w-full relative overflow-hidden">
+          className="h-2/3 w-full px-4 pt-4 pb-2 rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between">
+            <div className="h-90p w-full relative">
               {
-                Object.entries(braindumps).map((braindump) => {
+                Object.entries(openTabList).map((braindump) => {
+                  // console.log('braindump!: ', braindump);
                   return <BraindumpTab tab={braindump} key={braindump[0]}  onAddTabs={onAddTabs} onDeleteTabs={onDeleteTabs}
-                    onChangeContent={onChangeContent} onChangeName={onChangeName}
-                  />
+                    onChangeContent={onChangeContent} onChangeName={onChangeName} onMinimiseTabs={onMinimiseTabs} />
 
                 })
               }
-              
+            </div>
+            <div 
+            ref={tabBar}
+            className="h-10p w-full flex items-end">
+              {
+                Object.entries(minimisedTabList).map((braindump) => {
+                  return <TabBar tab={braindump} key={braindump[0]} width={tabWidth} onMaximiseTab={onMaximiseTabs}/>
+                })
+              }
             </div>
             
             
@@ -264,7 +351,30 @@ const Overview = () => {
       </div>
 
       {/* right of overview page */}
-      <div className="h-full w-1/4 flex items-center justify-between gap-2">
+      <div className="h-full w-1/4 pr-2 py-4 flex flex-col gap-2">
+          <div className="h-1/4 w-full p-2 rounded-lg bg-darkPink flex flex-col  justify-center items-center font-silkscreen justify-between">
+              <p className="h-fit text-xl text-center">How are you feeling?</p>
+              <div className="flex-1 items-center justify-between w-full flex">
+
+                <div className="h-full w-1/3 flex justify-center items-center hover:cursor-pointer">
+                <FrownIcon size={75} color="#1E3A8A" strokeWidth={0.25} radius={1} />
+                </div>
+
+                <div className="h-full w-1/3 flex justify-center items-center hover:cursor-pointer">
+                  <MehIcon size={75} color="#6B7280" strokeWidth={0.25} radius={1} />
+                </div>
+
+                <div className="h-full w-1/3 flex justify-center items-center hover:cursor-pointer">
+                  <SmileIcon size={75} color="#F59E0B" strokeWidth={0.25} radius={1} />
+                </div>
+              </div>
+
+          </div>
+
+          <div className="h-3/4 w-full p-2 rounded-lg bg-deepPink flex flex-col font-silkscreen justify-between">
+             <p>Deadlines: </p>
+             
+          </div>
       </div>
 
     </div>
@@ -272,117 +382,5 @@ const Overview = () => {
 }
 
 
-
-// const Overview = () => {
-//   const [HP, setHP]= useState(100)
-//   const [SP, setSP] = useState(70)
-
-//   useEffect(() => {
-//     addLogEntry('Welcome Player')
-//   }, [])
-
-//   useEffect(() => {
-//     if(HP < 50){
-//       addLogEntry('Warning! Health is low!');
-//     }
-//   }, [HP])
-
-//   const handleHPDmg = () => {
-//     setHP((prevVal) => Math.max(0, prevVal - 10)) 
-//   }
-  
-//   const handleSPDmg = () => {
-//     setSP((prevVal) => Math.max(0, prevVal - 10))
-//   }
-
-//   const addLogEntry = (message) => {
-//     const logDiv = document.getElementsByClassName("damage-log")[0];
-//     const timestamp = new Date().toLocaleTimeString(); // Generate timestamp
-//     const newLogEntry = document.createElement('p'); // Create a new paragraph element
-//     newLogEntry.textContent = `${timestamp} - ${message}`; // Set content with timestamp
-//     logDiv.appendChild(newLogEntry);
-//   }
-
-//   const dmgHandler = (monster) => {
-//     handleHPDmg();
-//     addLogEntry(`Player has taken damage from ${monster}`)
-//     // console.log(HP);
-//   }
-
-//   const hpBarWidth = `${(HP / 100) * 100}%`;
-//   const spBarWidth = `${(SP / 70) * 100}%`;
-
-//   return(
-//       <div className="overview-frame">
-//          <div className="player-details">
-//             <div className="player-frame">
-//                 <div className="player-picture">
-//                     <img src={profilePic} className="pfp" />
-//                 </div>
-//                 <div className="player-summary">
-//                     <p><b>Name: </b>Ziqing</p>
-//                     <p><b>Status: </b>Sprained ankle @.@</p>
-//                 </div>
-//             </div>
-//             <div className="player-stats">
-//                 <div className="stats-tracker">
-//                   <div className="stats-bars">
-//                       <p>HP</p>
-//                       <div className="stat-bar">
-//                         <div className="hp-bar-fill" style={{ width: hpBarWidth}}>
-//                           <span>{HP}</span>
-//                         </div>
-//                       </div>
-//                       <p>SP</p>
-//                       <div className="stat-bar">
-//                         <div className="sp-bar-fill" style={{width: spBarWidth}} >
-//                           <span>{SP}</span>
-//                         </div>
-//                       </div>
-//                       {/* <p>EXP</p> */}
-//                   </div>
-//                   <div className="damage-log">
-//                     <h2>Log</h2>
-//                   </div>
-//                 </div>
-//                 <div className="third-box">
-//                   <div className="day-tracker">
-//                     <FlipClock />
-//                   </div>
-//                   <div className="monster-selection">
-                    
-//                       <div onClick={() => {dmgHandler('Anxiety')}} className="monster-container">
-//                       <Tooltip title="Anxiety">
-//                         <img src={Anxiety} className="monster" />
-//                       </Tooltip>
-//                       </div>
-                      
-//                       <div onClick={handleHPDmg} className="monster-container">
-//                         <Tooltip title="Failure">
-//                           <img src={Failure} className="monster" />
-//                         </Tooltip>
-//                       </div>
-                      
-//                       <div onClick={handleHPDmg} className="monster-container">
-//                         <Tooltip title="Rejection">
-//                             <img src={Rejection} className="monster" />
-//                           </Tooltip>
-//                       </div>
-                      
-//                       <div onClick={handleHPDmg} className="monster-container">
-//                         <Tooltip title="Overwhelmed">
-//                             <img src={Overwhelmed} className="monster" />
-//                         </Tooltip>
-//                       </div>
-
-//                   </div>
-//                 </div>
-//             </div>
-            
-//          </div>
-//       </div>
-
-//   )
-// }
 
 export default Overview;

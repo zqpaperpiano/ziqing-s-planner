@@ -97,6 +97,7 @@ const Checkpoints = ({ checkpoints, handleSubmit, btnColor }) => {
                             index={index}
                             handleChange={handleCheckpointNameChange}
                             value={Object.values(checkpoint)[0].checkpointName}
+                            cancel={Object.values(checkpoint)[0].completion}
                         />
                         <DeleteIcon
                             onClick={() => { handleDeleteCheckpoint(index) }}

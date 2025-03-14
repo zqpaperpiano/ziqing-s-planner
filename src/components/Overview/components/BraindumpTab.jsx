@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, TextField } from "@mui/material";
 
-const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onMaximiseTabs, onChangeName, onChangeContent}) => {
+const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeName, onChangeContent}) => {
     const [tabName, setTabName] = useState(tab[1].title);
     const [content, setContent] = useState(tab[1].content);
     const [isDragging, setIsDragging] = useState(false);
@@ -11,6 +11,18 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onMaximiseT
     const [position, setPosition] = useState({x: tab[1].start.x, y: tab[1].start.y})
     const tabNameDiv = useRef(null);
     const tabContentDiv = useRef(null);
+
+    const entireDiv = useRef(null);
+    const [isResizing, setIsResizing] = useState(false);
+    const [heightOffset, setHeightOffset] = useState(0);
+    const [widthOffset, setWidthOffset] = useState(0);
+    const [height, setHeight] = useState(() => {
+        return entireDiv.current?.getBoundingClientRect().height;
+    })
+    const [width, setWidth] = useState(() => {
+        return entireDiv.current?.getBoundingClientRect().width;
+    })
+
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -52,13 +64,54 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onMaximiseT
         setIsDragging(false);
     }
 
+    // const handleResizeMouseDown = (event) => {
+    //     setIsResizing(true);
+    //     setHeightOffset(event.clientY - height);
+    //     setWidthOffset(event.clientX - width);
+    // }
+
+    // const handleResizeMouseMove = (event) => {
+    //     if(!isResizing) return;
+    //     setHeight(event.clientY - heightOffset);
+    //     setWidth(event.clientX - widthOffset);
+    // }
+
+    // const handleResizeMouseUp = () => {
+    //     set
+    // }
+
+
+
 
 
 
     return(
         <div 
-        style={{position: 'absolute', top: `${position.y}px`, left: `${position.x}px`, width: `${tab.width}px`, height: `${tab.height}px`}}
+        ref={entireDiv}
+        style={{position: 'absolute', top: `${position.y}px`, left: `${position.x}px`, height: `${height}px`, width: `${width}px`}}
         className="h-full w-full bg-bgPink rounded-lg">
+            
+            {/* four sides resize handles */}
+            <div 
+            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
+            className="absolute left-0 top-0 h-full w-2 cursor-ew-resize"></div>
+            <div 
+            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
+            className="absolute right-0 top-0 h-full w-2 cursor-ew-resize"></div>
+            <div 
+            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
+            className="absolute top-0 right-0 h-2 w-full cursor-ns-resize"></div>
+            <div 
+            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
+            className="absolute bottom-0 left-0 h-2 w-full cursor-ns-resize"></div>
+
+            {/* four corners resize handles */}
+            <div className="absolute top-0 left-0 h-2 w-2 cursor-nwse-resize"></div>
+            <div className="absolute top-0 right-0 h-2 w-2 cursor-nesw-resize"></div>
+            <div className="absolute bottom-0 left-0 h-2 w-2 cursor-nesw-resize"></div>
+            <div className="absolute bottom-0 right-0 h-2 w-2 cursor-nwse-resize"></div>
+            
+            
             <div 
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -73,7 +126,7 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onMaximiseT
                 <div className="h-full w-1/2 flex items-center absolute left-12 overflow-hidden text-ellipsis whitespace-nowrap">
                     <p 
                     style={{fontFamily: 'source-code-pro'}}
-                    className="font-semibold truncate">{tab[1].title}</p>
+                    className="font-semibold truncate select-none">{tab[1].title}</p>
                 </div>
                 
 
@@ -81,7 +134,7 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onMaximiseT
                 <div className="absolute right-0 w-16 rounded-tr-lg h-full flex justify-around items-center
                         ">
                     <div 
-                    
+                    onClick={() => {onMinimiseTabs(tab[0])}}
                     className="w-8 h-full hover:cursor-pointer hover:bg-black hover:bg-opacity-10 hover:backdrop-blur-sm flex justify-center items-center"><MinimizeIcon /></div>
                     <div 
                     onClick={() => {onDeleteTabs(tab[0])}}

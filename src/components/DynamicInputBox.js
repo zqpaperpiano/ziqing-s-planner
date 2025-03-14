@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
-const DynamicInputBox = ({ value, handleChange, index }) => {
+const DynamicInputBox = ({ value, handleChange, index, cancel }) => {
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
 
@@ -36,8 +36,10 @@ const DynamicInputBox = ({ value, handleChange, index }) => {
                 fontFamily: 'PatrickHand',
                 width: inputWidth,
                 maxWidth: maxInputWidth,
+                textDecoration: cancel ? "line-through" : "none", 
+                
             }}
-            className="border-b-2 border-gray-300 rounded-lg py-0.5 px-2 focus:outline-none focus:border-blue-500"
+            className={`border-b-2 border-gray-300 rounded-lg py-0.5 px-2 focus:outline-none focus:border-blue-500 ${cancel ? "bg-[#e0e0e0]": "bg-white"}`}
         />
     );
 };
