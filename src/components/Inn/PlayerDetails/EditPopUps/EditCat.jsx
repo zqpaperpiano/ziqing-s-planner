@@ -10,21 +10,14 @@ import config from "../../../../config/config.json";
 import CategoryBar from "./Components/CategoryBar";
 import { AuthContext } from "../../../../contexts/authContext";
 import { auth } from "../../../../config/firebase";
+import DeleteConfirmation from "../../../DeleteConfirmation/DeleteConfirmation";
 
 const EditCat = ({ onClose }) => {
     const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
     const [currInput, setCurrInput] = useState(null);
     const [tempList, setTempList] = useState(player?.preferences?.categories);
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [clickedDelete, setClickedDelete] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
-
-    const handleDialogOpen = () => {
-        setDialogOpen(true);
-    }
-
-    const handleDialogClose = () => {
-        setDialogOpen(false);
-    }
 
     const onChangeColor = (color, key) => {
         setTempList((prevList) => ({
@@ -98,7 +91,7 @@ const EditCat = ({ onClose }) => {
     }
 
     const onClickDelete = (e) => {
-        handleDialogOpen();
+        setClickedDelete(true);
         let delKey = e.target.id.split("-")[0];
         setSelectedKey(delKey);
     }
@@ -112,7 +105,7 @@ const EditCat = ({ onClose }) => {
         }, {})
         setTempList(filtered);
         setSelectedKey(null);
-        handleDialogClose();
+        setClickedDelete(false);
     }
 
 
@@ -124,6 +117,9 @@ const EditCat = ({ onClose }) => {
                     <CircularProgress size="large" color="black"/>
                 </div> :
                 <div className={`relative h-3/4 w-3/4 bg-white rounded-lg overflow-auto flex flex-col items-center p-2 gap-2`}>
+
+                    {/* <DeleteConfirmation onClickDelete={onDeleteCategory} onClickUndo={handleDialogClose} event="category"/> */}
+
                     <Button
                         onClick={onClose}
                         sx={{
@@ -134,42 +130,11 @@ const EditCat = ({ onClose }) => {
                         }}
                     ><X /></Button>
 
-                    <Dialog
-                        open={dialogOpen}
-                        onClose={handleDialogClose}
-                    >
-                        <DialogTitle
-                        sx={{
-                            fontFamily: 'silkscreen',
-                        }}
-                        >{"Delete this category?"}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText
-                                sx={{
-                                    fontFamily: 'silkscreen'
-                                }}
-                            >
-                                Are you sure you would like to delete this category? All events previously color-coded by this category
-                                will remain. 
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button 
-                            sx={{
-                                fontFamily: 'silkscreen',
-                                color: 'white',
-                                backgroundColor: 'red'
-                            }}
-                            onClick={onDeleteCategory}>Delete</Button>
-                            <Button 
-                            sx={{
-                                fontFamily: 'silkscreen',
-                                color: 'black'
-                            }}
-                            onClick={handleDialogClose}>Cancel</Button>
-                        </DialogActions>
-                    </Dialog>
-                    
+                    {
+                        clickedDelete &&
+                        <DeleteConfirmation onClickDelete={onDeleteCategory} onClickUndo={() => {setClickedDelete(false)}} event="category"/>
+                    }
+
                     <div className="h-fit text-center">
                         <h3 className="font-silkscreen text-3xl">Categories</h3>
                     </div>
