@@ -24,9 +24,9 @@ const FullNavBar = () => {
                     <p>Explore</p>
                 </div>
             </Link>
-            <Link to={'/shop'} className="item">
+            {/* <Link to={'/shop'} className="item">
                 <a>Shop</a>
-            </Link>
+            </Link> */}
             <Link to={'/inn'} className="item">
                 <p>Inn</p>
             </Link>

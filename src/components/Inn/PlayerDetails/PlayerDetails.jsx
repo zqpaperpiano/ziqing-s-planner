@@ -43,12 +43,12 @@ const PlayerDetails = () => {
                         >
                         <p className="text-xs bs:text-m">Profile Preferences</p>
                     </div>
-                    <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
+                    {/* <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
                         ${selectedPage === 'Stats' ? "bg-darkPink" : null}`}
                         onClick={() => {handleClickedStats()}}
                         >
                         <p className="text-xs bs:text-m">Stats</p>
-                    </div>
+                    </div> */}
                     <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
                         ${selectedPage === 'Account Settings' ? "bg-darkPink" : null}`}
                         onClick={() => {handleClickedAccountSettings()}}
@@ -67,10 +67,10 @@ const PlayerDetails = () => {
                         selectedPage === "Profile Preferences" &&
                         <ProfilePreferences />
                     }
-                    {
+                    {/* {
                         selectedPage === "Stats" &&
                         <PlayerStats />
-                    }
+                    } */}
                     {
                         selectedPage === "Account Settings" &&
                         <AccountSettings />
