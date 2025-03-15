@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import config from "../../../config/config.json";
 import { auth } from "../../../config/firebase";
 import { AuthContext } from "../../../contexts/authContext";
+import RightClickMenu from "./RightClickMenu";
 
 const DungeonDetailCard = () => {
     const { dungeonID } = useParams();
@@ -23,6 +24,9 @@ const DungeonDetailCard = () => {
     const navigate = useNavigate(); 
     const { tokenRefresh } = useContext(AuthContext);
 
+    const [showMenu, setShowMenu] = useState(false);
+    const [menuPos, setMenuPos] = useState({x: 0, y: 0});
+
     //auto focus onto input box for dungeonName
     useEffect(() => {
         if(editName) nameRef.current.focus();
@@ -32,10 +36,6 @@ const DungeonDetailCard = () => {
     useEffect(() => {
         if(editDescription) descriptionRef.current.focus();
     }, [editDescription])
-
-    // useEffect(() => {
-    //     console.log('my checkpoints: ', dungeon.dungeonCheckpoints)
-    // }, [dungeon.dungeonCheckpoints])
 
     //auto updae completion percentages
     useEffect(() => {
@@ -163,11 +163,14 @@ const DungeonDetailCard = () => {
             console.log('An error has occured. Please try again later.');
         }
     }
-        
 
     const exitDetailCard = () => {
         callNoSaveNotif();
         navigate(`/dungeon-board/${page}`);
+    }
+
+    const handleRightMouseDown = () => {
+        setShowMenu(true);
     }
 
     return(
@@ -283,9 +286,13 @@ const DungeonDetailCard = () => {
                                 </div>
                            <div className="h-3/4 w-full flex flex-col items-center ">
                                 <p className="text-xl">Checkpoints</p>
-                                <Checkpoints checkpoints={dungeon.dungeonCheckpoints} handleSubmit={handleNewCheckpointList} btnColor={"black"} />
+                                <Checkpoints checkpoints={dungeon.dungeonCheckpoints} handleSubmit={handleNewCheckpointList} btnColor={"black"} setRightClick={handleRightMouseDown} />
                            </div>
                         </div>
+                        {
+                            showMenu &&
+                            <RightClickMenu position={menuPos} />
+                        }
                     </div>
                     
                     

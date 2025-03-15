@@ -4,14 +4,25 @@ import DynamicInputBox from "../../DynamicInputBox";
 import { Button } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
-const Checkpoints = ({ checkpoints, handleSubmit, btnColor }) => {
+const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick }) => {
     const bColor = btnColor || 'primary'
     const [checkpointList, setCheckpointList] = useState(checkpoints);
+    const location = useLocation();
 
     useEffect(() => {
         handleSubmit(checkpointList);
     }, [checkpointList]);
+
+    const handleCheckboxRightClick = (e) => {
+        e.preventDefault();
+        const regex = /^\/dungeonboard\/([^/]+)\/dungeons\/([^/]+)$/;
+        const match = location.pathname.match(regex);
+        if(match){
+            setRightClick(true);
+        }
+    }
 
     const handleCheckboxCheckChange = (e, index) => {
         const checked = e.target.checked;

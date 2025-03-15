@@ -4,10 +4,12 @@ import AccountSettings from "./AccountSettings/AccountSettings";
 import ProfilePreferences from "./ProfilePreferences/ProfilePreferences";
 import NewPlayerSettings from "../../NewPlayerSettings/NewPlayerSettings";
 import { AuthContext } from "../../../contexts/authContext";
+import DeleteConfirmation from "../../DeleteConfirmation/DeleteConfirmation";
 
 const PlayerDetails = () => {
     const [selectedPage, setSelectedPage] = useState("Profile Preferences");
     const {logOut} = useContext(AuthContext);
+    const [clickLogout, setClickLogout] = useState(false);
 
     const handleClickedProfilePreferences = () => {
         setSelectedPage("Profile Preferences");
@@ -19,6 +21,14 @@ const PlayerDetails = () => {
 
     const handleClickedAccountSettings = () => {
         setSelectedPage("Account Settings");
+    }
+
+    const handleOnClickLogout = () => {
+        setClickLogout(true);
+    }
+
+    const handleUndoLogout = () => {
+        setClickLogout(false);
     }
 
 
@@ -47,7 +57,7 @@ const PlayerDetails = () => {
                     </div>
                     <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 text-red-500 hover:cursor-pointer hover:bg-turqoiseGreen
                         `}
-                        onClick={logOut}
+                        onClick={handleOnClickLogout}
                         >
                         <p className="text-xs bs:text-m">Log Out</p>
                     </div>
@@ -67,6 +77,10 @@ const PlayerDetails = () => {
                     }
                 </div>
             </div>
+            {
+                clickLogout &&
+                <DeleteConfirmation onClickDelete={logOut} onClickUndo={handleUndoLogout} event="Log Out" primaryBtn="Log out" msg={"You will lose all your braindump tabs. Procced?"} />
+            }
         </div>
     );
 }

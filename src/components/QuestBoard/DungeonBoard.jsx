@@ -209,7 +209,7 @@ const DungeonBoard = () => {
             }
             {
                 onClickDelete &&
-                <DeleteConfirmation event={"dungeon"} onClickDelete={confirmDelete} onClickUndo={undoDelete}/>
+                <DeleteConfirmation event={"Delete this dungeon"} onClickDelete={confirmDelete} onClickUndo={undoDelete}/>
             }
         </div>
     );

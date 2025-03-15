@@ -462,7 +462,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
                     </div>
                     {
                         deleteEvent &&
-                        <DeleteConfirmation event={"event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>
+                        <DeleteConfirmation event={"Delete this event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>
                     }
                 </div>
             </div>

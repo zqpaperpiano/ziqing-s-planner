@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, TextField } from "@mui/material";
+import DeleteConfirmation from "../../DeleteConfirmation/DeleteConfirmation";
 
 const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeName, onChangeContent}) => {
     const [tabName, setTabName] = useState(tab[1].title);
@@ -11,6 +12,8 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeNam
     const [position, setPosition] = useState({x: tab[1].start.x, y: tab[1].start.y})
     const tabNameDiv = useRef(null);
     const tabContentDiv = useRef(null);
+
+    const [clickClose, setClickClose] = useState(false);
 
     const entireDiv = useRef(null);
     const [isResizing, setIsResizing] = useState(false);
@@ -80,6 +83,10 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeNam
     //     set
     // }
 
+    const handleClickCloseTab = (e) => {
+        setClickClose(true);
+    }
+
 
 
 
@@ -90,6 +97,11 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeNam
         ref={entireDiv}
         style={{position: 'absolute', top: `${position.y}px`, left: `${position.x}px`, height: `${height}px`, width: `${width}px`}}
         className="h-full w-full bg-bgPink rounded-lg">
+
+            {
+                clickClose &&
+                <DeleteConfirmation onClickDelete={() => {onDeleteTabs(tab[0])}} onClickUndo={() => {setClickClose(false)}} event="Delete this tab"/>
+            }
             
             {/* four sides resize handles */}
             <div 
@@ -137,7 +149,7 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeNam
                     onClick={() => {onMinimiseTabs(tab[0])}}
                     className="w-8 h-full hover:cursor-pointer hover:bg-black hover:bg-opacity-10 hover:backdrop-blur-sm flex justify-center items-center"><MinimizeIcon /></div>
                     <div 
-                    onClick={() => {onDeleteTabs(tab[0])}}
+                    onClick={handleClickCloseTab}
                     className="w-8 h-full rounded-tr-lg hover:cursor-pointer hover:bg-black hover:bg-opacity-10 hover:backdrop-blur-sm flex justify-center items-center"><CloseIcon /></div>
                     
                 </div>

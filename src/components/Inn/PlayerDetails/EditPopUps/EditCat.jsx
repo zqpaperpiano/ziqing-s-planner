@@ -132,7 +132,7 @@ const EditCat = ({ onClose }) => {
 
                     {
                         clickedDelete &&
-                        <DeleteConfirmation onClickDelete={onDeleteCategory} onClickUndo={() => {setClickedDelete(false)}} event="category"/>
+                        <DeleteConfirmation onClickDelete={onDeleteCategory} onClickUndo={() => {setClickedDelete(false)}} event="Delete this category"/>
                     }
 
                     <div className="h-fit text-center">
