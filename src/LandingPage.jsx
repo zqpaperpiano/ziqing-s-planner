@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import './landingPage.css';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
 import Overview from "./components/Overview/Overview";
 import Inn from "./components/Inn/Inn";
 import DungeonBoard from "./components/QuestBoard/DungeonBoard";
@@ -20,10 +20,10 @@ import Explore from "./components/Explore/Explore";
 import DungeonDetailCard from "./components/QuestBoard/DungeonDetail/DungeonDetailCard";
 import { ShopProvider } from "./contexts/ShopContext";
 import { UserStatProvider } from "./contexts/userStatContext";
+import EventCreator from "./components/WarRoom/components/EventCreator";
 
 const LandingPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-
 
     const onToggleMenu = () => {
         if(menuOpen){
@@ -66,6 +66,8 @@ const LandingPage = () => {
                                     <Route path="/newPlayer" element={<NewPlayerSettings />}/>
                                     <Route path="/shop/" element={<Shop />} />
                                     <Route path="/warRoom" element={<WarRoom />} />
+                                    <Route path="/warRoom/event-details/:eventId" element={<EventCreator />} />
+                                    <Route path="/warRoom/new-event" element={<EventCreator />} />
                                     <Route path="/explore" element={<Explore />} />
                                 </Route>
                             </Routes>     

@@ -10,21 +10,32 @@ import { EventContext } from "../../../contexts/EventContext";
 import { AuthContext } from "../../../contexts/authContext";
 import { auth } from "../../../config/firebase";
 import config from '../../../config/config.json';
-import dayjs from "dayjs";
+import dayjs, { isDayjs } from "dayjs";
 import DeleteConfirmation from "../../DeleteConfirmation/DeleteConfirmation";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
+const EventCreator = ({ time, hasEvent}) => {
+    const location = useLocation();
+    const { eventList, setEventList, eventMap} = useContext(EventContext);
+    const { eventId } = useParams();
+    const event = eventList[eventMap.get(eventId)];
+
+    const navigate = useNavigate();
+
     const [cat, setCat] = useState(event?.category || "cat2");
     const [eventName, setEventName] = useState(event?.title || "");
-    const [defStart, setDefStart] = useState(event?.start ? dayjs(event?.start) : time[0]);
-    const [defEnd, setDefEnd] = useState(event?.end ? dayjs(event?.end): time[1]);
+    const [defStart, setDefStart] = useState(event?.start ? dayjs(event?.start) : dayjs(location?.state?.start));
+    const [defEnd, setDefEnd] = useState(event?.end ? dayjs(event?.end): dayjs(location.state.end));
     const [eventDescription, setEventDescription] = useState(event?.description || "");
-    const {eventList, setEventList, eventMap} = useContext(EventContext);
+    
     const { player, tokenRefresh } = useContext(AuthContext);
-    const categories = player?.preferences?.categories;
+    const categories = player?.preferences?.categories || [];
     const [dungeon, setDungeon] = useState(event?.dungeon || null);
     const [deleteEvent, setDeleteEvent] = useState(false);
-    const [retries, setRetries] = useState(false);
+
+    useEffect(() => {
+        console.log(location.pathname);
+    })
 
     const onDungeonChange = (dungeonId) => {
         setDungeon(dungeonId);
@@ -43,7 +54,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     }
 
     const handleClickExit = () => {
-        toggleCreatingEvent();
+        navigate('/warRoom');
     }
 
     //check which parts of the event Object has been updated and add into updated object to be passed in API call
@@ -86,7 +97,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         return updates;
     }
 
-    const updateChanges = async(updates) => {
+    const updateChanges = async(updates, retry) => {
         const token = await auth.currentUser.getIdToken();
         const eventId = event.eventId;
         // console.log('my eventId: ', event);
@@ -105,18 +116,15 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
             });
 
             if(resp.status===401){
-                if(!retries){
-                    setRetries(true);
+                if(!retry){
                     await tokenRefresh();
-                    updateChanges(updates);
+                    updateChanges(updates, true);
                 }else{
-                    setRetries(false);
                     throw new Error('Unauthorized');
                 }
             }
 
             if(resp.ok){
-                setRetries(false);
                 const data = await resp.json();
                 const formatEvent = {
                     ...data,
@@ -137,7 +145,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
         }
     }
 
-    const onClickDelete =  async() => {
+    const onClickDelete =  async(retry) => {
         const token = await auth.currentUser.getIdToken();
         const eventId = event.eventId;
         // console.log('eventId: ', eventId);
@@ -152,12 +160,10 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
             });
 
             if(resp.status === 401){
-                if(!retries){
-                    setRetries(true);
+                if(!retry){
                     await tokenRefresh();
-                    onClickDelete();
+                    onClickDelete(true);
                 }else{
-                    setRetries(false);
                     throw new Error('Unauthorized');
                 }
             }
@@ -200,10 +206,10 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
             desc = "No description provided";
         }
 
-        if(hasEvent){
+        if(location.pathname.include('event-details')){
             const update = checkUpdates(desc);
             if(Object.keys(update).length > 0){
-                updateChanges(update);
+                updateChanges(update, false);
             }
 
         }else{
@@ -263,6 +269,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
     return(
         <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <ToastContainer />
+            
             <div className="relative h-90p w-4/5 flex flex-col justify-center items-center gap-0 bg-white overflow-y-auto">
                 <div className="h-fit w-full font-grapeNuts text-3xl text-center mt-4">
                     <p>{eventName === "" ? "New Event" : eventName}</p>
@@ -377,7 +384,7 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
                                     size: 'small',
                                 }
                             }}
-                            defaultValue={defStart} />
+                            defaultValue={dayjs.isDayjs(defStart) ? defStart : dayjs()} />
                         </div>
                         <div><ArrowRightAltIcon /></div>
                         <div className="w-1/3 flex flex-col justify-center items-center">
@@ -437,29 +444,36 @@ const EventCreator = ({toggleCreatingEvent, time, event, hasEvent}) => {
                         onChange={onChangeEventDescription}
                         
                     />
-                    <div className="flex justify-center gap-4 items-center h-fit">
-                        <div className="w-1/2 flex justify-center items-center">
+                    {
+                        event ? 
+                        <div className="flex justify-center gap-4 items-center h-fit">
+                            <div className="w-1/2 flex justify-center items-center">
+                                <Button
+                                    onClick={onClickSave}
+                                >{event ? "Save Changes" : "Create Event"}
+                                </Button>
+                            </div>
+                            <div className="w-1/2 flex justify-center items-center">
+                                <Button
+                                    onClick={() => setDeleteEvent(true)}
+                                    sx={{
+                                        color: 'red',
+                                        '&:hover': {
+                                            backgroundColor: 'red',
+                                            color: 'white'
+                                        }
+                                    }}
+                                >Delete</Button>
+                            </div>
+                        </div> :
+                        <div className="flex justify-center items-center">
                             <Button
                                 onClick={onClickSave}
-                            >{hasEvent ? "Save Changes" : "Create Event"}
+                            >Create Event
                             </Button>
                         </div>
-                        <div className="w-1/2 flex justify-center items-center">
-                        {
-                            hasEvent &&
-                            <Button
-                                onClick={() => setDeleteEvent(true)}
-                                sx={{
-                                    color: 'red',
-                                    '&:hover': {
-                                        backgroundColor: 'red',
-                                        color: 'white'
-                                    }
-                                }}
-                            >Delete</Button>
-                        }
-                        </div>
-                    </div>
+                    }
+                    
                     {
                         deleteEvent &&
                         <DeleteConfirmation event={"Delete this event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>

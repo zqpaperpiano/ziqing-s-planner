@@ -10,6 +10,7 @@ import { UserStatContext } from '../../contexts/userStatContext';
 import BraindumpTab from './components/BraindumpTab';
 import TabBar from './components/TabBar';
 import {SmileIcon, MehIcon, FrownIcon } from 'raster-react'
+import { ToastContainer, toast } from 'react-toastify';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
@@ -41,8 +42,26 @@ const Overview = () => {
     }
   });
 
+  const startDate = useMemo(() => {
+    return startOfWeek(addWeeks(anchorDate, offset), {weekStartsOn: 1});
+  }, [offset]);
 
-  const braindumpDiv = useRef(null);
+  const weekDays = useMemo(() => {
+    return [...Array(7)].map((_, i) => {
+      const date = addDays(startDate, i);
+      return{
+        fullDate: date,
+        day: format(date, 'EEE'),
+        date: format(date, 'd'),
+        month: format(date, 'MMM'),
+        isToday: isToday(date),
+      }
+    })
+  }, [startDate])
+
+
+
+  const braindumpDiv = useRef(null); //main div that acts as the backboard for the braindump
   const [braindumps, setBraindumps] = useState(
     {
       0: {title: 'Braindump 1', content: '', start: {x: 0, y:0}, open: true}
@@ -51,6 +70,7 @@ const Overview = () => {
   const [parentWidth, setParentWidth] = useState(0);
   const [parentHeight, setParentHeight] = useState(0);
 
+  // initialise braindump to have at least one tab if there is none
   useEffect(() => {
     if(!braindumps || Object.keys(braindumps).length < 1){
       setBraindumps({
@@ -62,6 +82,7 @@ const Overview = () => {
     } 
   }, [braindumps])
 
+  // observer to resize minimized tab size upon resizing
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       setParentWidth(braindumpDiv.current?.clientWidth - 16 || 0);
@@ -110,7 +131,6 @@ const Overview = () => {
     return supposedWidth;
   }, [minimisedTabList])
 
-
   const onAddTabs = () => {
     const arrLen = Object.keys(braindumps).length;
     const nextKey = Number.parseInt(Object.keys(braindumps)[arrLen - 1] )+ 1;
@@ -144,9 +164,9 @@ const Overview = () => {
   }
 
   const onDeleteTabs = (index) => {
-    console.log('deleting tab: ', index);
+    // console.log('deleting tab: ', index);
     if(Object.keys(braindumps).length <= 1){
-      console.log('You cannot delete the last tab!');
+      toast.error('You need at least 1 braindump!')
       return;
     }
 
@@ -161,7 +181,7 @@ const Overview = () => {
   }
 
   const onMinimiseTabs = (index) => {
-    console.log('minimising tabs');
+    // console.log('minimising tabs');
     setBraindumps((prev) => {
       const updatedBraindump = {
         ...prev,
@@ -222,8 +242,8 @@ const Overview = () => {
     
   }
 
+  // loading braindumps from localStorage if any
   useEffect(() => {
-    // console.log('getting from localStorage: ');
     const cached = localStorage.getItem('braindumps');
     if (cached) {
       // console.log('loaded from localStorage:', cached);
@@ -234,26 +254,38 @@ const Overview = () => {
   }, []);
 
 
+  const constraintDiv = useRef(null);
+  const [braindumpHeight, setBraindumpHeight] = useState(null);
+  const [braindumpWidth, setBraindumpWidth] = useState(null);
 
-  const startDate = useMemo(() => {
-    return startOfWeek(addWeeks(anchorDate, offset), {weekStartsOn: 1});
-  }, [offset]);
+  useEffect(() => {
 
-  const weekDays = useMemo(() => {
-    return [...Array(7)].map((_, i) => {
-      const date = addDays(startDate, i);
-      return{
-        fullDate: date,
-        day: format(date, 'EEE'),
-        date: format(date, 'd'),
-        month: format(date, 'MMM'),
-        isToday: isToday(date),
+    const handleResize = () => {
+      if(constraintDiv.current) {
+        const fullHeight = constraintDiv.current.getBoundingClientRect().height;
+        const fullWidth = constraintDiv.current.getBoundingClientRect().width;
+        setBraindumpHeight(fullHeight);
+        setBraindumpWidth(fullWidth);
       }
-    })
-  }, [startDate])
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    if(constraintDiv.current){
+      resizeObserver.observe(constraintDiv.current);
+    }
+
+    return() => {
+      if(constraintDiv.current){
+        resizeObserver.unobserve(constraintDiv.current);
+      }
+    }
+  }, [])
+
+  
 
   return(
     <div className="h-full w-full flex">
+      <ToastContainer />
 
       {/* left side of overview page */}
       <div className="h-full w-1/4  pl-2 py-4 border-darkPink flex flex-col items-center justify-between gap-2">
@@ -324,12 +356,13 @@ const Overview = () => {
           <div 
           ref={braindumpDiv}
           className="h-2/3 w-full px-4 pt-4 pb-2 rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between">
-            <div className="h-90p w-full relative">
+            <div 
+            ref={constraintDiv}
+            className="h-90p w-full relative">
               {
                 Object.entries(openTabList).map((braindump) => {
-                  // console.log('braindump!: ', braindump);
                   return <BraindumpTab tab={braindump} key={braindump[0]}  onAddTabs={onAddTabs} onDeleteTabs={onDeleteTabs}
-                    onChangeContent={onChangeContent} onChangeName={onChangeName} onMinimiseTabs={onMinimiseTabs} />
+                    onChangeContent={onChangeContent} onChangeName={onChangeName} onMinimiseTabs={onMinimiseTabs} givenHeight={braindumpHeight} givenWidth={braindumpWidth}/>
 
                 })
               }

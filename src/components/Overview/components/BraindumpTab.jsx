@@ -3,8 +3,9 @@ import MinimizeIcon from '@mui/icons-material/Minimize';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, TextField } from "@mui/material";
 import DeleteConfirmation from "../../DeleteConfirmation/DeleteConfirmation";
+import { set } from "date-fns";
 
-const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeName, onChangeContent}) => {
+const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeName, onChangeContent, givenHeight, givenWidth}) => {
     const [tabName, setTabName] = useState(tab[1].title);
     const [content, setContent] = useState(tab[1].content);
     const [isDragging, setIsDragging] = useState(false);
@@ -12,19 +13,8 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeNam
     const [position, setPosition] = useState({x: tab[1].start.x, y: tab[1].start.y})
     const tabNameDiv = useRef(null);
     const tabContentDiv = useRef(null);
-
     const [clickClose, setClickClose] = useState(false);
 
-    const entireDiv = useRef(null);
-    const [isResizing, setIsResizing] = useState(false);
-    const [heightOffset, setHeightOffset] = useState(0);
-    const [widthOffset, setWidthOffset] = useState(0);
-    const [height, setHeight] = useState(() => {
-        return entireDiv.current?.getBoundingClientRect().height;
-    })
-    const [width, setWidth] = useState(() => {
-        return entireDiv.current?.getBoundingClientRect().width;
-    })
 
 
     useEffect(() => {
@@ -67,61 +57,23 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeNam
         setIsDragging(false);
     }
 
-    // const handleResizeMouseDown = (event) => {
-    //     setIsResizing(true);
-    //     setHeightOffset(event.clientY - height);
-    //     setWidthOffset(event.clientX - width);
-    // }
 
-    // const handleResizeMouseMove = (event) => {
-    //     if(!isResizing) return;
-    //     setHeight(event.clientY - heightOffset);
-    //     setWidth(event.clientX - widthOffset);
-    // }
-
-    // const handleResizeMouseUp = () => {
-    //     set
-    // }
 
     const handleClickCloseTab = (e) => {
         setClickClose(true);
     }
 
-
-
-
-
-
     return(
         <div 
-        ref={entireDiv}
-        style={{position: 'absolute', top: `${position.y}px`, left: `${position.x}px`, height: `${height}px`, width: `${width}px`}}
-        className="h-full w-full bg-bgPink rounded-lg">
+        style={{position: 'absolute', top: `${position.y}px`, left: `${position.x}px`, height: givenHeight ? `${givenHeight}px` : '100%', // If givenHeight exists, set height to givenHeight, otherwise 100%
+        width: givenWidth ? `${givenWidth}px` : '100%'}}
+        className={`bg-bgPink rounded-lg ${!givenHeight ? 'h-full' : `h-[${givenHeight}px]`} ${!givenWidth ? 'w-full' : `w-[${givenWidth}px]`}`}>
 
             {
                 clickClose &&
                 <DeleteConfirmation onClickDelete={() => {onDeleteTabs(tab[0])}} onClickUndo={() => {setClickClose(false)}} event="Delete this tab"/>
             }
             
-            {/* four sides resize handles */}
-            <div 
-            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
-            className="absolute left-0 top-0 h-full w-2 cursor-ew-resize"></div>
-            <div 
-            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
-            className="absolute right-0 top-0 h-full w-2 cursor-ew-resize"></div>
-            <div 
-            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
-            className="absolute top-0 right-0 h-2 w-full cursor-ns-resize"></div>
-            <div 
-            // onMouseDown={handleResizeMouseDown} onMouseMove={handleResizeMouseMove} onMouseUp={handleResizeMouseUp}
-            className="absolute bottom-0 left-0 h-2 w-full cursor-ns-resize"></div>
-
-            {/* four corners resize handles */}
-            <div className="absolute top-0 left-0 h-2 w-2 cursor-nwse-resize"></div>
-            <div className="absolute top-0 right-0 h-2 w-2 cursor-nesw-resize"></div>
-            <div className="absolute bottom-0 left-0 h-2 w-2 cursor-nesw-resize"></div>
-            <div className="absolute bottom-0 right-0 h-2 w-2 cursor-nwse-resize"></div>
             
             
             <div 

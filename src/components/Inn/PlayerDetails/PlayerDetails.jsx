@@ -79,7 +79,7 @@ const PlayerDetails = () => {
             </div>
             {
                 clickLogout &&
-                <DeleteConfirmation onClickDelete={logOut} onClickUndo={handleUndoLogout} event="Log Out" primaryBtn="Log out" msg={"You will lose all your braindump tabs. Procced?"} />
+                <DeleteConfirmation onClickDelete={logOut} onClickUndo={handleUndoLogout} event="Log Out" primaryBtn="Log out" msg={"You may lose your braindump tabs. Procced?"} />
             }
         </div>
     );
