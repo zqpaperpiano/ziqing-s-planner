@@ -27,8 +27,8 @@ const TimePicker = ({handleChangeDuration}) => {
                 hideKnobRing
                 hideLabelValue
                 labelFontSize="1.5rem"
-                progressColorFrom="#f8bdd1"
-                progressColorTo="#bdf8e4"
+                progressColorFrom="#FF2E63"
+                progressColorTo="#800080"
                 trackColor="#f6d7e0"
                 knobColor="#53b5a9"
             />
