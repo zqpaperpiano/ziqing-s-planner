@@ -316,7 +316,7 @@ const Overview = () => {
                 {
                   validSchedule && validSchedule.length > 0 ?
                   validSchedule.map((event, index) => {
-                    return <DayScheduleOverview key={index} event={event} />
+                    return <DayScheduleOverview  key={index} event={event} />
                   }) :
                   <div className="h-full w-full items-center justify-center">
                     <p className="text-center">You have nothing scheduled today!</p>

@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DayScheduleOverview = ({ event }) => {
+    const navigate = useNavigate();
     const timeStartString = useMemo(() => {
         const timeOnlyString = event.start.toTimeString().split(' ')[0];
         const hourAndMin = timeOnlyString.split(':')[0] + ':' +timeOnlyString.split(':')[1];
@@ -12,12 +14,11 @@ const DayScheduleOverview = ({ event }) => {
         return hourAndMin;
     })
     
-    // useEffect(() => {
-    //     console.log(event);
-    // })
 
     return(
-        <div className="h-fit w-full flex flex-col" id={event.eventId}> 
+        <div 
+        onClick={() => {navigate(`/warRoom/event-details/${event.eventId}`)}}
+        className="h-fit w-full flex flex-col hover:cursor-pointer" id={event.eventId}> 
             <div className="h-18 py-2 border-b border-black">
                 <div className="relative flex w-full">
                     <div className="flex-col h-full items-start gap-2">
