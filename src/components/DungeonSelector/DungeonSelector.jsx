@@ -18,7 +18,6 @@ const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {
     const newHeight = height || '40px';
 
     return(
-        <div className="h-full w-full">
             <FormControl fullWidth>
                 <InputLabel
                     id="dungeon-selector"
@@ -31,17 +30,17 @@ const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {
                     onChange={onSelectDungeon}
                     labelId="dungeon-selector"
                     value={selectedDungeon}
-                    label="Dungeon"
+                    // label="Dungeon"
                     fullWidth
                     sx={{
                         height: newHeight,
                         backgroundColor: newBgColor,
-                        fontFamily: newfont
+                        fontFamily: newfont,
+                        width: '100%'
                     }}
                 >
                     {
                         Object.entries(dungeonList).map((dungeon, index) => {
-                            // console.log('dungeon being mapped: ', dungeon);
                             return(
                                 <MenuItem
                                 key={index}
@@ -57,7 +56,6 @@ const DungeonSelector = ({bgColor, font, height, onDungeonChange}) => {
                     }
                 </Select>
             </FormControl>
-        </div>
     );
 }
 

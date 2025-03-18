@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, FormControl, InputLabel, ListItem, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import React, { useContext, useState, useEffect } from "react";
@@ -13,6 +13,10 @@ import config from '../../../config/config.json';
 import dayjs, { isDayjs } from "dayjs";
 import DeleteConfirmation from "../../DeleteConfirmation/DeleteConfirmation";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { XIcon } from "raster-react";
+import { CheckIcon } from "raster-react";
+import EventTasks from "./EventTasks";
+import { DeleteIcon } from "raster-react";
 
 const EventCreator = ({ time, hasEvent}) => {
     const location = useLocation();
@@ -22,20 +26,102 @@ const EventCreator = ({ time, hasEvent}) => {
 
     const navigate = useNavigate();
 
+    const [eventType, setEventType] = useState('event');
+
     const [cat, setCat] = useState(event?.category || "cat2");
     const [eventName, setEventName] = useState(event?.title || "");
     const [defStart, setDefStart] = useState(event?.start ? dayjs(event?.start) : dayjs(location?.state?.start));
     const [defEnd, setDefEnd] = useState(event?.end ? dayjs(event?.end): dayjs(location.state.end));
     const [eventDescription, setEventDescription] = useState(event?.description || "");
+    const [eventToDos, setEventToDos] = useState(event?.toDos || {"td1": {title: "", completed: false}});
     
     const { player, tokenRefresh } = useContext(AuthContext);
     const categories = player?.preferences?.categories || [];
     const [dungeon, setDungeon] = useState(event?.dungeon || null);
     const [deleteEvent, setDeleteEvent] = useState(false);
 
+    const [eventRepeat, setEventRepeat] = useState("none");
+    const [dayRepeat, setDayRepeat] = useState(1);
+    const [weekRepeat, setWeekRepeat] = useState(1);
+    const [monthRepeat, setMonthRepeat] = useState(1);
+    const [yearRepeat, setYearRepeat] = useState(1);
+    const [selectedRepeatNumber, setSelectedRepeatNumber] = useState(null);
+    const [repeatUntil, setRepeatUntil] = useState('forever');
+    const [repeatTimes, setRepeatTimes] = useState(10);
+    const [repeatEndDate, setRepeatEndDate] = useState(defStart);
+    const [selectedRepeatEnd, setSelectedRepeatEnd] = useState(null);
+
     useEffect(() => {
-        console.log(location.pathname);
-    })
+        if(eventRepeat === 'day'){
+            setSelectedRepeatNumber(dayRepeat);
+        }else if(eventRepeat === 'week'){
+            setSelectedRepeatNumber(weekRepeat);
+        }else if(eventRepeat === 'month'){
+            setSelectedRepeatNumber(monthRepeat);
+        }else if(eventRepeat === 'year'){
+            setSelectedRepeatNumber(yearRepeat);
+        }else{
+            setSelectedRepeatNumber(null);
+        }
+    }, [eventRepeat, dayRepeat, weekRepeat, monthRepeat, yearRepeat]);
+
+    useEffect(() => {
+        if(repeatUntil === 'times'){
+            setSelectedRepeatEnd(repeatTimes);
+        }else if(repeatUntil === 'date'){
+            setSelectedRepeatEnd(repeatEndDate.toDate());
+        }else{
+            setSelectedRepeatEnd(null);
+        }
+    }, [repeatUntil, repeatTimes, repeatEndDate]);
+
+    const handleClickStuff = (e) => {
+        console.log('i have been clicked!', e.target.id);
+    }
+
+    const onAddTasks = () => {
+        const newTask = {
+            title: "",
+            completed: false
+        }
+
+        const length = Object.keys(eventToDos).length;
+        let lastKey = 1;
+        if(length !== 0){
+            lastKey = Object.keys(eventToDos)[length - 1];
+        }
+        
+        setEventToDos(prevToDos => {
+            let newToDos = {...prevToDos};
+            newToDos[`td${lastKey + 1}`] = newTask;
+            return newToDos;
+        })
+    }
+
+    const onChangeName = (id, newName) => {
+        setEventToDos(prevToDos => {
+            let newToDos = {...prevToDos};
+            newToDos[id].title = newName;
+            return newToDos;
+        })
+    }
+
+    const onChangeCompletion = (id, completion) => {
+        setEventToDos(prevToDos => {
+            let newToDos = {...prevToDos};
+            newToDos[id].completed = completion;
+            return newToDos;
+        })
+    }
+
+    const onDeleteTask = (id) => {
+        setEventToDos(prevToDos => {
+            const updatedToDos = { ...prevToDos }; // Create a shallow copy
+            delete updatedToDos[id]; // Remove the task
+            return updatedToDos; // Return the new object
+        });
+    };
+    
 
     const onDungeonChange = (dungeonId) => {
         setDungeon(dungeonId);
@@ -58,7 +144,7 @@ const EventCreator = ({ time, hasEvent}) => {
     }
 
     //check which parts of the event Object has been updated and add into updated object to be passed in API call
-    const checkUpdates = (desc) => {
+    const checkEventUpdates = (desc) => {
         let updates = {};
 
         if(event.title !== eventName){
@@ -92,7 +178,42 @@ const EventCreator = ({ time, hasEvent}) => {
             updates.description = desc;
         }
 
-        console.log('updates: ', updates);
+        if(event.repeat !== eventRepeat) updates.repeat = eventRepeat;
+        if(event.frequency !== selectedRepeatNumber) updates.frequency = selectedRepeatNumber;
+        if(event.repeatType !== repeatUntil) updates.repeatType = repeatUntil;
+        if(event.repeatEnding !== selectedRepeatEnd) updates.repeatEnding = selectedRepeatEnd;
+
+        return updates;
+    }
+
+    const checkDeadlineUpdates = (desc) => {
+        let updates = {};
+
+        if(event.title !== eventName){
+            updates.title = eventName;
+        }
+
+        if(event.end.getTime() !== defEnd.toDate().getTime()){
+            updates.end = defEnd.toDate();
+        }
+
+        if(event.category !== cat){
+            updates.category = cat;
+            updates.color = categories[cat].color;
+        }
+
+        if(event.dungeon !== dungeon){
+            updates.dungeon = dungeon;
+        }
+
+        if(event.description !== desc){
+            updates.description = desc;
+        }
+
+        if(event.repeat !== eventRepeat) updates.repeat = eventRepeat;
+        if(event.frequency !== selectedRepeatNumber) updates.frequency = selectedRepeatNumber;
+        if(event.repeatType !== repeatUntil) updates.repeatType = repeatUntil;
+        if(event.repeatEnding !== selectedRepeatEnd) updates.repeatEnding = selectedRepeatEnd;
 
         return updates;
     }
@@ -194,37 +315,71 @@ const EventCreator = ({ time, hasEvent}) => {
             return; 
         }
 
-        if(defEnd.toDate().getTime() < defStart.toDate().getTime()){
-            toast.error("Please ensure that end time is after the start time!")
-            return;
-        }
+        let desc = eventDescription;
+            if(desc === ""){
+                desc = "No description provided";
+            }
 
         const playerId = auth.currentUser.uid;
 
-        let desc = eventDescription;
-        if(desc === ""){
-            desc = "No description provided";
-        }
-
-        if(location.pathname.include('event-details')){
-            const update = checkUpdates(desc);
-            if(Object.keys(update).length > 0){
-                updateChanges(update, false);
-            }
-
-        }else{
-            const newEvent = {
-                title: eventName,
-                start: defStart.toDate(),
-                end: defEnd.toDate(),
-                color: categories[cat].color,
-                category: cat, 
-                dungeon: dungeon,
-                description: desc,
-                createdBy: playerId
+        if(eventType === 'event'){
+            if(defEnd.toDate().getTime() < defStart.toDate().getTime()){
+                toast.error("Please ensure that end time is after the start time!")
+                return;
             }
     
-            postNewEvent(newEvent, false);
+            if(location.pathname.include('event-details')){
+                const update = checkEventUpdates(desc);
+                if(Object.keys(update).length > 0){
+                    updateChanges(update, false);
+                }
+    
+            }else{
+                const newEvent = {
+                    title: eventName,
+                    start: defStart.toDate(),
+                    end: defEnd.toDate(),
+                    color: categories[cat].color,
+                    category: cat, 
+                    dungeon: dungeon,
+                    description: desc,
+                    createdBy: playerId,
+                    repeat: eventRepeat,
+                    frequency: selectedRepeatNumber,
+                    repeatType: eventRepeat === 'none' ? null : repeatUntil,
+                    repeatEnding: selectedRepeatEnd
+                }
+                
+                postNewEvent(newEvent, false);
+            }
+        }else{
+            if(defEnd.toDate().getTime() < new Date().getTime()){
+                toast.error("Please ensure deadline is after the current time!")
+                return;
+            }
+
+            if(location.pathname.includes('event-details')){
+                const update = checkDeadlineUpdates(desc);
+                if(Object.keys(update).length > 0){
+                    console.log('my updates: ', update, ' please write your api');
+                }
+            }else{
+                const newDeadline = {
+                    title: eventName,
+                    end: defEnd.toDate(),
+                    color: categories[cat].color,
+                    category: cat,
+                    dungeon: dungeon,
+                    description: desc,
+                    createdBy: playerId,
+                    repeat: eventRepeat,
+                    frequency: selectedRepeatNumber,
+                    repeatType: eventRepeat === 'none' ? null : repeatUntil,
+                    repeatEnding: selectedRepeatEnd
+                }
+
+                console.log('my deadline object: ', newDeadline, ' please write this api too');
+            }
         }
     }
 
@@ -269,215 +424,393 @@ const EventCreator = ({ time, hasEvent}) => {
     return(
         <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <ToastContainer />
+            {
+                deleteEvent &&
+                <DeleteConfirmation event={"Delete this event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>
+            }
             
-            <div className="relative h-90p w-4/5 flex flex-col justify-center items-center gap-0 bg-white overflow-y-auto">
-                <div className="h-fit w-full font-grapeNuts text-3xl text-center mt-4">
-                    <p>{eventName === "" ? "New Event" : eventName}</p>
+            <div className="relative h-85p w-4/5 flex flex-col bg-bgPink">
+                <div className="relative w-full bg-darkPink flex items-center p-2" style={{height: '12%', fontFamily: 'source-code-pro'}}>
+                    <div 
+                    onClick={handleClickExit}
+                    className="absolute right-0 h-full flex items-center w-12  hover:cursor-pointer hover:bg-opacity-30 hover:bg-white">
+                        <XIcon size={50} color="" strokeWidth={0.25} radius={1} />
+                    </div>
+                    <div 
+                    onClick={onClickSave}
+                    className="absolute right-16 h-full flex items-center hover:cursor-pointer hover:bg-opacity-30 hover:bg-white">
+                        <CheckIcon size={50} color="" strokeWidth={0.25} radius={1} />
+                    </div>
+                    {
+                        event && 
+                        <div 
+                        onClick={() => {setDeleteEvent(true)}}
+                        className="absolute right-32 h-full flex items-center hover:cursor-pointer hover:bg-opacity-30 hover:bg-white">
+                            <DeleteIcon size={50} color="" strokeWidth={0.25} radius={1} onClick={() => {setDeleteEvent(true)}} />
+                        </div>
+                    }
+                    <p className="text-3xl font-bold">{eventName === '' ? 'New Event' : eventName}</p>
                 </div>
-                <div 
-                onClick={handleClickExit}
-                className="absolute right-0 top-0 hover:cursor-pointer">
-                    <X />
-                </div>
-                <div className="flex-1 w-95p font-grapeNuts flex flex-col justify-evenly gap-1">
-                    <div className="w-full flex h-fit gap-4">
-                        <div className="w-1/2">
-                            <TextField 
-                                className="w-full"
-                                value={eventName}
-                                onChange={onChangeEventName}
-                                variant="outlined" 
-                                size="small"
-                                label="Event Title"
-                                sx={{
-                                    height: '40px',
-                                    backgroundColor: '#f5f5f5',
-                                    '& .MuiInputBase-input': {
-                                        fontFamily: 'PatrickHand',
-                                        fontWeight: 'bold',
-                                        fontSize: '1rem',
-                                    },
-                                }}
+
+                <div className="w-full flex" style={{height: '88%', fontFamily: 'source-code-pro'}}>
+
+                    {/* for event main details such as name, time recurring category etc.  */}
+                    <div className="h-full relative w-2/3 pl-4 py-2 border border-darkPink border-r-1">
+                        <div className="h-full w-95p flex flex-col justify-evenly gap-2">
+
+                            <div className="w-full flex gap-4">
+                                <div className="w-full w-2/3 flex flex-col">
+                                    <p className="text-xl ">Event Title</p>
+                                    <TextField 
+                                        className="w-full"
+                                        value={eventName}
+                                        onChange={onChangeEventName}
+                                        variant="outlined" 
+                                        size="small"
+                                        placeholder="Event Title"
+                                        sx={{
+                                            height: '40px',
+                                            backgroundColor: '#f5f5f5',
+                                            '& .MuiInputBase-input': {
+                                                fontFamily: 'source-code-pro',
+                                                fontWeight: 'bold',
+                                                fontSize: '1rem',
+                                            },
+                                        }}
+                                    />
+                                </div>
+                                <div className="w-full w-1/3 flex flex-col">
+                                    <p className="text-xl">Event Type</p>
+                                    <Select 
+                                        value={eventType}
+                                        onChange={(e) => {setEventType(e.target.value)}}
+                                        sx={{fontFamily: 'source-code-pro', backgroundColor: '#f5f5f5', height: '40px'}}>
+                                        <MenuItem value="event" style={{fontFamily: 'source-code-pro'}}>Event</MenuItem>
+                                        <MenuItem value="deadline" style={{fontFamily: 'source-code-pro'}}>Deadline</MenuItem>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            {
+                                eventType === 'event' &&
+                                <div className=" w-full flex flex-col gap-2">
+
+                                <p className="text-xl ">Event Start</p>
+
+                                <div className="w-full flex gap-2">
+                                        <DatePicker 
+                                            disablePast
+                                            defaultValue={defStart}
+                                            onChange={(e) => {setDefStart(e)}}
+                                            formatDensity="dense"
+                                            sx={{
+                                                backgroundColor: '#f5f5f5',
+                                                fontFamily: 'source-code-pro',
+                                                "& .MuiInputBase-input": {
+                                                    fontFamily: 'source-code-pro'
+                                                }
+                                            }}
+                                            slotProps={{
+                                                textField: {
+                                                    size: "small",
+                                                    InputLabelProps: {
+                                                        sx: {
+                                                            fontFamily: 'source-code-pro', // Font for the label
+                                                        }
+                                                    }
+                                                },
+                                                popper: {
+                                                    placement: 'bottom-end',
+                                                    sx: {
+                                                        paddingTop: '10px',
+                                                        scale: '0.85'
+                                                    }
+                                                }
+                                            }}
+                                            label="Start Day" />
+                                        <MobileTimePicker 
+                                        onChange={(e) => {setDefStart(e)}}
+                                        label="Start Time"
+                                        sx={{
+                                            backgroundColor: '#f5f5f5',
+                                            fontFamily: 'source-code-pro',
+                                            "& .MuiInputBase-input": {
+                                                fontFamily: 'source-code-pro'
+                                            }
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                size: "small",
+                                                InputLabelProps: {
+                                                    sx: {
+                                                        fontFamily: 'source-code-pro', // Font for the label
+                                                    }
+                                                }
+                                            },
+                                        }}
+                                        defaultValue={dayjs.isDayjs(defStart) ? defStart : dayjs()} />
+                                </div>
+
+                                
+                                </div> 
+                            }
+                            
+                            <div className="w-full gap-2">
+                                <div className="w-full flex">
+                                        <p className="text-xl ">{eventType === 'event' ? 'Event End' : 'Deadline'}</p>
+                                    </div>
+
+                                    <div className="w-full flex gap-2">
+                                        <DatePicker 
+                                            onChange={(e) => {setDefEnd(e)}}
+                                            disablePast
+                                            formatDensity="dense"
+                                            defaultValue={defEnd}
+                                            sx={{
+                                                backgroundColor: '#f5f5f5',
+                                                fontFamily: 'source-code-pro',
+                                                "& .MuiInputBase-input": {
+                                                    fontFamily: 'source-code-pro'
+                                                }
+                                            }}
+                                            slotProps={{
+                                                textField: {
+                                                    size: "small",
+                                                    InputLabelProps: {
+                                                        sx: {
+                                                            fontFamily: 'source-code-pro', // Font for the label
+                                                        }
+                                                    }
+                                                },
+                                                popper: {
+                                                    placement: 'bottom-end',
+                                                    sx: {
+                                                        paddingTop: '10px',
+                                                        scale: '0.85'
+                                                    }
+                                                }
+                                            }}
+                                            label="End Day" />
+                                            <MobileTimePicker 
+                                            onChange={(e) => {setDefEnd(e)}}
+                                            label="End Time"
+                                            sx={{
+                                                backgroundColor: '#f5f5f5',
+                                                fontFamily: 'source-code-pro',
+                                                "& .MuiInputBase-input": {
+                                                    fontFamily: 'source-code-pro'
+                                                }
+                                            }}
+                                            slotProps={{
+                                                textField: {
+                                                    size: "small",
+                                                    InputLabelProps: {
+                                                        sx: {
+                                                            fontFamily: 'source-code-pro', // Font for the label
+                                                        }
+                                                    }
+                                                },
+                                            }}
+                                            defaultValue={defEnd} />
+                                    </div>
+                            </div>
+                            
+
+                            <div className="w-full flex gap-2">
+                                <div className="h-fit w-1/2 flex flex-col">
+                                    <p className="text-xl ">Repeat: </p>
+                                    <div className="w-full flex">
+                                        <Select  
+                                        sx={{fontFamily: 'source-code-pro', 
+                                            backgroundColor: '#f5f5f5', height: '40px'}}
+                                        className="w-full" value={eventRepeat} onChange={(e) => {setEventRepeat(e.target.value)}}>
+                                            <MenuItem
+                                                sx={{fontFamily: 'source-code-pro'}}
+                                                value='none'
+                                            >None</MenuItem>
+                                            <MenuItem
+                                            sx={{fontFamily: 'source-code-pro'}}
+                                                value="day"
+                                            >Every 
+                                                <input type="number" 
+                                                min={1}
+                                                value={dayRepeat}
+                                                onClick={(e) => {e.stopPropagation()}}
+                                                onChange={(e) => {setDayRepeat(e.target.value)}}
+                                                className="mx-2 text-center w-12"
+                                                style={{fontFamily: 'source-code-pro'}}
+                                                />
+                                            day
+                                            </MenuItem>
+                                            <MenuItem
+                                            sx={{fontFamily: 'source-code-pro'}}
+                                                value="week"
+                                            >Every
+                                                <input type="number" 
+                                                    min={1}
+                                                    value={weekRepeat}
+                                                    onClick={(e) => {e.stopPropagation()}}
+                                                    onChange={(e) => {setWeekRepeat(e.target.value)}}
+                                                    className="mx-2 text-center w-12"
+                                                    style={{fontFamily: 'source-code-pro'}}
+                                                />
+                                            week</MenuItem>
+                                            <MenuItem
+                                            sx={{fontFamily: 'source-code-pro'}}
+                                                value="month"
+                                            >Every 
+                                                <input type="number" 
+                                                value={monthRepeat}
+                                                min={1}
+                                                onClick={(e) => {e.stopPropagation()}}
+                                                onChange={(e) => {setMonthRepeat(e.target.value)}}
+                                                className="mx-2 text-center w-12"
+                                                style={{fontFamily: 'source-code-pro'}}
+                                                />
+                                            month</MenuItem>
+                                            <MenuItem
+                                            sx={{fontFamily: 'source-code-pro'}}
+                                                value="year"
+                                            >Every 
+                                                <input type="number" 
+                                                min={1}
+                                                value={yearRepeat}
+                                                onClick={(e) => {e.stopPropagation()}}
+                                                onChange={(e) => {setYearRepeat(e.target.value)}}
+                                                className="mx-2 text-center w-12"
+                                                style={{fontFamily: 'source-code-pro'}}
+                                                />
+                                            year</MenuItem>
+                                        </Select>
+                                    </div>
+                                </div>
+                                {
+                                    eventRepeat !== 'none' &&
+                                    <div className="h-fit w-1/2 flex flex-col">
+                                        <p className="text-xl">Repeat until</p>
+                                        <Select
+                                            id="repeat-until-selection"
+                                            onClick={handleClickStuff}
+                                            onChange={(e) => {setRepeatUntil(e.target.value)}}
+                                            value={repeatUntil}
+                                            sx={{fontFamily: 'source-code-pro', 
+                                                backgroundColor: '#f5f5f5',
+                                                height: '40px'
+                                            }}
+                                        >
+                                            <MenuItem 
+                                                sx={{fontFamily: 'source-code-pro'}}
+                                            value="forever">Forever</MenuItem>
+                                            <MenuItem 
+                                            sx={{fontFamily: 'source-code-pro'}}
+                                            value="times">Repeat 
+                                                <input type="number"
+                                                    min={1}
+                                                    value={repeatTimes}
+                                                    onClick={(e) => {e.stopPropagation()}}
+                                                    onChange={(e) => {setRepeatTimes(e.target.value)}}
+                                                    className="mx-2 text-center w-12"
+                                                    style={{fontFamily: 'source-code-pro'}}
+                                                /> times
+                                            </MenuItem>
+                                            <MenuItem 
+                                                id="date-menu-item"
+                                                sx={{ fontFamily: 'source-code-pro' }}
+                                                value="date" 
+                                                className="h-full w-full"
+                                            >
+                                                <input type="date"
+                                                value={repeatEndDate.format('YYYY-MM-DD')}
+                                                onChange={(e) => {setRepeatEndDate(dayjs(e.target.value))}}
+                                                onClick={(e) => {e.stopPropagation()}}
+                                                onMouseDown={(e) => {e.stopPropagation()}}
+                                                className="border-none outline-none h-full w-full" 
+                                                style={{fontFamily: 'source-code-pro', 
+                                                    backgroundColor: '#f5f5f5',}}
+                                                />
+                                            </MenuItem>
+
+
+                                        </Select>
+                                    </div>
+                                }
+                            </div>
+
+                            <div className="w-full flex gap-2">
+                                <div className="w-1/2 flex flex-col">
+                                    <p className="text-xl">Category</p>
+                                    <Select
+                                        onChange={onChangeEventCat}
+                                        value={cat}
+                                        sx={{
+                                            height: '40px',
+                                            backgroundColor: '#f5f5f5',
+                                            width: '100%',
+                                            fontFamily: 'source-code-pro'
+                                        }}
+                                    >
+                                        {
+                                            Object.entries(categories).map((cat, index) => {
+                                                return(
+                                                    <MenuItem
+                                                        key={index}
+                                                        sx={{
+                                                            fontFamily: 'PatrickHand'
+                                                        }}
+                                                        value={cat[0]}>
+                                                            <div className="h-full w-full flex items-center">
+                                                                <div className={`h-4 w-4 rounded-full`} style={{backgroundColor: cat[1].color}}>
+                                                                </div>
+                                                                <p>{cat[1].name}</p>
+                                                            </div>
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </div>
+                                {
+                                    cat === "cat1" &&
+                                    <div className="w-1/2 flex flex-col">
+                                        <p className="text-xl">Dungeon</p>
+                                        <div className="w-full">
+                                            <DungeonSelector onDungeonChange={onDungeonChange} font={'source-code-pro'}/>
+                                        </div>
+                                    </div>
+                                    
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* for event things such as task list, additional notes */}
+                    <div className="w-1/3 px-4 py-2 flex flex-col overflow-y-auto gap-4" style={{height: '88%'}}>
+
+                        <div className="w-full h-1/3">
+                            <p className="text-xl">Event Description</p>
+                            <textarea 
+                                placeholder="Event Description"
+                                value={eventDescription}
+                                onChange={onChangeEventDescription}
+                                className="w-full h-80p p-2 resize-none" style={{backgroundColor: '#f5f5f5', fontFamily: 'source-code-pro'}}
                             />
                         </div>
-                        <div className="w-1/4 relative">
-                        <FormControl fullWidth>
-                                <InputLabel
-                                    id="event-category-label"
-                                >Category</InputLabel>
-                                <Select
-                                    id="event-category"
-                                    labelId="event-category-label"
-                                    onChange={onChangeEventCat}
-                                    value={cat}
-                                    label="Category"
-                                    fullWidth
-                                    sx={{
-                                        height: '40px',
-                                        backgroundColor: '#f5f5f5',
-                                        width: '100%',
-                                        fontFamily: 'PatrickHand'
-                                    }}
-                                >
-                                    {
-                                        Object.entries(categories).map((cat, index) => {
-                                            return(
-                                                <MenuItem
-                                                    key={index}
-                                                    sx={{
-                                                        fontFamily: 'PatrickHand'
-                                                    }}
-                                                    value={cat[0]}>
-                                                        <div className="h-full w-full flex items-center">
-                                                            <div className={`h-4 w-4 rounded-full`} style={{backgroundColor: cat[1].color}}>
-                                                            </div>
-                                                            <p>{cat[1].name}</p>
-                                                        </div>
-                                                    </MenuItem>
-                                            )
-                                        })
-                                    }   
-                                </Select>
-                            </FormControl>
-                        </div>
-                        {
-                            cat === "cat1" &&
-                            <div className="w-1/3">
-                                <DungeonSelector onDungeonChange={onDungeonChange}/>
+
+                        <div className="w-full h-2/3 flex flex-col">
+                            <p className="text-xl">To-Dos</p>
+                            <div className="w-full h-fit gap-0 flex-col">
+                            {
+                                Object.entries(eventToDos).map((toDo, index) => {
+                                    return (<EventTasks task={toDo} key={toDo[0]} onChangeCompletion={onChangeCompletion} onChangeName={onChangeName} onDelete={onDeleteTask} />)
+                                })
+                            }
                             </div>
-                        }
-                    </div>
-                    <div className="w-full flex justify-center items-center gap-2">
-                        <div className="w-1/3 flex flex-col justify-center items-center">
-                            <DatePicker 
-                                disablePast
-                                defaultValue={defStart}
-                                onChange={(e) => {setDefStart(e)}}
-                                formatDensity="dense"
-                                sx={{
-                                    backgroundColor: '#f5f5f5',
-                                }}
-                                slotProps={{
-                                    textField: {
-                                        size: "small"
-                                    },
-                                    popper: {
-                                        placement: 'bottom-end',
-                                        sx: {
-                                            paddingTop: '10px',
-                                            scale: '0.85'
-                                        }
-                                    },
-                                    
-                                }}
-                                label="Start Day" />
-                        </div>
-                        <div className="w-1/3 flex flex-col justify-center items-center">
-                            <MobileTimePicker 
-                            onChange={(e) => {setDefStart(e)}}
-                            label="Start Time"
-                            sx={{
-                                backgroundColor: '#f5f5f5',
-                            }}
-                            slotProps={{
-                                textField: {
-                                    size: 'small',
-                                }
-                            }}
-                            defaultValue={dayjs.isDayjs(defStart) ? defStart : dayjs()} />
-                        </div>
-                        <div><ArrowRightAltIcon /></div>
-                        <div className="w-1/3 flex flex-col justify-center items-center">
-                            <DatePicker 
-                                onChange={(e) => {setDefEnd(e)}}
-                                disablePast
-                                formatDensity="dense"
-                                defaultValue={defEnd}
-                                sx={{
-                                    backgroundColor: '#f5f5f5',
-                                }}
-                                slotProps={{
-                                    textField: {
-                                        size: "small"
-                                    },
-                                    popper: {
-                                        placement: 'bottom-end',
-                                        sx: {
-                                            paddingTop: '10px',
-                                            scale: '0.85'
-                                        }
-                                    },
-                                    
-                                }}
-                                label="End Day" />
-                        </div>
-                        <div className="w-1/3 flex flex-col justify-center items-center">
-                            <MobileTimePicker 
-                            onChange={(e) => {setDefEnd(e)}}
-                            label="End Time"
-                            sx={{
-                                backgroundColor: '#f5f5f5',
-                            }}
-                            slotProps={{
-                                textField: {
-                                    size: 'small',
-                                }
-                            }}
-                            defaultValue={defEnd} />
+                            <p 
+                            onClick={onAddTasks}
+                            className="text-center hover:cursor-pointer text-slate-500">Add ToDo</p>
                         </div>
                     </div>
-                    <TextField
-                        variant="outlined"
-                        fullWidth
-                        sx={{
-                            backgroundColor: '#f5f5f5',
-                            '& .MuiInputBase-input': {
-                                fontFamily: 'PatrickHand',
-                                fontWeight: 'bold',
-                                fontSize: '1rem',
-                            },
-                        }}
-                        label="Description of the event"
-                        multiline
-                        rows={7}
-                        value={eventDescription}
-                        onChange={onChangeEventDescription}
-                        
-                    />
-                    {
-                        event ? 
-                        <div className="flex justify-center gap-4 items-center h-fit">
-                            <div className="w-1/2 flex justify-center items-center">
-                                <Button
-                                    onClick={onClickSave}
-                                >{event ? "Save Changes" : "Create Event"}
-                                </Button>
-                            </div>
-                            <div className="w-1/2 flex justify-center items-center">
-                                <Button
-                                    onClick={() => setDeleteEvent(true)}
-                                    sx={{
-                                        color: 'red',
-                                        '&:hover': {
-                                            backgroundColor: 'red',
-                                            color: 'white'
-                                        }
-                                    }}
-                                >Delete</Button>
-                            </div>
-                        </div> :
-                        <div className="flex justify-center items-center">
-                            <Button
-                                onClick={onClickSave}
-                            >Create Event
-                            </Button>
-                        </div>
-                    }
-                    
-                    {
-                        deleteEvent &&
-                        <DeleteConfirmation event={"Delete this event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>
-                    }
                 </div>
             </div>
         </div>

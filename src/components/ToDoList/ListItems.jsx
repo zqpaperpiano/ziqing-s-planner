@@ -1,21 +1,26 @@
 import { Checkbox, TextField } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
-const ListItems = ({item, onKeyPress, onDeleteChecklist, onRenameChecklist}) => {
+const ListItems = ({item, onKeyPress, onDeleteChecklist, onRenameChecklist, color, font}) => {
     const [completed, setCompleted] = useState(Object.values(item)[0].completed);
+    const newColor = color || 'white';
+    const newFont = font || 'silkscreen';
+
 
     const onChangeName = (e) => {
         onRenameChecklist(e.target.value, Object.keys(item)[0]);
     }
 
+
+
     return(
-        <div className="relative w-full h-fit flex text-white justify-center items-center">
+        <div className="relative w-full h-fit flex justify-center items-center">
             <Checkbox 
                 onChange={(e) => {setCompleted(e.target.checked)}}
                 sx={{
-                    color: 'white',
+                    color: newColor,
                     '&.Mui-checked': {
-                        color: 'white'
+                        color: newColor
                     }
                 }}
             />
@@ -26,10 +31,10 @@ const ListItems = ({item, onKeyPress, onDeleteChecklist, onRenameChecklist}) => 
             onChange={onChangeName}
             sx={{
                 width: '100%',
-                color: 'white',
+                color: newColor,
                 '& .MuiInputBase-input': {
-                    color: 'white',
-                    fontFamily: 'silkscreen'
+                    color: newColor,
+                    fontFamily: newFont
                 },
                 textDecoration: completed ? 'line-through' : 'none',
 
