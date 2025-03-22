@@ -38,14 +38,10 @@ const AdventureDetails = ({ onStartExploration }) => {
 
     return(
         <div className="relative h-full w-full flex flex-col items-center justify-center">
-            <div className="h-1/5 w-full flex text-center font-silkscreen text-3xl justify-center items-center">
                 <ToastContainer />
-                <h1>Exploration Declaration Form</h1>
-            </div>
-            
+
             <div className="h-4/5 w-95p flex">
                 <div className="relative w-1/2 h-full aspect-square flex flex-col items-center justify-center">
-                    <p className="absolute top-8 h-fit font-silkscreen text-l text-center">Duration of exploration</p>
                     <TimePicker handleChangeDuration={onDurationChange}/>
                 </div>
                 <div className="h-full w-1/2 flex flex-col justify-center items-center px-2 gap-4">

@@ -3,12 +3,15 @@ import ToDoList from "../../ToDoList/ToDoList";
 import CountdownClock from "../../CountdownClock/CountdownClock";
 import { AuthContext } from "../../../contexts/authContext";
 import config from '../../../config/config.json';
+import ExplorationEndPage from "./ExplorationEndPage";
 
 const Exploration = ({ details, handleExitExploration }) => {
-    const [timer, setTimer] = useState(details.duration * 60);
+    // const [timer, setTimer] = useState(details.duration * 60);
+    const [timer, setTimer] = useState(1);
     const [dungeon, setDungeon] = useState(details.dungeon);
     const [timeLeft, setTimeLeft] = useState(timer);
     const { tokenRefresh } = useContext(AuthContext);
+    const [endExploration, setEndExploration] = useState(false);
 
 
     const updateUserFocusTimeStats = async(retry) => {
@@ -54,9 +57,9 @@ const Exploration = ({ details, handleExitExploration }) => {
     })
 
     const onExitFocus = () => {
-        // console.log('exiting...');
+        setEndExploration(true);
         updateUserFocusTimeStats(false);
-        handleExitExploration();
+        // handleExitExploration();
     }
 
 
@@ -82,6 +85,9 @@ const Exploration = ({ details, handleExitExploration }) => {
             className="absolute top-0 left-2 opacity-20 text-white font-silkscreen hover:cursor-pointer hover:opacity-100">
                 Back
             </div>
+            {
+                endExploration && <ExplorationEndPage details={details} onExitSumamry={handleExitExploration} timeLeft={timeLeft}/>
+            }
 
         </div>
     )
