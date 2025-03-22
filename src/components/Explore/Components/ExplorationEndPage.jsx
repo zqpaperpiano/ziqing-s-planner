@@ -1,15 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { XIcon } from "raster-react";
 import explorationEndAlert from './exploration-end-alert.wav';
 import completedStamp from '../../../images/CompleteStamp.png';
 import abandonedStamp from '../../../images/AbandonedStamp.png';
 import stampSoundEffect from '../../../sounds/traditional-stamp-44189.mp3'
 import { motion } from "framer-motion";
+import { UserStatContext } from "../../../contexts/userStatContext";
 
 const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
+    const { userStats, difficultyModifier } = useContext(UserStatContext);
     const elapsedTimeInSeconds = details.duration * 60 - timeLeft;
     const elapsedMinutes = Math.floor(elapsedTimeInSeconds / 60);
     const elapsedSeconds = elapsedTimeInSeconds % 60;  
+
+    const toNextLevel = userStats.toNextLevel;
+    const currXp = userStats.xp;
+    const gain = elapsedMinutes * difficultyModifier;
+    const bonus = timeLeft === 0 ? 50 : 0;
+    const [displayXp, setDisplayXp] = useState(userStats.xp);
+    const [phase, setPhase] = useState(1);
     
     const playSound = () => {
         const sound = new Audio(explorationEndAlert);
@@ -29,6 +38,28 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
         }, 1500)
     }, [])
 
+    useEffect(() => {
+        const newXp = currXp + gain;
+        if (newXp >= toNextLevel) {
+            setDisplayXp(toNextLevel);
+        } else {
+            setDisplayXp(newXp);
+        }
+    
+        // Step 2: Delay for 2 seconds, then animate extra bonus EXP
+        setTimeout(() => {
+            if (timeLeft === 0) {
+                setPhase(2);
+                setDisplayXp((prevXp) => {
+                    let afterBonusXp = prevXp + bonus;
+                    return afterBonusXp >= toNextLevel ? toNextLevel : afterBonusXp;
+                });
+            }
+        }, 2000);
+    }, [gain, bonus, timeLeft]);
+
+
+
     return(
         <div className="inset-0 fixed bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <div className="relative bg-bgPink w-2/5 h-2/3 rounded-lg">
@@ -46,6 +77,26 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
                         details.dungeon && <p>Dungeon: {details.dungeon.dungeonName}</p>
                     }
                     <p>Time Elapsed: {elapsedMinutes}:{elapsedSeconds < 10 ? '0' + elapsedSeconds : elapsedSeconds}</p>
+                    <p className="flex">Exp gained: {currXp + gain}  
+                        <motion.div
+                        className="pl-2"
+                        initial={{ y: -100, opacity: 0, rotate: -10, scale: 2 }} // Starts off-screen
+                        animate={{ y: 0, opacity: 1, rotate: 0, scale: 1 }} // Drops down
+                        transition={{ 
+                            type: "spring", 
+                            stiffness: 100, 
+                            damping: 10, 
+                            delay: 2 // <-- Delays animation by 1.5 seconds
+                        }}> +{bonus}</motion.div>
+                    </p>
+                    <div className="h-4 w-4/5 rounded-lg bg-white">
+                        <motion.div 
+                        key={phase}
+                        initial={{width: `${currXp / toNextLevel * 100}%`}}
+                        animate={{width: `${displayXp / toNextLevel * 100}%`}}
+                        transition={{duration: 1}}
+                        className="rounded-lg h-full bg-deepPink"/>
+                    </div>
                     <motion.img
                         src={timeLeft === 0 ? completedStamp : abandonedStamp}
                         className="absolute right-0 bottom-0 h-1/3"
@@ -57,7 +108,7 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
                             damping: 10, 
                             delay: 1.5 // <-- Delays animation by 1.5 seconds
                         }}
-        />
+                     />
 
                     <button onClick={onExitSumamry} className="absolute bottom-4 bg-deepPink rounded-lg px-4 py-2 mt-4">OK</button>
                 </div>

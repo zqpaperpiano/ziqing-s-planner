@@ -8,6 +8,7 @@ export const UserStatContext = createContext();
 export const UserStatProvider = ({ children }) => {
     const [userStats, setUserStats] = useState({}); 
     const { tokenRefresh } = useContext(AuthContext);
+    const [difficultyModifier, setDifficultyModifier] = useState(1);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -65,7 +66,7 @@ export const UserStatProvider = ({ children }) => {
 
     return(
         <UserStatContext.Provider 
-            value={{userStats, setUserStats}}>
+            value={{userStats, setUserStats, difficultyModifier, setDifficultyModifier}}>
             {children}
         </UserStatContext.Provider>
     )
