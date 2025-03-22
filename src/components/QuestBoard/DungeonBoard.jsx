@@ -56,6 +56,8 @@ const DungeonBoard = () => {
     //when a new quest is added
     const handleIncreaseDungeons = async (newDungeon, retry) => {
         try{
+
+            console.log('i am clicked!');
             const resp =  await fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
                 method: 'POST',
                 credentials: 'include',

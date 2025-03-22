@@ -136,8 +136,6 @@ const DungeonDetailCard = () => {
                 })
             })
 
-            // console.log('resp: ', resp.status);
-
             if(resp.status === 401){
                 if(!retry){
                     await tokenRefresh();

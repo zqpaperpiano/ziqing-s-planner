@@ -26,7 +26,7 @@ const EventCreator = ({ time, hasEvent}) => {
 
     const navigate = useNavigate();
 
-    const [eventType, setEventType] = useState('event');
+    const [eventType, setEventType] = useState(event?.type || 'event');
 
     const [cat, setCat] = useState(event?.category || "cat2");
     const [eventName, setEventName] = useState(event?.title || "");
@@ -182,6 +182,7 @@ const EventCreator = ({ time, hasEvent}) => {
         if(event.frequency !== selectedRepeatNumber) updates.frequency = selectedRepeatNumber;
         if(event.repeatType !== repeatUntil) updates.repeatType = repeatUntil;
         if(event.repeatEnding !== selectedRepeatEnd) updates.repeatEnding = selectedRepeatEnd;
+        if(event.type !== eventType) updates.type = eventType;
 
         return updates;
     }
@@ -194,6 +195,7 @@ const EventCreator = ({ time, hasEvent}) => {
         }
 
         if(event.end.getTime() !== defEnd.toDate().getTime()){
+            updates.start = defEnd.toDate();
             updates.end = defEnd.toDate();
         }
 
@@ -214,6 +216,7 @@ const EventCreator = ({ time, hasEvent}) => {
         if(event.frequency !== selectedRepeatNumber) updates.frequency = selectedRepeatNumber;
         if(event.repeatType !== repeatUntil) updates.repeatType = repeatUntil;
         if(event.repeatEnding !== selectedRepeatEnd) updates.repeatEnding = selectedRepeatEnd;
+        if(event.type !== eventType) updates.type = eventType;
 
         return updates;
     }
@@ -247,12 +250,14 @@ const EventCreator = ({ time, hasEvent}) => {
 
             if(resp.ok){
                 const data = await resp.json();
+
                 const formatEvent = {
                     ...data,
                     start: new Date(data.start),
                     end: new Date(data.end)
                 }
-    
+                
+                console.log('formattedEvent: ', formatEvent);   
                 const index = eventMap.get(event.eventId);
                 setEventList(prevList => {
                     let newList = [...prevList];
@@ -328,7 +333,7 @@ const EventCreator = ({ time, hasEvent}) => {
                 return;
             }
     
-            if(location.pathname.include('event-details')){
+            if(location.pathname.split('/').includes('event-details')){
                 const update = checkEventUpdates(desc);
                 if(Object.keys(update).length > 0){
                     updateChanges(update, false);
@@ -337,6 +342,7 @@ const EventCreator = ({ time, hasEvent}) => {
             }else{
                 const newEvent = {
                     title: eventName,
+                    type: 'event',
                     start: defStart.toDate(),
                     end: defEnd.toDate(),
                     color: categories[cat].color,
@@ -361,11 +367,13 @@ const EventCreator = ({ time, hasEvent}) => {
             if(location.pathname.includes('event-details')){
                 const update = checkDeadlineUpdates(desc);
                 if(Object.keys(update).length > 0){
-                    console.log('my updates: ', update, ' please write your api');
+                    updateChanges(update, false);
                 }
             }else{
                 const newDeadline = {
                     title: eventName,
+                    type: 'deadline',
+                    start: defEnd.toDate(),
                     end: defEnd.toDate(),
                     color: categories[cat].color,
                     category: cat,
@@ -378,7 +386,7 @@ const EventCreator = ({ time, hasEvent}) => {
                     repeatEnding: selectedRepeatEnd
                 }
 
-                console.log('my deadline object: ', newDeadline, ' please write this api too');
+                postNewEvent(newDeadline, false);
             }
         }
     }
@@ -499,7 +507,6 @@ const EventCreator = ({ time, hasEvent}) => {
 
                                 <div className="w-full flex gap-2">
                                         <DatePicker 
-                                            disablePast
                                             defaultValue={defStart}
                                             onChange={(e) => {setDefStart(e)}}
                                             formatDensity="dense"
@@ -563,7 +570,6 @@ const EventCreator = ({ time, hasEvent}) => {
                                     <div className="w-full flex gap-2">
                                         <DatePicker 
                                             onChange={(e) => {setDefEnd(e)}}
-                                            disablePast
                                             formatDensity="dense"
                                             defaultValue={defEnd}
                                             sx={{

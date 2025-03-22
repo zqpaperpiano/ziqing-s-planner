@@ -16,9 +16,9 @@ const WarRoom = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     console.log('warRoom event list; ', eventList);
-    // }, [eventList])
+    useEffect(() => {
+        console.log('warRoom event list; ', eventList);
+    }, [eventList])
 
     const handleClick = useCallback((slotInfo) => {
         navigate(`/warRoom/new-event`, {state: {start: slotInfo.start, end: slotInfo.end}})
