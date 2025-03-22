@@ -257,7 +257,6 @@ const EventCreator = ({ time, hasEvent}) => {
                     end: new Date(data.end)
                 }
                 
-                console.log('formattedEvent: ', formatEvent);   
                 const index = eventMap.get(event.eventId);
                 setEventList(prevList => {
                     let newList = [...prevList];
