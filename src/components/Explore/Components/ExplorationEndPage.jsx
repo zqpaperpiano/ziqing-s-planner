@@ -6,9 +6,12 @@ import abandonedStamp from '../../../images/AbandonedStamp.png';
 import stampSoundEffect from '../../../sounds/traditional-stamp-44189.mp3'
 import { motion } from "framer-motion";
 import { UserStatContext } from "../../../contexts/userStatContext";
+import config from '../../../config/config.json';
+import { AuthContext } from "../../../contexts/authContext";
 
 const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
-    const { userStats, difficultyModifier } = useContext(UserStatContext);
+    const { userStats, setUserStats, difficultyModifier } = useContext(UserStatContext);
+    const { tokenRefresh } = useContext(AuthContext);
     const elapsedTimeInSeconds = details.duration * 60 - timeLeft;
     const elapsedMinutes = Math.floor(elapsedTimeInSeconds / 60);
     const elapsedSeconds = elapsedTimeInSeconds % 60;  
@@ -16,7 +19,7 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
     const toNextLevel = userStats.toNextLevel;
     const currXp = userStats.xp;
     const gain = elapsedMinutes * difficultyModifier;
-    const bonus = timeLeft === 0 ? 50 : 0;
+    const bonus = timeLeft === 0 ? elapsedMinutes * 0.5 : 0;
     const [displayXp, setDisplayXp] = useState(userStats.xp);
     const [phase, setPhase] = useState(1);
     
@@ -58,6 +61,61 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
         }, 2000);
     }, [gain, bonus, timeLeft]);
 
+    const handleXpGain = () => {
+        const newXp = currXp + gain + bonus;
+        console.log('currXp: ', currXp, ' gain: ', gain, ' bonus: ', bonus, ' newXp: ', newXp);
+
+        if(newXp < toNextLevel){
+            const updates = {
+                xp: newXp
+            }
+            handleUserStatChanges(updates, false);
+        }else{
+            const updates = {
+                level: userStats.level + 1,
+                xp: newXp - toNextLevel,
+                toNextLevel: 100 + 50 * (userStats.level + 1)^2
+            }
+            handleUserStatChanges(updates, false);
+        }
+
+    }
+
+    const handleUserStatChanges = async(updates, retry) => {
+        try{
+            console.log('hello')
+            const resp = await fetch(`${config.development.apiURL}userStats/update`, {
+                method: 'POST', 
+                credentials: 'include', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    updates: updates
+                })
+            });
+
+            if(resp.status === 401){
+                if(retry){
+                    await tokenRefresh();
+                    handleUserStatChanges(updates, true);
+                    return;
+                }
+                throw new Error('Unauthorized');
+            }
+
+            if(resp.ok){
+                const data = await resp.json();
+                setUserStats(data);
+            }
+            
+        }catch(err){
+            console.log('an error has occured: ', err);
+        }
+    }
+
+    useEffect(() => {handleXpGain()}, [])
+
 
 
     return(
@@ -77,7 +135,7 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
                         details.dungeon && <p>Dungeon: {details.dungeon.dungeonName}</p>
                     }
                     <p>Time Elapsed: {elapsedMinutes}:{elapsedSeconds < 10 ? '0' + elapsedSeconds : elapsedSeconds}</p>
-                    <p className="flex">Exp gained: {currXp + gain}  
+                    <p className="flex">Exp gained: { gain }  
                         <motion.div
                         className="pl-2"
                         initial={{ y: -100, opacity: 0, rotate: -10, scale: 2 }} // Starts off-screen
