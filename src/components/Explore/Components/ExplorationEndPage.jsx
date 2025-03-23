@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { XIcon } from "raster-react";
 import explorationEndAlert from './exploration-end-alert.wav';
 import completedStamp from '../../../images/CompleteStamp.png';
@@ -18,7 +18,16 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
 
     const toNextLevel = userStats.toNextLevel;
     const currXp = userStats.xp;
-    const gain = elapsedMinutes * difficultyModifier;
+    // const gain = elapsedMinutes * difficultyModifier;
+    const gain = useMemo(() => {
+        var modifier = Object.values(difficultyModifier)[0];
+        const today = new Date().toISOString().split("T")
+
+        if(Object.keys(difficultyModifier)[0] !== today){
+            return elapsedMinutes;
+        }
+        return elapsedMinutes * modifier;
+    }, [difficultyModifier, elapsedMinutes]);
     const bonus = timeLeft === 0 ? elapsedMinutes * 0.5 : 0;
     const [displayXp, setDisplayXp] = useState(userStats.xp);
     const [phase, setPhase] = useState(1);
@@ -33,6 +42,7 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
         stampSound.play();
     }
 
+    //controls playing of sound effects
     useEffect(() => {
         playSound();
 
@@ -41,6 +51,7 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
         }, 1500)
     }, [])
 
+    //controls exp bar animation
     useEffect(() => {
         const newXp = currXp + gain;
         if (newXp >= toNextLevel) {
@@ -61,9 +72,10 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
         }, 2000);
     }, [gain, bonus, timeLeft]);
 
+
+
     const handleXpGain = () => {
         const newXp = currXp + gain + bonus;
-        console.log('currXp: ', currXp, ' gain: ', gain, ' bonus: ', bonus, ' newXp: ', newXp);
 
         if(newXp < toNextLevel){
             const updates = {

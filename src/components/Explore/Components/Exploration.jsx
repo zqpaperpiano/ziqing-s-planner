@@ -6,8 +6,7 @@ import config from '../../../config/config.json';
 import ExplorationEndPage from "./ExplorationEndPage";
 
 const Exploration = ({ details, handleExitExploration }) => {
-    // const [timer, setTimer] = useState(details.duration * 60);
-    const [timer, setTimer] = useState(1);
+    const [timer, setTimer] = useState(details.duration * 60);
     const [dungeon, setDungeon] = useState(details.dungeon);
     const [timeLeft, setTimeLeft] = useState(timer);
     const { tokenRefresh } = useContext(AuthContext);
