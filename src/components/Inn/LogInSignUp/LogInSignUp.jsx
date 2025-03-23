@@ -9,6 +9,7 @@ import { setPersistence, browserLocalPersistence } from "firebase/auth";
 import { redirect, useNavigate } from "react-router";
 import config from '../../../config/config.json';
 import { toast, ToastContainer } from "react-toastify";
+import LoadingScreen from "../../LoadingScreen/LoadingScreen";
 
 const LogInSignUp = () => {
     const [onSignup, toggleOnSignUp] = useState(false);
@@ -62,10 +63,10 @@ const LogInSignUp = () => {
             })
             .then((data) => {
                 signIn(data);
-                if(data.completedCalibration){
+                // if(data.completedCalibration){
                     return navigate('/');
-                }
-                return navigate('/newPlayer');
+                // }
+                // return navigate('/newPlayer');
             })
             .catch((err) => {
                 console.log(err);
@@ -161,11 +162,7 @@ const LogInSignUp = () => {
             </div> 
             {
                 logInLoading &&
-                <div className="inset-0 fixed z-50 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-                    <CircularProgress 
-                        size="100px"
-                    />
-                </div>
+                <LoadingScreen />
             }
         </div>
     );

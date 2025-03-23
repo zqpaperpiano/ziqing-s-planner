@@ -99,10 +99,10 @@ const LogIn = ({ onSignUp, logGUser, emptyFields, failedLogin, invalidEmail, too
             signIn(data);
             setPlayerEmail("");
             setPlayerPassword('');
-            if(data.completedCalibration){
+            // if(data.completedCalibration){
                 return navigate('/');
-            }
-            return navigate('/newPlayer');
+            // }
+            // return navigate('/newPlayer');
             
         })
         .catch((err) => {

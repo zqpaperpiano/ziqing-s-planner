@@ -74,7 +74,8 @@ const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, 
             setUserEmail("");
             setUserPassword("");
             setUserName("");
-            return navigate('/newPlayer');
+            return navigate('/');
+            // return navigate('/newPlayer');
         })
         .catch((err) => {
             console.log('Failed: ',err)

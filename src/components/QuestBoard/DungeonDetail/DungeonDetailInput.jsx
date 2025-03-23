@@ -5,6 +5,7 @@ import Checkpoints from "./Checkpoints";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Background from '../../../images/hip-square.webp';
+import { XIcon, CheckIcon } from "raster-react";
 
 
 const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => {
@@ -86,91 +87,37 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-            <div className="relative w-3/4 h-5/6 flex items-center justify-center">
-                <div className="absolute inset-0">
-                    <img src={Background} className="h-full w-full object-cover z-0" />
-                </div>
-                <Button 
-                    onClick={handleExitAddDungeon}
-                    sx={{
-                        position: "absolute",
-                        top: 0,
-                        right: 2,
-                        color: 'black',
-                        zIndex: 100,
-
-                        '&:hover':{
-                            backgroundColor: 'transparent'
-                        }
-                    }}
-                ><X /></Button>
-                <div className="overflow-scroll overflow-x-hidden w-full font-grapeNuts h-full flex items-center justify-evenly flex-col z-50">
-                    <div className="h-1/6 flex flex-col justify-around">
-                        <h1 className="text-5xl text-center ">Spotted a new Dungeon?</h1>
-                        <h3 className="text-center mt-2 text-xl">Please fill in the details below so an adventurer can take on the quest!</h3>
-                    </div>
-                    <form className="mt-4 h-5/6 w-full flex flex-col items-center">
-                        <ToastContainer 
-                            autoClose={5000}
+            <ToastContainer autoClose={5000}
                             closeOnClick
                             pauseOnHover
-                            pauseOnFocusLoss
-                        />
-                        <div className="h-5/6 flex flex-col items-center w-5/6 ">
-                            <div className="flex items-center h-12 text-xl">
-                                <p>Dungeon Name:</p>
-                                <TextField variant="standard" 
-                                    onChange={(e) => {handleDungeonDetailsChange(e, "dungeonName")}}
-                                    size="small"
-                                    sx={{
-                                        '& .MuiInputBase-input': {
-                                            fontFamily: 'PatrickHand',
-                                            fontWeight: 'bold',
-                                            fontSize: '1rem',
-                                        }
-                                    }}
-                                />
-                            </div>
-                            <p className="text-xl">Dungeon Details:</p>
-                            <textarea
-                                style={{
-                                    fontFamily: 'PatrickHand' 
-                                }}
-                                value={dungeonDetails.dungeonDescription}
-                                onChange={(e) => handleDungeonDetailsChange(e, "dungeonDescription")}
-                                maxLength={150}
-                                rows="5"
-                                className="border border-gray-300 rounded p-2 w-1/2 h-2/3"
-                                placeholder="A short description of the dungeon to better aid our adventurers... (max 150 chars)"
-                                required
-                            />
-                        </div>
-                        <div className="h-1/3 flex flex-col items-center mt-2 w-full">
-                            <div className="flex justify-center items-center">
-                                <p className="text-xl">Checkpoints </p>
-                               
-                            </div>
-                            <div className="flex flex-col justify-center items-center w-full">
-                                <Checkpoints checkpoints={checkpointList} handleSubmit={checkpointListSubmimssion}/>  
-                            </div>  
-                            <Button 
-                            sx={{
-                                fontFamily: 'GrapeNuts',
-                                fontWeight: 'bold',
-                                color: 'black',
-                                textDecoration: 'underline',
-                                '&:hover':{
-                                    textDecoration: 'underline',
-                                },
-                            }}
-                            onClick={() => {
-                                handlePostQuest()}}>
-                                Post Dungeon
-                            </Button>
-                        </div>
-                    </form>
+                            pauseOnFocusLoss/>
+            <div className="relative w-1/2 h-5/6 flex flex-col bg-bgPink">
+                <div className="relative bg-deepPink flex w-full p-2" style={{height: '12%', fontFamily: 'source-code-pro'}}>
+                    <p className="text-3xl font-bold">New Dungeon</p>
+                    <div className="absolute right-0 h-full top-0 flex items-center w-12  hover:cursor-pointer hover:bg-opacity-30 hover:bg-white">
+                        <XIcon onClick={handleExitAddDungeon} size={50} color="" strokeWidth={0.25} radius={1} />
+                    </div>
+                    <div className="absolute right-12 w-12 top-0 h-full flex items-center hover:cursor-pointer hover:bg-opacity-30 hover:bg-white">
+                        <CheckIcon onClick={handlePostQuest} size={50} color="" strokeWidth={0.25} radius={1} />
+                    </div>
                 </div>
-                
+
+                <div className="flex w-full py-2 px-4 flex-col overflow-y-auto " style={{height: '88%', fontFamily: 'source-code-pro'}}>
+                        <div className="h-fit flex flex-col gap-2 w-full">
+                            <p className="text-xl">Dungeon Name: </p>
+                            <input type="text" className="w-full border border-black border-1" />
+                        </div>
+
+                        <div className="h-fit flex flex-col gap-2 w-full">
+                            <p className="text-xl">Dungeon Description: </p>
+                            <textarea className="w-full border border-black border-1 resize-none" rows={7} />
+                        </div>
+
+                        <div className="h-fit flex flex-col gap-2 mt-2">
+                            <p className="text-xl">Checkpoints: </p>
+                            <Checkpoints theme={'retro'} checkpoints={checkpointList} handleSubmit={checkpointListSubmimssion} />
+                        </div>
+                </div>
             </div>
         </div>
     );

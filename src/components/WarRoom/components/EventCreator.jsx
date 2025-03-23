@@ -17,6 +17,7 @@ import { XIcon } from "raster-react";
 import { CheckIcon } from "raster-react";
 import EventTasks from "./EventTasks";
 import { DeleteIcon } from "raster-react";
+import LoadingScreen from "../../LoadingScreen/LoadingScreen";
 
 const EventCreator = ({ time, hasEvent}) => {
     const location = useLocation();
@@ -50,6 +51,8 @@ const EventCreator = ({ time, hasEvent}) => {
     const [repeatTimes, setRepeatTimes] = useState(10);
     const [repeatEndDate, setRepeatEndDate] = useState(defStart);
     const [selectedRepeatEnd, setSelectedRepeatEnd] = useState(null);
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if(eventRepeat === 'day'){
@@ -227,6 +230,7 @@ const EventCreator = ({ time, hasEvent}) => {
         // console.log('my eventId: ', event);
 
         try{
+            setLoading(true);
             const resp = await fetch(`${config.development.apiURL}event/updateEvent`, {
                 method: 'POST',
                 credentials: 'include',
@@ -244,13 +248,12 @@ const EventCreator = ({ time, hasEvent}) => {
                     await tokenRefresh();
                     updateChanges(updates, true);
                 }else{
-                    throw new Error('Unauthorized');
+                    toast.error('An error has occured. Please try re-logging into your account again. ')
                 }
             }
 
             if(resp.ok){
                 const data = await resp.json();
-
                 const formatEvent = {
                     ...data,
                     start: new Date(data.start),
@@ -263,10 +266,12 @@ const EventCreator = ({ time, hasEvent}) => {
                     newList[index] = formatEvent;
                     return newList;
                 })
+                setLoading(false);
                 handleClickExit();
             }
         }catch(err) {
-            console.log('An error has occured with the server. Please try again: ', err);
+            setLoading(false);
+            toast.error('An error has occured with the server. Please try again: ', err);
         }
     }
 
@@ -276,6 +281,7 @@ const EventCreator = ({ time, hasEvent}) => {
         // console.log('eventId: ', eventId);
 
         try{
+            setLoading(true);
             const resp = await fetch(`${config.development.apiURL}event/deleteEvent/${eventId}`, {
                 method: 'DELETE',
                 credentials: 'include', 
@@ -289,7 +295,7 @@ const EventCreator = ({ time, hasEvent}) => {
                     await tokenRefresh();
                     onClickDelete(true);
                 }else{
-                    throw new Error('Unauthorized');
+                    toast.error('An error has occured. Please try re-logging into your account again. ')
                 }
             }
 
@@ -302,10 +308,12 @@ const EventCreator = ({ time, hasEvent}) => {
                     return newList;
                 })
                 setDeleteEvent(false);
+                setLoading(false);
                 handleClickExit();
             }
         }catch(err){
-            console.log('An error has occured: ', err);
+            setLoading(false);
+            toast.error('An error has occured. Please try again later');
         }
     }
 
@@ -392,6 +400,7 @@ const EventCreator = ({ time, hasEvent}) => {
 
     const postNewEvent = async(newEvent, retry) =>{
         try{
+            setLoading(true);
             const resp = await fetch(`${config.development.apiURL}event/createNewEvent`, {
                 method: 'POST',
                 credentials: 'include',
@@ -409,7 +418,7 @@ const EventCreator = ({ time, hasEvent}) => {
                     postNewEvent(newEvent, true);
                     return;
                 }
-                throw new Error('Unauthorized')
+                toast.error('An error has occured. Please try re-logging into your account again. ')
             }
 
             if(resp.ok){
@@ -419,18 +428,20 @@ const EventCreator = ({ time, hasEvent}) => {
                     start: new Date(data.start),
                     end: new Date(data.end)
                 }
-
+                setLoading(false);
                 setEventList((prevList) => [...prevList, formatEvent]);
                 handleClickExit();
             }
         }catch(err){
-            console.log('An error has occured in posting a new event: ', err);
+            setLoading(false);
+            toast.error('An error has occured. Please try again later.')
         }
     }
 
     return(
         <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <ToastContainer />
+            {loading && <LoadingScreen />}
             {
                 deleteEvent &&
                 <DeleteConfirmation event={"Delete this event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>

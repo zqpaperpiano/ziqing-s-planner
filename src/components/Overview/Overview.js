@@ -12,6 +12,7 @@ import TabBar from './components/TabBar';
 import { ToastContainer, toast } from 'react-toastify';
 import DeadlineView from './components/DeadlineView';
 import MoodDiary from './components/MoodDiary';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
@@ -303,10 +304,10 @@ const Overview = () => {
           <div className="h-1/5 w-full relative ">
             <div 
             onClick={() => SetOffset(0)}
-            className="absolute left-0 top-0 hover:cursor-pointer select-none">This Week</div>
+            className="absolute left-0 top-0 flex-wrap hover:cursor-pointer select-none">This Week</div>
             <div 
             onClick={() => SetOffset((prev) => prev + 1)}
-            className="absolute right-0 top-0 hover:cursor-pointer select-none">Next Week</div>     
+            className="absolute right-0 top-0 flex-wrap hover:cursor-pointer select-none">Next Week</div>     
           </div>
 
           <div className={`h-3/5 w-full grid grid-cols-7 gap-1`}>

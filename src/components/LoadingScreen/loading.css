@@ -1,0 +1,10 @@
+@keyframes runAnimation {
+    from { background-position: 0 0; }
+    to { background-position: -1602px 0; } /* Adjust based on sprite width */
+}
+
+.pixel-man {
+    background-image: url("../../images/loading-animation.png");
+    background-size: auto 100%;
+    animation: runAnimation 5s steps(6) infinite; 
+}

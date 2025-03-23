@@ -10,6 +10,7 @@ import config from "../../../config/config.json";
 import { auth } from "../../../config/firebase";
 import { AuthContext } from "../../../contexts/authContext";
 import RightClickMenu from "./RightClickMenu";
+import LoadingScreen from "../../LoadingScreen/LoadingScreen";
 
 const DungeonDetailCard = () => {
     const { dungeonID } = useParams();
@@ -23,7 +24,7 @@ const DungeonDetailCard = () => {
     const descriptionRef = useRef(null);
     const navigate = useNavigate(); 
     const { tokenRefresh } = useContext(AuthContext);
-
+    const [loading, setLoading] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [menuPos, setMenuPos] = useState({x: 0, y: 0});
 
@@ -120,7 +121,7 @@ const DungeonDetailCard = () => {
 
     const handleSubmitChanges = async (retry) => {
         try{
-            // console.log('my retry status:', retry);
+            setLoading(true);
             const resp = await fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
                 method: 'POST',
                 credentials: 'include',
@@ -142,15 +143,14 @@ const DungeonDetailCard = () => {
                     handleSubmitChanges(true);
                     return;
                 }else{
-                    throw new Error('Unauthorized');
+                    toast.error('An error has occured. Please try re-logging into your account again. ')
                 }
             }
 
             if(resp.ok){
                 const data = await resp.json();
-
-                // console.log('data received: ', data);
                 callSuccessNotif(dungeon.dungeonName);
+                setLoading(false);
                 setDungeonList((prevList) => ({
                     ...prevList,
                     ...data
@@ -158,7 +158,8 @@ const DungeonDetailCard = () => {
                 navigate(`/dungeon-board/${page}`)
             }
         }catch(err){
-            console.log('An error has occured. Please try again later.');
+            setLoading(false);
+            toast.error('An error has occured. Please try again later.');
         }
     }
 
@@ -177,6 +178,8 @@ const DungeonDetailCard = () => {
         animate={{ opacity: 1, rotateY: 180}}
         transition={{duration: 0.3}}
         className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+            <ToastContainer />
+            {loading && <LoadingScreen />}
             {
                 !dungeon ? 
                 <CircularProgress /> :
@@ -284,7 +287,7 @@ const DungeonDetailCard = () => {
                                 </div>
                            <div className="h-3/4 w-full flex flex-col items-center ">
                                 <p className="text-xl">Checkpoints</p>
-                                <Checkpoints checkpoints={dungeon.dungeonCheckpoints} handleSubmit={handleNewCheckpointList} btnColor={"black"} setRightClick={handleRightMouseDown} />
+                                <Checkpoints theme={'pixel'} checkpoints={dungeon.dungeonCheckpoints} handleSubmit={handleNewCheckpointList} btnColor={"black"} setRightClick={handleRightMouseDown} />
                            </div>
                         </div>
                         {

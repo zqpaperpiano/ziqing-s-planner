@@ -11,6 +11,7 @@ import config from '../../config/config.json';
 import { auth } from '../../config/firebase';
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
 import { AuthContext } from "../../contexts/authContext";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const DungeonBoard = () => {
     const {'page-number': page} = useParams();
@@ -22,6 +23,7 @@ const DungeonBoard = () => {
     const [maxPages, setMaxPages] = useState(1);
     const [dungeonPp, setDungeonPp] = useState(3);
     const { tokenRefresh } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -56,8 +58,7 @@ const DungeonBoard = () => {
     //when a new quest is added
     const handleIncreaseDungeons = async (newDungeon, retry) => {
         try{
-
-            console.log('i am clicked!');
+            setLoading(true);
             const resp =  await fetch(`${config.development.apiURL}dungeon/create-new-dungeon`, {
                 method: 'POST',
                 credentials: 'include',
@@ -76,7 +77,8 @@ const DungeonBoard = () => {
                     handleIncreaseDungeons(newDungeon, true);
                     return;
                 }else{
-                    throw new Error('Unauthorized');
+                    setLoading(false);
+                    toast.error('An error has occured. Please try re-logging into your account. ')
                 }
             }
 
@@ -88,9 +90,11 @@ const DungeonBoard = () => {
                     ...prevList,
                     [dungeonId]: dungeonData
                 }));
+                setLoading(false);
             }
         }catch(err){
-            console.log(err);
+            setLoading(false);
+            toast.error('An error has occured. Please try again later.')
         }
     }
 
@@ -101,6 +105,7 @@ const DungeonBoard = () => {
 
     const handleDeleteDungeon = async (retry) => {
         try{
+            setLoading(true);
             const resp = await fetch(`${config.development.apiURL}dungeon/delete-dungeon`, {
                 method: 'DELETE',
                 credentials: 'include', 
@@ -118,7 +123,7 @@ const DungeonBoard = () => {
                     handleDeleteDungeon(true);
                     return;
                 }else{
-                    throw new Error('Unauthorized');
+                    toast.error('An error has occured. Please try re-logging into your account again. ')
                 }
             }
 
@@ -127,10 +132,12 @@ const DungeonBoard = () => {
                     const { [toDel]: _, ...updatedDungeonList } = prevDungeonList;
                     return updatedDungeonList;
                 });
+                setLoading(false);
                 setToDel('');
             }
         }catch(err){
-            console.log('an error has occured: ', err);
+            setLoading(false);
+            toast.error('An error has occured. Please try again later.');
         }
     }
 
@@ -173,6 +180,7 @@ const DungeonBoard = () => {
 
     return(
         <div className={`h-full w-full flex ${onAddDungeon} ? 'z-0' : 'z-50'`}>
+            {loading && <LoadingScreen />}
             <ToastContainer />
             <div className="flex items-center justify-center mx-auto">
                 <Button
@@ -180,14 +188,14 @@ const DungeonBoard = () => {
                 ><StepBack /></Button>
             </div>
             <div className="h-full w-85p mx-auto flex flex-col">
-                <div className="relative h-10p w-full mx-auto mt-1">
-                    <Button 
-                    sx={{
-                        fontFamily: 'GrapeNuts',
+                <div className="relative h-10p w-full mx-auto mt-4">
+                    <button 
+                    style={{
+                        fontFamily: 'silkscreen',
                         color: 'black'
                     }}
-                    className="absolute  w-auto left-0"
-                    onClick={handleOnClickAddDungeons}>Post a Dungeon</Button>
+                    className="absolute  w-auto left-0 border border-deepPink py-1 px-2 rounded-md bg-deepPink hover:bg-turqoiseGreen hover:border-turqoiseGreen"
+                    onClick={handleOnClickAddDungeons}>Post a Dungeon</button>
                 </div>
                 <div className={`relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden ${onAddDungeon ? 'z-0' : 'z-50'}`}>
                     <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleClickAbandon} />

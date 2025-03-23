@@ -4,6 +4,7 @@ import CountdownClock from "../../CountdownClock/CountdownClock";
 import { AuthContext } from "../../../contexts/authContext";
 import config from '../../../config/config.json';
 import ExplorationEndPage from "./ExplorationEndPage";
+import { toast, ToastContainer } from "react-toastify";
 
 const Exploration = ({ details, handleExitExploration }) => {
     const [timer, setTimer] = useState(details.duration * 60);
@@ -40,12 +41,12 @@ const Exploration = ({ details, handleExitExploration }) => {
                     updateUserFocusTimeStats(true);
                     return;
                 }
-                throw new Error("Unauthorized");
+                toast.error('An error has occured. Your focus session may not have been recorded. Please try logging out and in again.')
             }
 
             //need to include end screen
         }catch(err){
-            console.log("an error has occured: ", err);
+            toast.error('An error has occured. Your focus session may not have been recorded. Please contact an administrator for help.')
         }
     }
 
@@ -64,6 +65,7 @@ const Exploration = ({ details, handleExitExploration }) => {
 
     return(
         <div className="fixed inset-0 bg-black z-50 flex justify-center items-center font-silkscreen text-white">
+            <ToastContainer />
             <div className="h-full w-3/4 flex justify-center items-center font-tiny5 text-9xl">
                 <CountdownClock startTime={timer} setRemainingTime={setTimeLeft} />
             </div>

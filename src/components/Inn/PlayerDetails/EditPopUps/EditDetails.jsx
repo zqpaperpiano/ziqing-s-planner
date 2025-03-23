@@ -3,11 +3,14 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../../contexts/authContext";
 import config from '../../../../config/config.json';
 import { auth } from "../../../../config/firebase";
+import LoadingScreen from "../../../LoadingScreen/LoadingScreen";
+import { toast, ToastContainer } from "react-toastify";
 
 const EditDetails = ({handleClose}) => {
     const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
     const [displayName, setDisplayName] = useState(player.name);
     const [status, setStatus] = useState(player.status);
+    const [loading, setLoading] = useState(false);
 
     const handleEditDisplayName = (e) => {
         setDisplayName(e.target.value);
@@ -19,6 +22,7 @@ const EditDetails = ({handleClose}) => {
 
     const onClickSave = async (retry) => {
         try{
+            setLoading(true);
             const resp = await fetch(`${config.development.apiURL}users/updateDisplayInfo`,{
                 method: 'POST',
                 credentials: 'include',
@@ -38,22 +42,27 @@ const EditDetails = ({handleClose}) => {
                     onClickSave(true);
                     return;
                 }else{
-                    throw new Error('Unauthorized');
+                    setLoading(false);
+                    toast.error('An error has occured. Please try logging out and in again.');
                 }
             }
 
             if(resp.ok){
                 const data = await resp.json();
                 setPlayer(data);
+                setLoading(false);
                 handleClose();
             }
         }catch(err){
-            console.log('an error has occured: ', err);
+            setLoading(false);
+            toast.error('An error has occured. Please try again later.');
         }
     }
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+            <ToastContainer />
+            {loading && <LoadingScreen />}
             <div className="relative h-2/3 w-1/3 bg-white flex flex-col items-center  gap-2 z-50 p-2">
                 <div className="h-fit w-full ">
                     <p className="font-silkscreen text-l text-center">Edit Profile Details</p>

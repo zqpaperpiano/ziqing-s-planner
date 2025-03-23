@@ -11,6 +11,8 @@ import CategoryBar from "./Components/CategoryBar";
 import { AuthContext } from "../../../../contexts/authContext";
 import { auth } from "../../../../config/firebase";
 import DeleteConfirmation from "../../../DeleteConfirmation/DeleteConfirmation";
+import LoadingScreen from "../../../LoadingScreen/LoadingScreen";
+import { toast, ToastContainer } from "react-toastify";
 
 const EditCat = ({ onClose }) => {
     const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
@@ -18,6 +20,7 @@ const EditCat = ({ onClose }) => {
     const [tempList, setTempList] = useState(player?.preferences?.categories);
     const [clickedDelete, setClickedDelete] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const onChangeColor = (color, key) => {
         setTempList((prevList) => ({
@@ -42,6 +45,7 @@ const EditCat = ({ onClose }) => {
 
     const onSaveChanges = async (retry) => {
         try{
+            setLoading(true);
             const resp = await fetch(`${config.development.apiURL}users/updateUserEventCategories`, {
                 method: 'POST',
                 credentials: 'include',
@@ -60,7 +64,8 @@ const EditCat = ({ onClose }) => {
                     onSaveChanges(true);
                     return;
                 }else{
-                    throw new Error('Unauthorized');
+                    setLoading(false);
+                    toast.error("An error has occured. Please try logging out and back in again. ")
                 }
                 
             }
@@ -68,12 +73,14 @@ const EditCat = ({ onClose }) => {
             if(resp.ok){
                 const data = await resp.json();
                 setPlayer(data);
+                setLoading(false);
                 onClose();
             }
 
             
         }catch(err){
-            console.log('an error has occured: ', err);
+            setLoading(false);
+            toast.error('An error has occured. Please try again later.')
         }
     }
 
@@ -111,6 +118,10 @@ const EditCat = ({ onClose }) => {
 
     return(
         <div className="fixed inset-0 bg-black z-40 bg-opacity-30 backdrop-blur-sm flex items-center justify-center">
+            <ToastContainer />
+            {
+                loading && <LoadingScreen />
+            }
             {
                 !player?.preferences?.categories || player?.preferences?.categories === "" ?
                 <div className="h-screen w-screen flex items-center justify-center">

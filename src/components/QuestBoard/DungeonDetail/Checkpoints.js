@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 
-const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick }) => {
+const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick, theme }) => {
     const bColor = btnColor || 'primary'
     const [checkpointList, setCheckpointList] = useState(checkpoints);
     const location = useLocation();
@@ -88,12 +88,12 @@ const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick }) => 
     };
 
     return (
-        <div className="w-full flex flex-col items-center justify-center">
+        <div className={`w-full flex flex-col ${theme === 'pixel' ? 'items-center justify-center' : 'items-start'}`}>
             <ToastContainer />
             {checkpointList && checkpointList.map((checkpoint, index) => {
                 const checked = Object.values(checkpoint)[0].completion ?? false; // Ensure a boolean value for checked
                 return (
-                    <form key={index} className="flex items-center justify-center w-full gap-2">
+                    <form key={index} className={`flex ${theme === 'pixel' && ' justify-center'} items-center w-full gap-2`}>
                         <Checkbox
                             sx={{
                                 color: 'gray',
@@ -105,6 +105,7 @@ const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick }) => 
                             onChange={(e) => { handleCheckboxCheckChange(e, index) }}
                         />
                         <DynamicInputBox
+                            theme={theme}
                             index={index}
                             handleChange={handleCheckpointNameChange}
                             value={Object.values(checkpoint)[0].checkpointName}
@@ -128,7 +129,7 @@ const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick }) => 
             <Button
                 onClick={handleAddCheckpoint}
                 sx={{
-                    fontFamily: 'silkscreen',
+                    fontFamily: theme === 'retro' ? 'source-code-pro' : 'Silkscreen',
                     color: bColor,
                 }}>Add Checkpoint</Button>
         </div>

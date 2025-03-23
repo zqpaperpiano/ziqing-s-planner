@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { UserStatContext } from "../../../contexts/userStatContext";
 import config from '../../../config/config.json';
 import { AuthContext } from "../../../contexts/authContext";
+import { ToastContainer, toast } from "react-toastify";
 
 const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
     const { userStats, setUserStats, difficultyModifier } = useContext(UserStatContext);
@@ -95,7 +96,6 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
 
     const handleUserStatChanges = async(updates, retry) => {
         try{
-            console.log('hello')
             const resp = await fetch(`${config.development.apiURL}userStats/update`, {
                 method: 'POST', 
                 credentials: 'include', 
@@ -113,7 +113,7 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
                     handleUserStatChanges(updates, true);
                     return;
                 }
-                throw new Error('Unauthorized');
+                toast.error('There is something wrong with the server. Please try logging out and in again.')
             }
 
             if(resp.ok){
@@ -122,7 +122,7 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
             }
             
         }catch(err){
-            console.log('an error has occured: ', err);
+            toast.error('An error has occured. Please try again later.')
         }
     }
 
@@ -130,8 +130,11 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
 
 
 
+
+
     return(
         <div className="inset-0 fixed bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
+            <ToastContainer />
             <div className="relative bg-bgPink w-2/5 h-2/3 rounded-lg">
 
                 <div className="bg-deepPink w-full rounded-t-lg flex items-center px-2 text-black" style={{height: '12%', fontFamily: 'source-code-pro'}}>
