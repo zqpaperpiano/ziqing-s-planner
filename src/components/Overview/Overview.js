@@ -11,6 +11,7 @@ import BraindumpTab from './components/BraindumpTab';
 import TabBar from './components/TabBar';
 import {SmileIcon, MehIcon, FrownIcon } from 'raster-react'
 import { ToastContainer, toast } from 'react-toastify';
+import DeadlineView from './components/DeadlineView';
 
 const Overview = () => {
   const [offset, SetOffset] = useState(0);
@@ -28,7 +29,7 @@ const Overview = () => {
 
   const expBarWidth = useMemo(() => {
       return `${(userStats.xp / userStats.toNextLevel) * 100}%`;
-  }, [userStats.xp])
+  }, [userStats])
 
   const validSchedule = useMemo(() => {
     if(eventList.length > 0){
@@ -58,6 +59,14 @@ const Overview = () => {
       }
     })
   }, [startDate])
+
+  const deadlineList = useMemo(() => {
+    if(eventList.length > 0){
+      const sortedList = eventList.filter((event) =>  event.type === 'deadline')
+      return sortedList
+    }
+    
+  }, [eventList])
 
 
 
@@ -325,7 +334,7 @@ const Overview = () => {
                 <div className="mt-2 flex justify-center items-center">
                   {
                     validSchedule && validSchedule.length > 0 &&
-                    <p className="text-slate-400">End of Schedule</p> 
+                    <p className="text-slate-400 text-sm">End of Schedule</p> 
                   }
                 </div>
                 </div>
@@ -345,8 +354,8 @@ const Overview = () => {
           className='h-1/3 w-full p-2 rounded-lg '>
               <div className="h-full w-full font-silkscreen flex flex-col gap-2 justify-center items-center">
                 <p className="text-xl">Adventurer Level {userStats.level}</p>
-                <div className="h-2 w-2/3 bg-white rounded-lg p-2">
-                  <div className="h-1 bg-white rounded-lg" style={{width: expBarWidth}}>
+                <div className="h-2 w-2/3 bg-white rounded-lg p-2 flex items-center">
+                  <div className="h-2 bg-deepPink rounded-lg" style={{width: expBarWidth}}>
                   </div>  
                 </div>
               </div>
@@ -406,6 +415,16 @@ const Overview = () => {
 
           <div className="h-3/4 w-full p-2 rounded-lg bg-deepPink flex flex-col font-silkscreen justify-between">
              <p>Deadlines: </p>
+             <div className="h-full w-full rounded-lg bg-bgPink p-2">
+                {
+                  deadlineList && deadlineList.length > 0 ?
+                  deadlineList.map((event) => {
+                    return <DeadlineView key={event.eventId} event={event}/>
+                  }) :
+                  <p className="text-center">No upcoming deadlines</p>
+                }
+                <p className="text-slate-400 text-center text-sm">No other upcoming deadlines</p>
+             </div>
              
           </div>
       </div>
