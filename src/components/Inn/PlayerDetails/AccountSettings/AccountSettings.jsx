@@ -1,8 +1,9 @@
 import { IconButton, InputAdornment, InputLabel, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
+import { AuthContext } from "../../../../contexts/authContext";
 
 
 const AccountSettings = () => {
@@ -10,6 +11,9 @@ const AccountSettings = () => {
     const [showCurrPassword, setShowCurrPassword] = useState(false);
     const [newPassword, setNewPassword] = useState("");
     const [currPassword, setCurrPassword] = useState("");
+    const { player } = useContext(AuthContext);
+
+    console.log(player);
 
     const onChangeNewPassword = (e) => {
         setNewPassword(e.target.value);
@@ -37,23 +41,23 @@ const AccountSettings = () => {
 
 
     return(
-        <div className="h-full w-85p mx-auto">
-            <h1 className="text-3xl font-bold">Account Settings</h1>
+        <div className="h-full w-85p mx-auto px-4 py-2" style={{fontFamily: 'Silkscreen'}}>
+            <h1 className="text-3xl">Account Settings</h1>
 
-            <div>
-                <h3 className="text-xl font-bold">Email Address</h3>
+            <div className="flex-1 flex-col gap-2 mt-4">
+                <h3 className="text-xl  ">Email Address</h3>
                 <div className="flex">
-                    <p>insert email address here</p>
+                    <p className="font-tiny5">{player.email}</p>
                     <p className="text-sky-600 hover:underline hover:decoration-sky-400 hover:cursor-pointer hover:text-sky-400"> Change </p>
                 </div>
             </div>
 
-            <div className="w-full">
-                <h3 className="text-xl font-bold">Password</h3>
+            <div className="w-full flex-1 flex flex-col gap-2 mt-4">
+                <h3 className="text-xl  ">Password</h3>
 
                 <div className="flex w-85p gap-4">
                     <div className="flex flex-col">
-                        <InputLabel >New Password</InputLabel>
+                        <InputLabel sx={{fontFamily: 'source-code-pro'}}>New Password</InputLabel>
                         <TextField variant="outlined" size="small"
                             type={showNewPassword ? "text" : "password"}
                             slotProps={{
@@ -72,7 +76,7 @@ const AccountSettings = () => {
                     </div>
 
                     <div className="flex flex-col">
-                    <InputLabel >Current Password</InputLabel>
+                    <InputLabel sx={{fontFamily: 'source-code-pro'}}>Current Password</InputLabel>
                     <TextField variant="outlined" size="small"
                             type={showCurrPassword ? "text" : "password"}
                             slotProps={{
@@ -101,7 +105,7 @@ const AccountSettings = () => {
             </div>
 
             <div>
-                <h3 className="font-bold text-xl">Delete Account</h3>
+                <h3 className=" flex-1 text-xl">Delete Account</h3>
                 <p className="text-s">Are you sure you would like to delete your account?</p>
                 <p className="text-xs">
                     This account contains number of dungeons, of which number have been cleared. 

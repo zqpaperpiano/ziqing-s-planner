@@ -49,12 +49,12 @@ const PlayerDetails = () => {
                         >
                         <p className="text-xs bs:text-m">Stats</p>
                     </div> */}
-                    <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
+                    {/* <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 hover:cursor-pointer hover:bg-turqoiseGreen
                         ${selectedPage === 'Account Settings' ? "bg-darkPink" : null}`}
                         onClick={() => {handleClickedAccountSettings()}}
                         >
                         <p className="text-xs bs:text-m">Account settings</p>
-                    </div>
+                    </div> */}
                     <div className={`my-2 rounded w-85p h-auto mx-auto p-0 bs:p-1 text-red-500 hover:cursor-pointer hover:bg-turqoiseGreen
                         `}
                         onClick={handleOnClickLogout}

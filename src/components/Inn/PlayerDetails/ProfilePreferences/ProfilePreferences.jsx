@@ -94,7 +94,10 @@ const ProfilePreferences = () => {
                         className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Routine</p>
                     </div>
                     <div className="h-90p w-full rounded-lg border-darkPink border-2 flex">
-                        {
+                    <div className="h-full w-full bg-black rounded-lg flex justify-center items-center">
+                            <p className="font-silkscreen font-5xl text-white text-center">Not available yet!</p>
+                        </div>
+                        {/* {
                             player?.preferences?.hasSchedule ?
                             <div className='h-full w-full flex'>
                             <div className="h-full w-fit grid grid-rows-7 border-r-darkPink border-r-2 text-start p-1 gap-2 items-center ">
@@ -119,7 +122,7 @@ const ProfilePreferences = () => {
                         <div className="h-full w-full bg-black rounded-lg flex justify-center items-center">
                             <p className="font-silkscreen font-5xl text-white text-center">No routine set</p>
                         </div>
-                        }
+                        } */}
                     </div>
                 </div>
                 <div className="h-1/2 w-full p-2 flex">
@@ -160,7 +163,10 @@ const ProfilePreferences = () => {
                             className="text-xs text-sky-500 absolute right-0 underline hover:cursor-pointer hover:text-sky-500">Edit Salary</p>
                         </div>
                         <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-center items-center">
-                            {
+                        <div className="h-full w-full bg-black rounded-lg flex justify-center items-center">
+                                    <p className="font-silkscreen font-5xl text-white text-center">Not available yet!</p>
+                                </div>
+                            {/* {
                                 player?.preferences?.hasSalary ?
                                 <div className="h-full w-full flex items-center justify-center">
                                     <div className="h-full w-1/2 p-2 flex items-center justify-center">
@@ -181,7 +187,7 @@ const ProfilePreferences = () => {
                                 <div className="h-full w-full bg-black rounded-lg flex justify-center items-center">
                                     <p className="font-silkscreen font-5xl text-white text-center">No salary set</p>
                                 </div>
-                            }
+                            } */}
                         </div>
                     </div>
                 </div>
