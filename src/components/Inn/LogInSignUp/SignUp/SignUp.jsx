@@ -1,15 +1,103 @@
 import { Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { LockKeyhole, Mail, User } from 'lucide-react'
-import Facebook from '../../../../images/facebook-app-symbol.png';
 import Google from '../../../../images/google-plus.png';
-import Github from '../../../../images/github.png';
-import { ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router";
+import { AuthContext } from "../../../../contexts/authContext";
+import { browserLocalPersistence, deleteUser, setPersistence } from "firebase/auth";
+import config from '../../../../config/config.json';
+import { auth, signUpWEmail, signUpWithGPopUp } from "../../../../config/firebase";
+import { toast, ToastContainer } from "react-toastify";
 
-const SignUp  = () => {
+const SignUp  = ({onSignUp, logGUser, invalidEmail, emptyFields, repeatedEmail, invalidPassword, setLoading}) => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
+    const { signIn } = useContext(AuthContext);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+            if (event.key === 'Enter' && onSignUp){
+                handleSubmitButton();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        }
+    }, [onSignUp, userName, userEmail, userPassword])
+
+    
+
+
+    const verifyUserToken = (token, email, name) => {
+        setLoading(true);
+        fetch(`${config.development.apiURL}users/new-user`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                name: name,
+                token: token
+            })
+        })
+        .then(async (res) => {
+            if(res.status !== 201){
+                const errTxt = await res.text();
+
+                //rollback
+                if(auth.currentUser){
+                    
+                    await deleteUser(auth.currentUser)
+                    .then(() => {
+                        toast.error('An error has occured. Please try again or contact an administrator if the issue persists.');
+                    })
+
+                    .catch((err) => {console.log('Rollback met an issue: ', err)});
+
+                    
+                }
+
+                throw new Error(`Error ${res.status}`, errTxt);
+            }
+            return res.json();
+        })
+        .then((data) => {
+            signIn(data);
+            setUserEmail("");
+            setUserPassword("");
+            setUserName("");
+            return navigate('/');
+            // return navigate('/newPlayer');
+        })
+        .catch((err) => {
+            console.log('Failed: ',err)
+        })
+    }
+
+    //uid taken directly from user object in backend
+    const logEmailUser = async () => {
+        try{
+            await setPersistence(auth, browserLocalPersistence);
+            const resp = await signUpWEmail(userEmail, userPassword);
+            const respID = await resp.user.getIdToken();
+
+            verifyUserToken(respID, userEmail, userName);
+        }catch(err){
+            if(err.code === "auth/email-already-in-use"){
+                repeatedEmail();
+            }else{
+                console.log(err);
+            }
+        }
+    }
 
     const handleNameChange = (e) => {
         setUserName(e.target.value);
@@ -23,21 +111,21 @@ const SignUp  = () => {
         setUserPassword(e.target.value);
     }
 
-    const handleSubmitButton = () => {
-        if(userName !== "" && userEmail !== "" && userPassword !== ""){
-            if(userPassword.length >= 6){
-                const userAcc = {
-                    //userID is sequential given by postgres
-                    "userEmail": userEmail,
-                    "userName": userName,
-                    "userPassword": userPassword
-                }
-                //post to database
+    const validateEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
 
-                //log user in by passing user information back to state
-            }else{
-                console.log('insert toast error here');
-            }
+    const handleSubmitButton = () => {
+        if(userName === "" || userEmail === "" || userPassword === ""){
+            console.log('here in signup');
+            emptyFields();
+        }else if(!validateEmail(userEmail)){
+            invalidEmail();
+        }else if(userPassword.length < 6){
+            invalidPassword();
+        }else{
+            logEmailUser(userEmail, userPassword);
         }
     }
 
@@ -46,28 +134,19 @@ const SignUp  = () => {
     return(
         <div className="absolute h-full w-full flex right-0 rounded">
             <div className="h-full w-full flex flex-col items-center justify-center">
-                <ToastContainer />
-                <h1 className="header font-bold">Create Account</h1>
-                <div className="mt-2 h-10 w-60 flex justify-evenly">
-                    <div 
-                    className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                        border border-black border-2 hover:cursor-pointer hover:scale-105
-                        ">
-                        <img src={Facebook} className="absolute h-4"/>
-                    </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full
-                     border border-black border-2 hover:cursor-pointer hover:scale-105
-                     ">
-                        <img src={Google} className="absolute h-4"/>
-                    </div>
-                    <div className="relative h-8 w-8 flex items-center justify-center rounded-full 
-                    border border-black border-2 hover:cursor-pointer hover:scale-105
-                    ">
-                        <img src={Github} className="absolute h-4"/>
+                <div className="w-fit">
+                    <h1 className="header font-bold text-center">Create Account</h1>
+                    <div className="mt-2 h-10 w-full rounded-lg border border-black p-2 flex justify-between px-4 items-center hover:cursor-pointer hover:bg-sky-100">
+                        <div className="h-full aspect-square">
+                            <img src={Google} className="h-full w-full cover-fit" />
+                        </div>
+                        <p 
+                    onClick={logGUser}
+                    className="text-sm font-bold">Continue with Google</p>
                     </div>
 
                 </div>
-                <p className="my-0 h-6"> Or use your email for registration </p>
+                <p className="mt-2 h-6 text-center mb-2 bs:b-0"> Or use your email for registration </p>
                 <div className="h-50p w-85p flex flex-col items-center">
                     <form>
                         <div className="h-8 mt-2 relative flex flex-row items-center">
@@ -121,17 +200,15 @@ const SignUp  = () => {
                         </div>
                         <div className="flex items-center justify-center mt-4">
                             <Button
+                                onClick={handleSubmitButton}
                                 className="hover:cursor-pointer"
                                 sx={{color: 'deepPink', borderColor: 'deepPink'}}
                                 variant="outlined"
-                            > Sign Up </Button>
+                            > Sign Up </Button> 
                         </div>
-
                     </form>
                 </div>
             </div>
-
-
         </div>
     );
 }

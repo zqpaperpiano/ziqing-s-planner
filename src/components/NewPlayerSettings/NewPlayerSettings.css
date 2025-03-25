@@ -1,0 +1,25 @@
+@keyframes zoom-in{
+    0%{
+        transform: scale(1);
+        opacity: 1;
+    }
+    100%{
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+.backgrounds {
+    background-image: url("https://i.pinimg.com/736x/f1/32/d1/f132d1696d40df8cb4a762d63dc80bc6.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.number{
+    transition:transform 0.3s ease-in-out
+}
+
+.flip{
+    transform: rotateX(180deg);
+}

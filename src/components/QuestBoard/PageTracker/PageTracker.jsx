@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Sakura from '../../../images/sakura.png';
 import { useNavigate } from "react-router";
 
 const PageTracker = ({ maxPages, currPage }) => {
@@ -7,10 +6,8 @@ const PageTracker = ({ maxPages, currPage }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('no of max pages received:', maxPages);
         let tempArr = []
         for(let i = 0; i < maxPages; ++i){
-            console.log(i);
             if(i===(currPage - 1)){
                 tempArr.push({[i] :true});
             }else{
@@ -20,12 +17,8 @@ const PageTracker = ({ maxPages, currPage }) => {
         setTracking(tempArr);
     }, [maxPages])
 
-    useEffect(() => {
-        console.log(tracking);
-    }, [tracking])
-
     const handleClickedNavigator = (num) => {
-        navigate(`/quest-board/quest-page/${num}`)
+        navigate(`/dungeon-board/${num}`)
     }
 
     return(

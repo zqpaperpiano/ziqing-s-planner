@@ -1,0 +1,5 @@
+{
+    "development": {
+        "apiURL": "https://zqpaperpianos-cozy-planner-api.onrender.com/"
+    }
+}

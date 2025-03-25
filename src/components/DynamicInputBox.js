@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
-const DynamicInputBox = ({ placeholderText, handleChange, index }) => {
+const DynamicInputBox = ({ value, handleChange, index, cancel, theme }) => {
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
 
@@ -13,7 +13,7 @@ const DynamicInputBox = ({ placeholderText, handleChange, index }) => {
     }, []);
 
     const handleInputChange = (e) => {
-
+        
         if(e.target.value !== ""){
             const newWidth = Math.min(
                 inputRef.current.scrollWidth + 2,
@@ -31,12 +31,15 @@ const DynamicInputBox = ({ placeholderText, handleChange, index }) => {
             ref={inputRef}
             type="text"
             onChange={handleInputChange}
-            placeholder={placeholderText}
+            value={value}
             style={{
+                fontFamily: theme === 'retro' ? 'source-code-pro' : 'PatrickHand',
                 width: inputWidth,
                 maxWidth: maxInputWidth,
+                textDecoration: cancel ? "line-through" : "none", 
+                
             }}
-            className="border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
+            className={`py-0.5 px-2 ${theme === 'retro' ? 'border-black border border-1' : ' border-b-2 border-gray-300 rounded-lg  focus:outline-none focus:border-blue-500'} ${cancel ? "bg-[#e0e0e0]": "bg-white"}`}
         />
     );
 };
