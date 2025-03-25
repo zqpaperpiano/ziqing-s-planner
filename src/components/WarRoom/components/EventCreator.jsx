@@ -1,16 +1,14 @@
-import { Button, FormControl, InputLabel, ListItem, MenuItem, Select, TextField } from "@mui/material";
+import { MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import React, { useContext, useState, useEffect } from "react";
-import { X } from 'lucide-react';
 import DungeonSelector from "../../DungeonSelector/DungeonSelector";
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { ToastContainer, toast } from 'react-toastify';
 import { EventContext } from "../../../contexts/EventContext";
 import { AuthContext } from "../../../contexts/authContext";
 import { auth } from "../../../config/firebase";
 import config from '../../../config/config.json';
-import dayjs, { isDayjs } from "dayjs";
+import dayjs from "dayjs";
 import DeleteConfirmation from "../../DeleteConfirmation/DeleteConfirmation";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { XIcon } from "raster-react";
@@ -19,7 +17,7 @@ import EventTasks from "./EventTasks";
 import { DeleteIcon } from "raster-react";
 import LoadingScreen from "../../LoadingScreen/LoadingScreen";
 
-const EventCreator = ({ time, hasEvent}) => {
+const EventCreator = ({}) => {
     const location = useLocation();
     const { eventList, setEventList, eventMap} = useContext(EventContext);
     const { eventId } = useParams();
@@ -36,7 +34,7 @@ const EventCreator = ({ time, hasEvent}) => {
     const [eventDescription, setEventDescription] = useState(event?.description || "");
     const [eventToDos, setEventToDos] = useState(event?.toDos || {"td1": {title: "", completed: false}});
     
-    const { player, tokenRefresh } = useContext(AuthContext);
+    const { player, tokenRefresh, logOut } = useContext(AuthContext);
     const categories = player?.preferences?.categories || [];
     const [dungeon, setDungeon] = useState(event?.dungeon || null);
     const [deleteEvent, setDeleteEvent] = useState(false);
@@ -53,6 +51,23 @@ const EventCreator = ({ time, hasEvent}) => {
     const [selectedRepeatEnd, setSelectedRepeatEnd] = useState(null);
 
     const [loading, setLoading] = useState(false);
+
+        useEffect(() =>{
+            let timeoutId;
+    
+            if(loading){
+                timeoutId = setTimeout(() => {
+                    toast.error('An error has occured. Please try logging in again.');
+                    logOut();
+                }, 60000)
+            }
+    
+            return () => {
+                if(timeoutId){
+                    clearTimeout(timeoutId);
+                }
+            }
+        }, [loading])
 
     useEffect(() => {
         if(eventRepeat === 'day'){

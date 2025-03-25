@@ -1,5 +1,5 @@
 import { TextField, Button } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../../../contexts/authContext";
 import config from '../../../../config/config.json';
 import { auth } from "../../../../config/firebase";
@@ -7,10 +7,27 @@ import LoadingScreen from "../../../LoadingScreen/LoadingScreen";
 import { toast, ToastContainer } from "react-toastify";
 
 const EditDetails = ({handleClose}) => {
-    const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
+    const { player, setPlayer, tokenRefresh, logOut } = useContext(AuthContext);
     const [displayName, setDisplayName] = useState(player.name);
     const [status, setStatus] = useState(player.status);
     const [loading, setLoading] = useState(false);
+
+        useEffect(() =>{
+            let timeoutId;
+    
+            if(loading){
+                timeoutId = setTimeout(() => {
+                    toast.error('An error has occured. Please try logging in again.');
+                    logOut();
+                }, 60000)
+            }
+    
+            return () => {
+                if(timeoutId){
+                    clearTimeout(timeoutId);
+                }
+            }
+        }, [loading])
 
     const handleEditDisplayName = (e) => {
         setDisplayName(e.target.value);

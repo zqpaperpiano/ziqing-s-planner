@@ -64,11 +64,11 @@ const WarRoom = () => {
 
             {   
                 creatingEvent &&
-                <EventCreator toggleCreatingEvent={toggleCreatingEvent} time={time} hasEvent={false}/>
+                <EventCreator />
             }
             {
                 selectedEvent &&
-                <EventCreator event={selectedEvent} time={time} toggleCreatingEvent={toggleSelectEvent} hasEvent={true}/>
+                <EventCreator />
             }
 
 

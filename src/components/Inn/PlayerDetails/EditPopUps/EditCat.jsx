@@ -1,11 +1,6 @@
 import { Button, CircularProgress} from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import { X } from "lucide-react";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import config from "../../../../config/config.json";
 import CategoryBar from "./Components/CategoryBar";
 import { AuthContext } from "../../../../contexts/authContext";
@@ -15,12 +10,28 @@ import LoadingScreen from "../../../LoadingScreen/LoadingScreen";
 import { toast, ToastContainer } from "react-toastify";
 
 const EditCat = ({ onClose }) => {
-    const { player, setPlayer, tokenRefresh } = useContext(AuthContext);
-    const [currInput, setCurrInput] = useState(null);
+    const { player, setPlayer, tokenRefresh, logOut } = useContext(AuthContext);
     const [tempList, setTempList] = useState(player?.preferences?.categories);
     const [clickedDelete, setClickedDelete] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() =>{
+        let timeoutId;
+
+        if(loading){
+            timeoutId = setTimeout(() => {
+                toast.error('An error has occured. Please try logging in again.');
+                logOut();
+            }, 60000)
+        }
+
+        return () => {
+            if(timeoutId){
+                clearTimeout(timeoutId);
+            }
+        }
+    }, [loading])
 
     const onChangeColor = (color, key) => {
         setTempList((prevList) => ({

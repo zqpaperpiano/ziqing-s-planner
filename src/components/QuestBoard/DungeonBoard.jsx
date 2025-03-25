@@ -22,10 +22,27 @@ const DungeonBoard = () => {
     const {dungeonList, setDungeonList} = useContext(DungeonContext);
     const [maxPages, setMaxPages] = useState(1);
     const [dungeonPp, setDungeonPp] = useState(3);
-    const { tokenRefresh } = useContext(AuthContext);
+    const { tokenRefresh, logOut } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+
+        useEffect(() =>{
+            let timeoutId;
+    
+            if(loading){
+                timeoutId = setTimeout(() => {
+                    toast.error('An error has occured. Please try logging in again.');
+                    logOut();
+                }, 60000)
+            }
+    
+            return () => {
+                if(timeoutId){
+                    clearTimeout(timeoutId);
+                }
+            }
+        }, [loading])
 
     useEffect(() => {
         const updateDungeonPp = () => {

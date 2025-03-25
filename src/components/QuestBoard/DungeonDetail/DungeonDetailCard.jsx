@@ -23,10 +23,27 @@ const DungeonDetailCard = () => {
     const nameRef = useRef(null);
     const descriptionRef = useRef(null);
     const navigate = useNavigate(); 
-    const { tokenRefresh } = useContext(AuthContext);
+    const { tokenRefresh, logOut } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [menuPos, setMenuPos] = useState({x: 0, y: 0});
+
+        useEffect(() =>{
+            let timeoutId;
+    
+            if(loading){
+                timeoutId = setTimeout(() => {
+                    toast.error('An error has occured. Please try logging in again.');
+                    logOut();
+                }, 60000)
+            }
+    
+            return () => {
+                if(timeoutId){
+                    clearTimeout(timeoutId);
+                }
+            }
+        }, [loading])
 
     //auto focus onto input box for dungeonName
     useEffect(() => {

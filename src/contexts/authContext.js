@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem('player');  
             localStorage.removeItem('eventList');
             localStorage.removeItem('userStats');
+            // localStorage.removeItem('moodDiary');
         }catch(err){
             console.log("an error occured when logging out");
         }
