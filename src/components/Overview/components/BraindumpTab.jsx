@@ -67,7 +67,7 @@ const BraindumpTab = ({tab, onAddTabs, onDeleteTabs, onMinimiseTabs, onChangeNam
         <div 
         style={{position: 'absolute', top: `${position.y}px`, left: `${position.x}px`, height: givenHeight ? `${givenHeight}px` : '100%', // If givenHeight exists, set height to givenHeight, otherwise 100%
         width: givenWidth ? `${givenWidth}px` : '100%'}}
-        className={`bg-bgPink rounded-lg ${!givenHeight ? 'h-full' : `h-[${givenHeight}px]`} ${!givenWidth ? 'w-full' : `w-[${givenWidth}px]`}`}>
+        className={`bg-bgPink rounded-lg z-50 ${!givenHeight ? 'h-full' : `h-[${givenHeight}px]`} ${!givenWidth ? 'w-full' : `w-[${givenWidth}px]`}`}>
 
             {
                 clickClose &&

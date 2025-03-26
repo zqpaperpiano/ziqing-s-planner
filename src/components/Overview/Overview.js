@@ -368,7 +368,7 @@ const Overview = () => {
           className="h-2/3 w-full px-4 pt-4 pb-2 rounded-lg bg-darkPink flex flex-col font-silkscreen justify-between">
             <div 
             ref={constraintDiv}
-            className="h-90p w-full relative">
+            className="h-90p w-full relative z-50">
               {
                 Object.entries(openTabList).map((braindump) => {
                   return <BraindumpTab tab={braindump} key={braindump[0]}  onAddTabs={onAddTabs} onDeleteTabs={onDeleteTabs}
@@ -398,7 +398,7 @@ const Overview = () => {
               <MoodDiary />
           </div>
 
-          <div className="h-3/4 w-full p-2 rounded-lg bg-deepPink flex flex-col font-silkscreen justify-between">
+          <div className="h-3/4 w-full p-2 rounded-lg bg-deepPink flex flex-col font-silkscreen justify-between z-30">
              <p>Deadlines: </p>
              <div className="h-full w-full rounded-lg bg-bgPink p-2">
                 {
