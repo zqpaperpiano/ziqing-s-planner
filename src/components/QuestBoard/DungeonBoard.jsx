@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect, useContext, useMemo} from "react";
 import Button from '@mui/material/Button';
 import DungeonDetailInput from "./DungeonDetail/DungeonDetailInput";
 import { DungeonContext } from "../../contexts/DungeonContext";
@@ -26,6 +26,20 @@ const DungeonBoard = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+    const backButton = useMemo(() => {
+        if(page > 1){
+            return true;
+        }else{
+            return false;
+        }
+    }, [page])
+    const forwardButton = useMemo(() => {
+        if(maxPages > 1 && page < maxPages){
+            return true;
+        }else{
+            return false;
+        }
+    }, [maxPages, page])
 
         useEffect(() =>{
             let timeoutId;
@@ -199,11 +213,15 @@ const DungeonBoard = () => {
         <div className={`h-full w-full flex ${onAddDungeon} ? 'z-0' : 'z-50'`}>
             {loading && <LoadingScreen />}
             <ToastContainer />
-            <div className="flex items-center justify-center mx-auto">
-                <Button
-                onClick={() => {handleClickBack()}}
-                ><StepBack /></Button>
-            </div>
+            {
+                backButton &&
+                <div className="flex items-center justify-center mx-auto">
+                    <Button
+                    onClick={() => {handleClickBack()}}
+                    
+                    ><StepBack /></Button>
+                </div>
+            }
             <div className="h-full w-85p mx-auto flex flex-col">
                 <div className="relative h-10p w-full mx-auto mt-4">
                     <button 
@@ -222,11 +240,14 @@ const DungeonBoard = () => {
                     <PageTracker maxPages={maxPages} currPage={page}/>
                 </div>
             </div>
+           {
+            forwardButton &&
             <div className="flex items-center justify-center mx-auto">
                 <Button
                 onClick={() => {handleClickNext()}}
                 ><StepForward /></Button>
             </div>
+           }
             <ToastContainer />
             { onAddDungeon &&
                 <DungeonDetailInput
