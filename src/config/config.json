@@ -1,5 +1,5 @@
 {
     "development": {
-        "apiURL": "http://localhost:3001/"
+        "apiURL": "https://zqpaperpianos-cozy-planner-api.onrender.com/"
     }
 }
