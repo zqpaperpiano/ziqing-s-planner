@@ -19,13 +19,13 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
     const [dungeonDetails, setDungeonDetails] = useState({
                                                     dungeonName: '',
                                                     dungeonDescription: '',
-                                                    color: {'#e9ebed': '#d6cdd0 '},
+                                                    color: {'#d6cdd0': '#b8a9b1'},
                                                     dungeonCheckpoints: checkpointList,
                                                     completionProgress: 0,
                                                     dungeonCompleted: false
                                                 });
                                             
-    const colors =[{'#e9ebed': '#d6cdd0 '}, {'#A3B9FF': '#5C7FDB'}, {'#A4F1C3': '#6CCB96'}, {'#C4A8FF': '#8C6FD7'}, {'#FFD8B5': '#FF9C69'}, {'#B7D8FF ' : '#6DB6F4 '}]
+    const colors =[{'#d6cdd0': '#b8a9b1'}, {'#FF6F61 ': '#E54B47'}, {'#B4A6D9 ': '#8A7BB6'}, {'#FFB79B ': '#F09A81'}, {'#A8E6CF ': '#7FBFA5'}, {'#8ED1D3' : '#6DA9A7'}]
 
     //when there is a change in the checkpoint list, change quest details as well
     useEffect(() => {
