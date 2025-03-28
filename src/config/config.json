@@ -1,5 +1,5 @@
 {
     "development": {
-        "apiURL": "http://localhost:30012/"
+        "apiURL": "http://localhost:3001/"
     }
 }
