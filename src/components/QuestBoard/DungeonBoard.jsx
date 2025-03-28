@@ -46,7 +46,9 @@ const DungeonBoard = () => {
     
             if(loading){
                 timeoutId = setTimeout(() => {
-                    toast.error('An error has occured. Please try logging in again.');
+                    const toastId = 'dungeon-board-error-time-out'
+                    if(!toast.isActive(toastId)) 
+                    toast.error('An error has occured. Please try logging in again.', {toastId});
                     logOut();
                 }, 60000)
             }
@@ -109,7 +111,9 @@ const DungeonBoard = () => {
                     return;
                 }else{
                     setLoading(false);
-                    toast.error('An error has occured. Please try re-logging into your account. ')
+                    const toastId = 'dungeon-board-error-unauthorized';
+                    if(!toast.isActive(toastId)) 
+                    toast.error('An error has occured. Please try re-logging into your account.', {toastId})
                 }
             }
 
@@ -125,7 +129,9 @@ const DungeonBoard = () => {
             }
         }catch(err){
             setLoading(false);
-            toast.error('An error has occured. Please try again later.')
+            const toastId = 'dungeon-board-error-server';
+            if(!toast.isActive(toastId)) 
+            toast.error('An error has occured. Please try again later.', {toastId})
         }
     }
 
@@ -154,7 +160,9 @@ const DungeonBoard = () => {
                     handleDeleteDungeon(true);
                     return;
                 }else{
-                    toast.error('An error has occured. Please try re-logging into your account again. ')
+                    const toastId = 'dungeon-board-delete-error-unauthorized';
+                    if(!toast.isActive(toastId))
+                    toast.error('An error has occured. Please try re-logging into your account again. ', {toastId})
                 }
             }
 
@@ -168,7 +176,9 @@ const DungeonBoard = () => {
             }
         }catch(err){
             setLoading(false);
-            toast.error('An error has occured. Please try again later.');
+            const toastId = 'dungeon-board-delete-error-server';
+            if(!toast.isActive(toastId))
+            toast.error('An error has occured. Please try again later.', {toastId});
         }
     }
 
@@ -185,7 +195,9 @@ const DungeonBoard = () => {
         if(newPage <= maxPages){
             navigate(`/dungeon-board/${newPage}`);
         }else{
-            toast.error('There is no next page!');
+            const toastId="dungeon-board-toast-error-next";
+            if(!toast.isActive(toastId))
+            toast.error('There is no next page!', {toastId});
         }
     }
 
@@ -194,7 +206,9 @@ const DungeonBoard = () => {
         if(newPage >= 1){
             navigate(`/dungeon-board/${newPage}`)
         }else{
-            toast.error('There is no previous page!');
+            const toastId = 'dungeon-board-toast-error-prev';
+            if(!toast.isActive(toastId)) 
+            toast.error('There is no previous page!', {toastId});
         }
     }
 

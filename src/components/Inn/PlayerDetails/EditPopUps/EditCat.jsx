@@ -21,7 +21,8 @@ const EditCat = ({ onClose }) => {
 
         if(loading){
             timeoutId = setTimeout(() => {
-                toast.error('An error has occured. Please try logging in again.');
+                const toastId = 'edit-cat-error-time-out'
+                if(!toast.isActive(toastId)) toast.error('An error has occured. Please try logging in again.', {toastId});
                 logOut();
             }, 60000)
         }
@@ -76,7 +77,8 @@ const EditCat = ({ onClose }) => {
                     return;
                 }else{
                     setLoading(false);
-                    toast.error("An error has occured. Please try logging out and back in again. ")
+                    const toastId = 'edit-cat-error-unauthorized';
+                    if(!toast.isActive(toastId)) toast.error("An error has occured. Please try logging out and back in again.", {toastId})
                 }
                 
             }
@@ -91,7 +93,8 @@ const EditCat = ({ onClose }) => {
             
         }catch(err){
             setLoading(false);
-            toast.error('An error has occured. Please try again later.')
+            const toastId = 'edit-cat-error-server';
+            if(!toast.isActive(toastId)) toast.error('An error has occured. Please try again later.', {toastId})
         }
     }
 

@@ -79,9 +79,21 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
     }
 
 
-    const notifyEmptyName = () => toast.error("Please fill in a dungeon name!");
-    const notifyEmptyDescription = () => toast.error("Please fill in a description!");
-    const notifyEmptyCheckpoint = () => toast.error("Please have at least one checkpoint for your progress!");
+    const notifyEmptyName = () => {
+        const toastId = 'dungeon-details-error-empty-name';
+        if(!toast.isActive(toastId)) 
+        toast.error("Please fill in a dungeon name!", {toastId})
+    }
+    const notifyEmptyDescription = () => {
+        const toastId = 'dungeon-details-error-empty-description';
+        if(!toast.isActive(toastId)) 
+        toast.error("Please fill in a description!", {toastId});
+    }
+    const notifyEmptyCheckpoint = () => {
+        const toastId = 'dungeon-details-error-no-checkpoints';
+        if(!toast.isActive(toastId)) 
+        toast.error("Please have at least one checkpoint for your progress!", {toastId});
+    }
 
     // can just set number of checkpoints and it automatically creates``
 

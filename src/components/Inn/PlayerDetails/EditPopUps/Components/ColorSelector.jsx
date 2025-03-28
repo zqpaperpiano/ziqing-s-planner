@@ -53,7 +53,9 @@ const ColorSelector = ({ handleClose, handleColorChange }) => {
 
     const onClickOk = () => {
         if(!checkValidHex(hexInput)){
-            toast.warning('Hex input is not valid!');
+            const toastId = 'color-selector-invalid-hex';
+            if(!toast.isActive(toastId)) 
+            toast.warning('Hex input is not valid!', {toastId});
         }else{
             setDefColor(hexInput);
             handleColorChange(defColor);

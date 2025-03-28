@@ -35,7 +35,9 @@ const DungeonDetailCard = () => {
     
             if(loading){
                 timeoutId = setTimeout(() => {
-                    toast.error('An error has occured. Please try logging in again.');
+                    const toastId = 'dungeon-detail-error-time-out';
+                    if(!toast.isActive(toastId)) 
+                    toast.error('An error has occured. Please try logging in again.', {toastId});
                     logOut();
                 }, 60000)
             }
@@ -165,7 +167,9 @@ const DungeonDetailCard = () => {
                     handleSubmitChanges(true);
                     return;
                 }else{
-                    toast.error('An error has occured. Please try re-logging into your account again. ')
+                    const toastId = 'dungeon-detail-error-unauthorized';
+                    if(!toast.isActive(toastId)) 
+                    toast.error('An error has occured. Please try re-logging into your account again. ', {toastId})
                 }
             }
 
@@ -181,7 +185,9 @@ const DungeonDetailCard = () => {
             }
         }catch(err){
             setLoading(false);
-            toast.error('An error has occured. Please try again later.');
+            const toastId = 'dungeon-detail-error-server';
+            if(!toast.isActive(toastId)) 
+            toast.error('An error has occured. Please try again later.', {toastId});
         }
     }
 

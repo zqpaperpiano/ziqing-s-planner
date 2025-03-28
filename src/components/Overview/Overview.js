@@ -174,7 +174,9 @@ const Overview = () => {
   const onDeleteTabs = (index) => {
     // console.log('deleting tab: ', index);
     if(Object.keys(braindumps).length <= 1){
-      toast.error('You need at least 1 braindump!')
+      const toastId = 'overview-braindump-min';
+      if(!toast.isActive(toastId)) 
+      toast.error('You need at least 1 braindump!', {toastId})
       return;
     }
 

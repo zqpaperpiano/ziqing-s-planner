@@ -113,7 +113,10 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
                     handleUserStatChanges(updates, true);
                     return;
                 }
-                toast.error('There is something wrong with the server. Please try logging out and in again.')
+                const toastId = 'explore-end-toast-error-unauthorized';
+                            if(!toast.isActive(toastId)){
+                toast.error('There is something wrong with the server. Please try logging out and in again.', {toastId})
+                            }
             }
 
             if(resp.ok){
@@ -122,7 +125,10 @@ const ExplorationEndPage = ({ details, onExitSumamry, timeLeft }) => {
             }
             
         }catch(err){
-            toast.error('An error has occured. Please try again later.')
+            const toastId = 'explore-end-toast-error-server';
+            if(!toast.isActive(toastId)){
+                toast.error('An error has occured. Please try again later.', {toastId})
+            }
         }
     }
 

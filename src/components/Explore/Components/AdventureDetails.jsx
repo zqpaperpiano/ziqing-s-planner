@@ -27,7 +27,11 @@ const AdventureDetails = ({ onStartExploration }) => {
 
     const handleClickStart = () => {
         if(purpose !== 'misc' && !selectedDungeon){
-            toast.error('Please select a dungeon first!');
+            const toastId = 'adv-deets-error-no-dungeon';
+            if(!toast.isActive(toastId)){
+                toast.error('Please select a dungeon first!', {toastId});
+            }
+            
         }else if(purpose === 'misc'){
             onStartExploration(duration, purpose, null);
         }else{
