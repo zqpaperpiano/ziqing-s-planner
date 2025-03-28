@@ -461,7 +461,7 @@ const EventCreator = ({}) => {
             }
         }catch(err){
             setLoading(false);
-            const toastID = "event-creator-new-server-error";
+            const toastId = "event-creator-new-server-error";
             if(!toast.isActive(toastId)) 
             toast.error('An error has occured. Please try again later.', {toastId})
         }
