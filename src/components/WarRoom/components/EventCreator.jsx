@@ -57,7 +57,9 @@ const EventCreator = ({}) => {
     
             if(loading){
                 timeoutId = setTimeout(() => {
-                    toast.error('An error has occured. Please try logging in again.');
+                    const toastId = 'event-creator-error-time-out';
+                    if(!toast.isActive(toastId)) 
+                    toast.error('An error has occured. Please try logging in again.', {toastId});
                     logOut();
                 }, 60000)
             }
@@ -263,7 +265,9 @@ const EventCreator = ({}) => {
                     await tokenRefresh();
                     updateChanges(updates, true);
                 }else{
-                    toast.error('An error has occured. Please try re-logging into your account again. ')
+                    const toastId = 'event-creator-error-unauthorized';
+                    if(!toast.isActive(toastId))
+                    toast.error('An error has occured. Please try re-logging into your account again. ', {toastId})
                 }
             }
 
@@ -286,7 +290,9 @@ const EventCreator = ({}) => {
             }
         }catch(err) {
             setLoading(false);
-            toast.error('An error has occured with the server. Please try again: ', err);
+            const toastId = 'event-creator-error-server';
+            if(!toast.isActive(toastId)) 
+            toast.error('An error has occured with the server. Please try again.', {toastId});
         }
     }
 
@@ -310,7 +316,9 @@ const EventCreator = ({}) => {
                     await tokenRefresh();
                     onClickDelete(true);
                 }else{
-                    toast.error('An error has occured. Please try re-logging into your account again. ')
+                    const toastId = 'event-creator-delete-error-unauthorized';
+                    if(!toast.isActive(toastId))
+                    toast.error('An error has occured. Please try re-logging into your account again.', {toastId})
                 }
             }
 
@@ -328,7 +336,9 @@ const EventCreator = ({}) => {
             }
         }catch(err){
             setLoading(false);
-            toast.error('An error has occured. Please try again later');
+            const toastId = "event-creator-delete-error-server";
+            if(!toast.isActive(toastId)) 
+            toast.error('An error has occured. Please try again later', {toastId});
         }
     }
 
@@ -433,7 +443,9 @@ const EventCreator = ({}) => {
                     postNewEvent(newEvent, true);
                     return;
                 }
-                toast.error('An error has occured. Please try re-logging into your account again. ')
+                const toastId = "event-creator-new-unauthorized";
+                if(!toast.isActive(toastId)) 
+                toast.error('An error has occured. Please try re-logging into your account again. ', {toastId})
             }
 
             if(resp.ok){
@@ -449,7 +461,9 @@ const EventCreator = ({}) => {
             }
         }catch(err){
             setLoading(false);
-            toast.error('An error has occured. Please try again later.')
+            const toastId = "event-creator-new-server-error";
+            if(!toast.isActive(toastId)) 
+            toast.error('An error has occured. Please try again later.', {toastId})
         }
     }
 

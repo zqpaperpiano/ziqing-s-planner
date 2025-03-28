@@ -41,12 +41,18 @@ const Exploration = ({ details, handleExitExploration }) => {
                     updateUserFocusTimeStats(true);
                     return;
                 }
-                toast.error('An error has occured. Your focus session may not have been recorded. Please try logging out and in again.')
+                const toastId = 'explore-toast-error-unauthorized';
+                if(!toast.isActive(toastId)){
+                    toast.error('An error has occured. Your focus session may not have been recorded. Please try logging out and in again.', {toastId})
+                }
             }
 
             //need to include end screen
         }catch(err){
-            toast.error('An error has occured. Your focus session may not have been recorded. Please contact an administrator for help.')
+            const toastId = 'explore-toast-error-server';
+            if(!toast.isActive(toastId)){
+                toast.error('An error has occured. Your focus session may not have been recorded. Please contact an administrator for help.', toastId)
+            }
         }
     }
 

@@ -77,31 +77,38 @@ const LogInSignUp = () => {
     }
 
     const emptyFields = () => {
-        toast.error('Please ensure all fields have been filled in!');
+        const toastId = 'login-signup-error-empty-fields';
+        if(!toast.isActive(toastId)) toast.error('Please ensure all fields have been filled in!', {toastId});
     }
 
     const failedLogIn = () => {
-        toast.error('Email and password do not match. Please try again.');
+        const toastId = 'login-signup-error-no-match'
+        if(!toast.isActive(toastId)) toast.error('Email and password do not match. Please try again.', {toastId});
     }
 
     const tooManyLogins = () => {
-        toast.warning('You have attempted to log in too many times. Please try again later');
+        const toastId = 'login-signup-error-too-many-logins'
+        if(!toast.isActive(toastId)) toast.warning('You have attempted to log in too many times. Please try again later', {toastId});
     }
 
     const invalidEmail = () => {
-        toast.error('Please enter a valid email.');
+        const toastId = 'login-signup-error-invalid-email'
+        if(!toast.isActive(toastId)) toast.error('Please enter a valid email.', {toastId});
     }
 
     const repeatedEmail = () => {
-        toast.error('There is an account associated with this email. Please log in instead.');
+        const toastId = 'login-signup-error-repeated-email'
+        if(!toast.isActive(toastId)) toast.error('There is an account associated with this email. Please log in instead.', {toastId});
     }
 
     const invalidPassword = () => {
-        toast.error('Please have at least 6 characters for your password');
+        const toastId = 'login-signup-error-short-password'
+        if(!toast.isActive(toastId)) toast.error('Please have at least 6 characters for your password', {toastId});
     }
 
     const successfulResetPassword = () => {
-        toast.success('A password reset email has been sent to your email if you have an account with us.');
+        const toastId = 'login-signup-alert-successful-rest'
+        if(!toast.isActive(toastId)) toast.success('A password reset email has been sent to your email if you have an account with us.', {toastId});
     }
 
     const toggleLoading = (bool) => {

@@ -8,10 +8,8 @@ import { useNavigate } from "react-router";
 const DungeonCard = ({dungeon, page, handleRemoveDungeon}) => {
     const [selected, setSelected] = useState(false);
     const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     console.log('from dungeon card received: ', dungeon);
-    // }, [])
+    const gradientStart = dungeon[1]?.color ? Object.keys(dungeon[1].color) : '#d6cdd0';
+    const gradientEnd = dungeon[1]?.color ? Object.values(dungeon[1].color)[0] : '#b8a9b1';
 
     return(
             <motion.div   
@@ -33,7 +31,10 @@ const DungeonCard = ({dungeon, page, handleRemoveDungeon}) => {
                 duration: 1.5,
                 rotateY: {delay: 0.1, duration: 0.75}
             }}
-            className={`relative h-full overflow-hidden  backface-hidden dungeon-card rounded-lg bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] ${selected ? 'z-50' : 'z-10'}`}>
+            style={{
+                backgroundImage: `linear-gradient(to bottom, ${gradientStart}, ${gradientEnd})`,
+              }}
+            className={`relative h-full overflow-hidden  backface-hidden dungeon-card rounded-lg ${selected ? 'z-50' : 'z-10'}`}>
                 <div 
                 className="absolute inset-0 flex flex-col items-center tf:p-4">
                     <div className="h-full w-full text-center flex flex-col pointer-event-none justify-center items-center font-silkscreen py-2">

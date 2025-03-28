@@ -15,6 +15,14 @@ const ProfilePreferences = () => {
     const [editDetails, setEditDetails] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const { player } = useContext(AuthContext);
+    const defCat = {
+                'cat1': {color: '#ca4a55', name: 'Clearing dungeons'},
+                'cat2': {color: '#ee694b', name: 'Running Errands'},
+                'cat3': {color: '#fdb814', name: 'Misc'},
+                'cat4': {color: "#30ad6e", name: 'Meetings'},
+                'cat5': {color: "#1d58a0", name: 'Social Activities'}
+            }
+    const categories = player?.preferences?.categories || defCat;
 
     // useEffect(() => {
     //     console.log("schedule: ", player?.preferences?.schedule);
@@ -136,7 +144,7 @@ const ProfilePreferences = () => {
                         <div className="h-90p w-full rounded-lg border-darkPink border-2 flex flex-col justify-evenly items-center p-2">
                             <div className={`h-full w-full grid gap-1 overflow-auto`}>
                                 {
-                                    Object.entries(player?.preferences?.categories).map((cat) => {
+                                    Object.entries(categories).map((cat) => {
                                         return(
                                             <div 
                                             key={cat[0]}

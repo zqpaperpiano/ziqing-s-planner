@@ -17,7 +17,8 @@ const EditDetails = ({handleClose}) => {
     
             if(loading){
                 timeoutId = setTimeout(() => {
-                    toast.error('An error has occured. Please try logging in again.');
+                    const toastId = 'edit-details-error-time-out'
+                    if(!toast.isActive(toastId)) toast.error('An error has occured. Please try logging in again.', {toastId});
                     logOut();
                 }, 60000)
             }
@@ -60,7 +61,9 @@ const EditDetails = ({handleClose}) => {
                     return;
                 }else{
                     setLoading(false);
-                    toast.error('An error has occured. Please try logging out and in again.');
+                    const toastId = 'edit-details-error-unauthorized';
+                    if(!toast.isActive(toastId)) 
+                    toast.error('An error has occured. Please try logging out and in again.', {toastId});
                 }
             }
 
@@ -72,7 +75,9 @@ const EditDetails = ({handleClose}) => {
             }
         }catch(err){
             setLoading(false);
-            toast.error('An error has occured. Please try again later.');
+            const toastId = 'edit-details-error-server';
+            if(!toast.isActive(toastId)) 
+            toast.error('An error has occured. Please try again later.', {toastId});
         }
     }
 

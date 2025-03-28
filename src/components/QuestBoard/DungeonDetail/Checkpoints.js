@@ -75,10 +75,13 @@ const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick, theme
 
     const handleDeleteCheckpoint = (index) => {
         if (checkpointList.length <= 1) {
+            const toastId = 'checkpoints-error-delete-minimum';
+            if(!toast.isActive(toastId)) 
             toast.error('You need at least 1 checkpoint!', {
                 position: "top-left",
                 autoClose: 1500,
-                closeOnClick: true
+                closeOnClick: true,
+                toastId: toastId
             });
         } else {
             const delKey = Object.keys(checkpointList[index])[0];

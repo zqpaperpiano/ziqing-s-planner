@@ -9,10 +9,7 @@ export const DungeonProvider = ({children}) => {
     const [dungeonList, setDungeonList] = useState({});
     const {tokenRefresh} = useContext(AuthContext);
     const { player } = useContext(AuthContext);
-
-    // useEffect(() => {
-    //     console.log('dungeonList: ', dungeonList);
-    // })
+     const colors =[{'#d6cdd0': '#b8a9b1'}, {'#FF6F61 ': '#E54B47'}, {'#B4A6D9 ': '#8A7BB6'}, {'#FFB79B ': '#F09A81'}, {'#A8E6CF ': '#7FBFA5'}, {'#8ED1D3' : '#6DA9A7'}]
 
     useEffect(() => {
         const controller = new AbortController();
@@ -73,7 +70,7 @@ export const DungeonProvider = ({children}) => {
 
     return (
         <DungeonContext.Provider 
-            value={{dungeonList, setDungeonList}}>
+            value={{dungeonList, setDungeonList, colors}}>
                 {children}
             </DungeonContext.Provider>
     )
