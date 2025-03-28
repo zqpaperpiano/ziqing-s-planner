@@ -74,13 +74,13 @@ export const UserStatProvider = ({ children }) => {
         if(auth.currentUser && userStats){
             localStorage.setItem('userStats', JSON.stringify(userStats));
         }
-    })
+    }, [userStats])
 
     useEffect(() => {
         if(auth.currentUser && difficultyModifier){
             localStorage.setItem('difficultyModifier', JSON.stringify(difficultyModifier));
         }
-    })
+    }, [difficultyModifier])
 
 
     return(

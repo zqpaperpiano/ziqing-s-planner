@@ -25,7 +25,9 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
                                                 });
                                             
 
-    //when there is a change in the checkpoint list, change quest details as well
+    
+    
+                                                //when there is a change in the checkpoint list, change quest details as well
     useEffect(() => {
         const completedCount = checkpointList.reduce((count, checkpoint) => {
             const value = Object.values(checkpoint)[0].completion;
@@ -78,7 +80,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
         }
     }
 
-
     const notifyEmptyName = () => {
         const toastId = 'dungeon-details-error-empty-name';
         if(!toast.isActive(toastId)) 
@@ -99,12 +100,16 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
     // can just set number of checkpoints and it automatically creates``
 
     return(
-        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+        <div 
+        onClick={handleExitAddDungeon}
+        className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
             <ToastContainer autoClose={5000}
                             closeOnClick
                             pauseOnHover
                             pauseOnFocusLoss/>
-            <div className="relative w-1/2 h-5/6 flex flex-col" style={{backgroundColor: Object.keys(dungeonDetails.color)}}>
+            <div 
+            onClick={(e) => {e.stopPropagation()}}
+            className="relative w-1/2 h-5/6 flex flex-col" style={{backgroundColor: Object.keys(dungeonDetails.color)}}>
                 <div className="relative flex w-full p-2" style={{height: '12%', fontFamily: 'source-code-pro', backgroundColor: Object.values(dungeonDetails.color)}}>
                     <p className="text-3xl font-bold">New Dungeon</p>
                     <div className="absolute right-0 h-full top-0 flex items-center w-12  hover:cursor-pointer hover:bg-opacity-30 hover:bg-white">

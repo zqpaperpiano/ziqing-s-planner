@@ -492,7 +492,9 @@ const EventCreator = ({}) => {
     }
 
     return(
-        <div className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
+        <div 
+        onClick={handleClickExit}
+        className="bg-black fixed inset-0 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">
             <ToastContainer />
             {loading && <LoadingScreen />}
             {
@@ -500,7 +502,9 @@ const EventCreator = ({}) => {
                 <DeleteConfirmation event={"Delete this event"} onClickDelete={onClickDelete} onClickUndo={onUndoDelete}/>
             }
             
-            <div className="relative h-85p w-4/5 flex flex-col bg-bgPink">
+            <div 
+            onClick={(e) => {e.stopPropagation()}}
+            className="relative h-85p w-4/5 flex flex-col bg-bgPink">
                 <div className="relative w-full bg-darkPink flex items-center p-2" style={{height: '12%', fontFamily: 'source-code-pro'}}>
                     <div 
                     onClick={handleClickExit}
