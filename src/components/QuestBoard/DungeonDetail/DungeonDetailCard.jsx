@@ -67,30 +67,32 @@ const DungeonDetailCard = () => {
 
     //auto updae completion percentages
     useEffect(() => {
-        if(!dungeon?.dungeonCheckpoints) return;
-
-        const numItems = dungeon?.dungeonCheckpoints?.length;
+        if (!dungeon?.dungeonCheckpoints) return;
+    
+        const numItems = dungeon.dungeonCheckpoints.length;
+        if (numItems === 0) return; // ✅ Avoid division by zero
+    
         let numCompleted = 0;
-        const list = dungeon.dungeonCheckpoints;
-
-        Object.values(list).map((itm) => {
-            Object.values(itm).map((cpt) => {
-                if(cpt.completion){
+        
+        dungeon.dungeonCheckpoints.forEach((itm) => {
+            Object.values(itm).forEach((cpt) => {
+                if (cpt.completion) {
                     numCompleted++;
                 }
-            })
-        })
-
-        const newPercetage = (numCompleted / numItems).toFixed(4);
-        if(newPercetage !== dungeon.completionPercetage){
+            });
+        });
+    
+        const newPercentage = (numCompleted / numItems).toFixed(4);
+        
+        // ✅ Only update state if it has actually changed
+        if (newPercentage !== dungeon.completionProgress) {
             setDungeon((prevDungeon) => ({
                 ...prevDungeon,
-                completionProgress: newPercetage
+                completionProgress: newPercentage
             }));
         }
     
-    }, [dungeon])
-
+    }, [dungeon?.dungeonCheckpoints])
 
     const handleNewCheckpointList = (newList) => {
         setDungeon((prev) => ({
@@ -150,44 +152,94 @@ const DungeonDetailCard = () => {
         try{
             setLoading(true);
             const finalColor= {[gradientStart]: gradientEnd}
-    
-            const resp = await fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    dungeonId: dungeonID,
-                    dungeonName: dungeon.dungeonName,
-                    color: finalColor,
-                    dungeonDescription: dungeon.dungeonDescription,
-                    dungeonCheckpoints: dungeon.dungeonCheckpoints,
-                    completionProgress: dungeon.completionProgress,
+
+            const newCompletionStatus = parseFloat(dungeon.completionProgress) === 1 ? true : false;
+
+            if(newCompletionStatus){
+                const resp = await fetch(`${config.development.apiURL}dungeon/completed-dungeon`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        dungeonId: dungeonID,
+                        dungeonName: dungeon.dungeonName,
+                        color: finalColor,
+                        dungeonDescription: dungeon.dungeonDescription,
+                        dungeonCheckpoints: dungeon.dungeonCheckpoints,
+                        completionProgress: dungeon.completionProgress,
+                        dungeonCompleted: true,
+                    })
                 })
-            })
 
-            if(resp.status === 401){
-                if(!retry){
-                    await tokenRefresh();
-                    handleSubmitChanges(true);
-                    return;
-                }else{
-                    const toastId = 'dungeon-detail-error-unauthorized';
-                    if(!toast.isActive(toastId)) 
-                    toast.error('An error has occured. Please try re-logging into your account again. ', {toastId})
+                if(resp.status === 401){
+                    if(!retry){
+                        await tokenRefresh();
+                        handleSubmitChanges(true);
+                        return;
+                    }else{
+                        const toastId = 'dungeon-detail-error-unauthorized';
+                        if(!toast.isActive(toastId)) 
+                        toast.error('An error has occured. Please try re-logging into your account again. ', {toastId})
+                    }
                 }
-            }
 
-            if(resp.ok){
-                const data = await resp.json();
-                callSuccessNotif(dungeon.dungeonName);
-                setLoading(false);
-                setDungeonList((prevList) => ({
-                    ...prevList,
-                    ...data
-                }))
-                navigate(`/dungeon-board/${page}`)
+                if(resp.ok){
+                    setLoading(false);
+                    setDungeonList((prevList) => {
+                        const filteredList = Object.keys(prevList)
+                        .filter((key) => key !== dungeonID)
+                        .reduce((acc, key) => {
+                            acc[key] = prevList[key]; // Rebuild the key-value pair
+                            return acc;
+                        }, {});
+
+                        return filteredList;
+                    })
+    
+                    navigate(`/dungeon-board/${page}`)
+                }
+
+            }else{
+                const resp = await fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        dungeonId: dungeonID,
+                        dungeonName: dungeon.dungeonName,
+                        color: finalColor,
+                        dungeonDescription: dungeon.dungeonDescription,
+                        dungeonCheckpoints: dungeon.dungeonCheckpoints,
+                        completionProgress: dungeon.completionProgress,
+                        dungeonCompleted: false,
+                    })
+                })
+
+                if(resp.status === 401){
+                    if(!retry){
+                        await tokenRefresh();
+                        handleSubmitChanges(true);
+                        return;
+                    }else{
+                        const toastId = 'dungeon-detail-error-unauthorized';
+                        if(!toast.isActive(toastId)) 
+                        toast.error('An error has occured. Please try re-logging into your account again. ', {toastId})
+                    }
+                }
+
+                if(resp.ok){
+                    setLoading(false);
+                    const data = await resp.json();
+                    setDungeonList((prevList) => ({
+                        ...prevList,
+                        ...data
+                    }))
+                    navigate(`/dungeon-board/${page}`)
+                    }
             }
         }catch(err){
             setLoading(false);
@@ -209,6 +261,7 @@ const DungeonDetailCard = () => {
 
     return(
         <motion.div 
+        onClick={exitDetailCard}
         initial={{ opacity: 0, rotateY: 90}}
         animate={{ opacity: 1, rotateY: 180}}
         transition={{duration: 0.3}}
@@ -221,7 +274,8 @@ const DungeonDetailCard = () => {
                 style={{
                     backgroundImage: `linear-gradient(to bottom, ${gradientStart}, ${gradientEnd})`,
                   }}
-                className={`h-4/5 w-3/4 relative transform rotate-y-180 pt-8 bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg`}>
+                  onClick={(e) => {e.stopPropagation()}}
+                className={`h-4/5 w-3/4 relative transform rotate-y-180 pt-8 bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg z-50`}>
                     <div className=" h-full w-full flex items-center justify-center font silkscreen">
                     <Button
                         onClick={exitDetailCard}

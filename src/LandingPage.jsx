@@ -55,7 +55,7 @@ const LandingPage = () => {
                             <DungeonProvider>
                             <EventProvider>
                             <ShopProvider>
-                            <Routes>
+                            <Routes >
                                 <Route path="/logIn" element={<LogInSignUp />} />
 
                                 <Route element={<ProtectedRoute />}>
