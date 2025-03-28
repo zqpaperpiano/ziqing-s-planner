@@ -210,7 +210,7 @@ const DungeonBoard = () => {
 
 
     return(
-        <div className={`h-full w-full flex ${onAddDungeon} ? 'z-0' : 'z-50'`}>
+        <div className={`h-full w-full flex ${onAddDungeon  ? 'z-0' : 'z-50'} ${loading ? 'z-20' : 'z-50'} `}>
             {loading && <LoadingScreen />}
             <ToastContainer />
             {

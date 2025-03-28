@@ -19,11 +19,13 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
     const [dungeonDetails, setDungeonDetails] = useState({
                                                     dungeonName: '',
                                                     dungeonDescription: '',
+                                                    color: {'#e9ebed': '#d6cdd0 '},
                                                     dungeonCheckpoints: checkpointList,
                                                     completionProgress: 0,
                                                     dungeonCompleted: false
                                                 });
-
+                                            
+    const colors =[{'#e9ebed': '#d6cdd0 '}, {'#A3B9FF': '#5C7FDB'}, {'#A4F1C3': '#6CCB96'}, {'#C4A8FF': '#8C6FD7'}, {'#FFD8B5': '#FF9C69'}, {'#B7D8FF ' : '#6DB6F4 '}]
 
     //when there is a change in the checkpoint list, change quest details as well
     useEffect(() => {
@@ -57,7 +59,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
     const handleDungeonDetailsChange = (e, parameterName) => {
         setDungeonDetails((prevDeets) => ({
             ...prevDeets, 
-            [parameterName]: e.target.value
+            [parameterName]: e
         }))
     }
 
@@ -91,8 +93,8 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
                             closeOnClick
                             pauseOnHover
                             pauseOnFocusLoss/>
-            <div className="relative w-1/2 h-5/6 flex flex-col bg-bgPink">
-                <div className="relative bg-deepPink flex w-full p-2" style={{height: '12%', fontFamily: 'source-code-pro'}}>
+            <div className="relative w-1/2 h-5/6 flex flex-col" style={{backgroundColor: Object.keys(dungeonDetails.color)}}>
+                <div className="relative flex w-full p-2" style={{height: '12%', fontFamily: 'source-code-pro', backgroundColor: Object.values(dungeonDetails.color)}}>
                     <p className="text-3xl font-bold">New Dungeon</p>
                     <div className="absolute right-0 h-full top-0 flex items-center w-12  hover:cursor-pointer hover:bg-opacity-30 hover:bg-white">
                         <XIcon onClick={handleExitAddDungeon}  size={50} color="" strokeWidth={0.25} radius={1} />
@@ -103,20 +105,47 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
                 </div>
 
                 <div className="flex w-full py-2 px-4 flex-col overflow-y-auto " style={{height: '88%', fontFamily: 'source-code-pro'}}>
-                        <div className="h-fit flex flex-col gap-2 w-full">
+                        <div className="h-1/5 flex flex-col gap-2 w-full">
                             <p className="text-xl">Dungeon Name: </p>
-                            <input onChange={(e) => {handleDungeonDetailsChange(e, 'dungeonName')}} type="text" className="w-full border border-black border-1" />
+                            <input onChange={(e) => {handleDungeonDetailsChange(e.target.value, 'dungeonName')}} type="text" className=" p-2 w-full border border-black border-1" />
                         </div>
 
-                        <div className="h-fit flex flex-col gap-2 w-full">
+                        <div className="h-2/5 flex flex-col gap-2 w-full">
                             <p className="text-xl">Dungeon Description: </p>
-                            <textarea onChange={(e) => {handleDungeonDetailsChange(e, 'dungeonDescription')}}  className="w-full border border-black border-1 resize-none" rows={7} />
+                            <textarea onChange={(e) => {handleDungeonDetailsChange(e.target.value, 'dungeonDescription')}}  className=" p-2 w-full border border-black border-1 resize-none" rows={7} />
                         </div>
 
-                        <div className="h-fit flex flex-col gap-2 mt-2">
-                            <p className="text-xl">Checkpoints: </p>
-                            <Checkpoints theme={'retro'} checkpoints={checkpointList} handleSubmit={checkpointListSubmimssion} />
+                        <div className="h-3/5 w-full flex">
+                            <div className="h-full flex flex-col gap-2 mt-2 w-2/3">
+                                <p className="text-xl">Checkpoints: </p>
+                                <Checkpoints theme={'retro'} checkpoints={checkpointList} handleSubmit={checkpointListSubmimssion} />
+                            </div>
+
+                            {/* color selector */}
+                            <div className="h-full w-1/3 flex flex-col justify-center items-end px-2 ml-2">
+                                <div className="w-full grid grid-cols-3 grid-rows-2 gap-1 justify-end">
+                                    {colors.map((color, index) => {
+                                        console.log('color: ', Object.keys(color)[0], ' ', Object.keys(dungeonDetails.color)[0] === Object.keys(color)[0])
+                                        return(
+                                            <div 
+                                            onClick={() => handleDungeonDetailsChange(color, 'color')}
+                                            key={index} className={`${Object.keys(dungeonDetails.color)[0] === Object.keys(color)[0] ? 'bg-black' : 'bg-white hover:bg-black'} hover:cursor-pointer aspect-square w-full max-w-[60px] rounded-full p-1 flex justify-center items-center`}>
+                                                <div className="w-full h-full rounded-full" style={{ backgroundColor: Object.keys(color) }}></div>
+                                            </div>
+                                        )
+                                        
+                                    })}
+                                    <div className="hover:cursor-pointer aspect-square w-full max-w-[60px] rounded-full bg-white p-1 flex justify-center items-center">
+                                        <div className="w-full h-full rounded-full text-4xl flex justify-center items-center">+</div>
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+
                         </div>
+
+                        
                 </div>
             </div>
         </div>
