@@ -14,8 +14,10 @@ import LoadingScreen from "../../LoadingScreen/LoadingScreen";
 
 const DungeonDetailCard = () => {
     const { dungeonID } = useParams();
-    const { dungeonList, setDungeonList } = useContext(DungeonContext);
+    const { dungeonList, setDungeonList, colors } = useContext(DungeonContext);
     const [dungeon, setDungeon] = useState(dungeonList[dungeonID]);
+    const [gradientStart, setGradientStart] = useState(dungeon?.color ? Object.keys(dungeon.color)[0] : '#d6cdd0');
+    const [gradientEnd, setGradientEnd] = useState(dungeon?.color ? Object.values(dungeon.color)[0] : '#b8a9b1');
     const {'page-number': page} = useParams();
     const [editName, setEditName] = useState(false);    
     const [editDescription, setEditDescription] = useState(false);
@@ -139,6 +141,8 @@ const DungeonDetailCard = () => {
     const handleSubmitChanges = async (retry) => {
         try{
             setLoading(true);
+            const finalColor= {[gradientStart]: gradientEnd}
+    
             const resp = await fetch(`${config.development.apiURL}dungeon/update-dungeon-details`, {
                 method: 'POST',
                 credentials: 'include',
@@ -148,6 +152,7 @@ const DungeonDetailCard = () => {
                 body: JSON.stringify({
                     dungeonId: dungeonID,
                     dungeonName: dungeon.dungeonName,
+                    color: finalColor,
                     dungeonDescription: dungeon.dungeonDescription,
                     dungeonCheckpoints: dungeon.dungeonCheckpoints,
                     completionProgress: dungeon.completionProgress,
@@ -200,7 +205,11 @@ const DungeonDetailCard = () => {
             {
                 !dungeon ? 
                 <CircularProgress /> :
-                <div className={`h-4/5 w-3/4 relative transform rotate-y-180 pt-8 bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg`}>
+                <div 
+                style={{
+                    backgroundImage: `linear-gradient(to bottom, ${gradientStart}, ${gradientEnd})`,
+                  }}
+                className={`h-4/5 w-3/4 relative transform rotate-y-180 pt-8 bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg`}>
                     <ToastContainer />
                     <div className=" h-full w-full flex items-center justify-center font silkscreen">
                     <Button
@@ -212,6 +221,7 @@ const DungeonDetailCard = () => {
                             color: 'black'
                         }}>X</Button>
                         <div className="h-full w-1/2 flex flex-col items-center justify-center">
+
                             <div className="h-1/3 w-full flex items-center justify-center">
                                 <div className="w-full flex justify-center items-center text-center ">
                                     {
@@ -246,7 +256,8 @@ const DungeonDetailCard = () => {
                                     }
                                 </div>
                             </div>
-                            <div className="h-2/3 w-full flex flex-col items-center px-2 relative">
+
+                            <div className="h-1/3 w-full flex flex-col items-center px-2 relative">
                                 <div className="h-16 w-2/3 flex items-center justify-center">
                                     <p className="text-xl">Description</p>
                                     <BorderColorIcon 
@@ -286,7 +297,27 @@ const DungeonDetailCard = () => {
                                     <p className="italic text-center">{dungeon.dungeonDescription}</p>
                                 }
                                 </div>
-                                <div className="absolute bottom-2 mx-auto">
+                                
+                                
+                            </div>
+
+                            <div className="h-1/3 w-full flex items-center justify-center px-2">
+                                <div className="w-2/3 h-full grid grid-cols-6 gap-2">
+                                    {
+                                        colors.map((color, index) => {
+                                            return(
+                                                <div 
+                                                onClick={() => {setGradientStart(Object.keys(color)); setGradientEnd(Object.values(color)[0])}}
+                                                key={index} className={`${gradientStart[0] === Object.keys(color)[0] ? 'bg-black' : 'bg-white hover:bg-black'} hover:cusor-pointer aspect-square w-full max-w-[60px] rounded-full p-1 flex justify-center items-center`}>
+                                                    <div className="w-full h-full rounded-full" style={{ backgroundColor: Object.keys(color) }}></div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </div>
+
+                            <div className="absolute bottom-2 mx-auto">
                                     <Button
                                     onClick={() => {handleSubmitChanges(false)}}
                                     sx={{
@@ -294,8 +325,6 @@ const DungeonDetailCard = () => {
                                         color: 'green'
                                     }}>Save and Exit</Button>
                                 </div>
-                                
-                            </div>
                         </div>
                         <div className="h-full w-1/2 flex flex-col items-center justify-center overflow-y-auto">
                         <div className="h-1/4 w-full w-full flex flex-col items-center justify-center">

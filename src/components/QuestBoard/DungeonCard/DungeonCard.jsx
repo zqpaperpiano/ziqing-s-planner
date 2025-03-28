@@ -10,8 +10,6 @@ const DungeonCard = ({dungeon, page, handleRemoveDungeon}) => {
     const navigate = useNavigate();
     const gradientStart = dungeon[1]?.color ? Object.keys(dungeon[1].color) : '#d6cdd0';
     const gradientEnd = dungeon[1]?.color ? Object.values(dungeon[1].color)[0] : '#b8a9b1';
-    
-    console.log('from dungeon card: ', dungeon);
 
     return(
             <motion.div   

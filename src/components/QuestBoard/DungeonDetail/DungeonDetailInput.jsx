@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from "react";
-import { X, Plus } from 'lucide-react'; 
-import { Button, TextField } from "@mui/material";
+import React, {useContext, useEffect, useState} from "react";
 import Checkpoints from "./Checkpoints";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Background from '../../../images/hip-square.webp';
 import { XIcon, CheckIcon } from "raster-react";
+import { DungeonContext } from "../../../contexts/DungeonContext";
 
 
 const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => {
-
+    const { colors } = useContext(DungeonContext);
     const [checkpointList, setCheckpointList] = useState([
         {"C1": {
             "checkpointName": "Checkpoint 1",
@@ -25,7 +24,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
                                                     dungeonCompleted: false
                                                 });
                                             
-    const colors =[{'#d6cdd0': '#b8a9b1'}, {'#FF6F61 ': '#E54B47'}, {'#B4A6D9 ': '#8A7BB6'}, {'#FFB79B ': '#F09A81'}, {'#A8E6CF ': '#7FBFA5'}, {'#8ED1D3' : '#6DA9A7'}]
 
     //when there is a change in the checkpoint list, change quest details as well
     useEffect(() => {
@@ -125,7 +123,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
                             <div className="h-full w-1/3 flex flex-col justify-center items-end px-2 ml-2">
                                 <div className="w-full grid grid-cols-3 grid-rows-2 gap-1 justify-end">
                                     {colors.map((color, index) => {
-                                        console.log('color: ', Object.keys(color)[0], ' ', Object.keys(dungeonDetails.color)[0] === Object.keys(color)[0])
                                         return(
                                             <div 
                                             onClick={() => handleDungeonDetailsChange(color, 'color')}

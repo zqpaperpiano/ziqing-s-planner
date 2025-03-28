@@ -213,16 +213,18 @@ const DungeonBoard = () => {
         <div className={`h-full w-full flex ${onAddDungeon  ? 'z-0' : 'z-50'} ${loading ? 'z-20' : 'z-50'} `}>
             {loading && <LoadingScreen />}
             <ToastContainer />
-            {
-                backButton &&
-                <div className="flex items-center justify-center mx-auto">
-                    <Button
-                    onClick={() => {handleClickBack()}}
+
+                <div className="flex items-center justify-center" style={{width: '7.5%'}}>
+                    {
+                        backButton &&
+                        <Button
+                        onClick={() => {handleClickBack()}}
+                        
+                        ><StepBack /></Button>
+                    }
                     
-                    ><StepBack /></Button>
                 </div>
-            }
-            <div className="h-full w-85p mx-auto flex flex-col">
+            <div className="h-full w-85p flex flex-col">
                 <div className="relative h-10p w-full mx-auto mt-4">
                     <button 
                     style={{
@@ -240,14 +242,14 @@ const DungeonBoard = () => {
                     <PageTracker maxPages={maxPages} currPage={page}/>
                 </div>
             </div>
-           {
-            forwardButton &&
-            <div className="flex items-center justify-center mx-auto">
-                <Button
-                onClick={() => {handleClickNext()}}
-                ><StepForward /></Button>
+            <div className="flex items-center justify-center"  style={{width: '7.5%'}}>
+                {
+                    forwardButton &&
+                    <Button
+                    onClick={() => {handleClickNext()}}
+                    ><StepForward /></Button>
+                }
             </div>
-           }
             <ToastContainer />
             { onAddDungeon &&
                 <DungeonDetailInput
