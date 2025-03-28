@@ -30,6 +30,12 @@ const DungeonDetailCard = () => {
     const [showMenu, setShowMenu] = useState(false);
     const [menuPos, setMenuPos] = useState({x: 0, y: 0});
 
+    useEffect(() => {
+        if(!dungeon || !dungeon.dungeonCheckpoints){
+            navigate(`/dungeon-board/${page}`);
+        }
+    })
+
         useEffect(() =>{
             let timeoutId;
     
@@ -63,7 +69,7 @@ const DungeonDetailCard = () => {
     useEffect(() => {
         if(!dungeon?.dungeonCheckpoints) return;
 
-        const numItems = dungeon.dungeonCheckpoints.length;
+        const numItems = dungeon?.dungeonCheckpoints?.length;
         let numCompleted = 0;
         const list = dungeon.dungeonCheckpoints;
 
@@ -83,7 +89,7 @@ const DungeonDetailCard = () => {
             }));
         }
     
-    }, [dungeon.dungeonCheckpoints])
+    }, [dungeon])
 
 
     const handleNewCheckpointList = (newList) => {
@@ -186,6 +192,7 @@ const DungeonDetailCard = () => {
         }catch(err){
             setLoading(false);
             const toastId = 'dungeon-detail-error-server';
+
             if(!toast.isActive(toastId)) 
             toast.error('An error has occured. Please try again later.', {toastId});
         }
@@ -206,7 +213,6 @@ const DungeonDetailCard = () => {
         animate={{ opacity: 1, rotateY: 180}}
         transition={{duration: 0.3}}
         className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-            <ToastContainer />
             {loading && <LoadingScreen />}
             {
                 !dungeon ? 
@@ -216,7 +222,6 @@ const DungeonDetailCard = () => {
                     backgroundImage: `linear-gradient(to bottom, ${gradientStart}, ${gradientEnd})`,
                   }}
                 className={`h-4/5 w-3/4 relative transform rotate-y-180 pt-8 bg-gradient-to-b from-[#d6cdd0] to-[#b8a9b1] rounded-lg`}>
-                    <ToastContainer />
                     <div className=" h-full w-full flex items-center justify-center font silkscreen">
                     <Button
                         onClick={exitDetailCard}
@@ -328,7 +333,7 @@ const DungeonDetailCard = () => {
                                     onClick={() => {handleSubmitChanges(false)}}
                                     sx={{
                                         fontFamily: 'silkscreen',
-                                        color: 'green'
+                                        color: 'black'
                                     }}>Save and Exit</Button>
                                 </div>
                         </div>

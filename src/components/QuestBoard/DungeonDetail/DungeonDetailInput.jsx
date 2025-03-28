@@ -90,6 +90,7 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
         toast.error("Please fill in a description!", {toastId});
     }
     const notifyEmptyCheckpoint = () => {
+        
         const toastId = 'dungeon-details-error-no-checkpoints';
         if(!toast.isActive(toastId)) 
         toast.error("Please have at least one checkpoint for your progress!", {toastId});

@@ -29,8 +29,26 @@ const EventCreator = ({}) => {
 
     const [cat, setCat] = useState(event?.category || "cat2");
     const [eventName, setEventName] = useState(event?.title || "");
-    const [defStart, setDefStart] = useState(event?.start ? dayjs(event?.start) : dayjs(location?.state?.start));
-    const [defEnd, setDefEnd] = useState(event?.end ? dayjs(event?.end): dayjs(location.state.end));
+    const [defStart, setDefStart] = useState(() => {
+        if(event){
+            return dayjs(event.start);
+        }else if(location.state){
+            return dayjs(location.state.start);
+        }else{
+            return dayjs();
+        }
+    })
+    const [defEnd, setDefEnd] = useState(() => {
+        if(event){
+            console.log('has event')
+            return dayjs(event.end);
+        }else if(location.state){
+            console.log('has location')
+            return dayjs(location.state.end);
+        }else{
+            return dayjs();
+        }
+    })
     const [eventDescription, setEventDescription] = useState(event?.description || "");
     const [eventToDos, setEventToDos] = useState(event?.toDos || {"td1": {title: "", completed: false}});
     
@@ -51,6 +69,12 @@ const EventCreator = ({}) => {
     const [selectedRepeatEnd, setSelectedRepeatEnd] = useState(null);
 
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if(eventId && !event){
+            navigate('/warRoom');
+        }
+    },[])
 
         useEffect(() =>{
             let timeoutId;
