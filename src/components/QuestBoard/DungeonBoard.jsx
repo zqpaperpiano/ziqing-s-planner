@@ -226,7 +226,6 @@ const DungeonBoard = () => {
     return(
         <div className={`h-full w-full flex ${onAddDungeon  ? 'z-0' : 'z-50'} ${loading ? 'z-20' : 'z-50'} `}>
             {loading && <LoadingScreen />}
-            <ToastContainer />
 
                 <div className="flex items-center justify-center" style={{width: '7.5%'}}>
                     {

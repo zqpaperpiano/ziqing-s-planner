@@ -103,10 +103,6 @@ const DungeonDetailInput = ({handleExitAddDungeon, handleIncreaseDungeons }) => 
         <div 
         onClick={handleExitAddDungeon}
         className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-            <ToastContainer autoClose={5000}
-                            closeOnClick
-                            pauseOnHover
-                            pauseOnFocusLoss/>
             <div 
             onClick={(e) => {e.stopPropagation()}}
             className="relative w-1/2 h-5/6 flex flex-col" style={{backgroundColor: Object.keys(dungeonDetails.color)}}>
