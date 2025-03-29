@@ -63,9 +63,10 @@ const Overview = () => {
 
   const deadlineList = useMemo(() => {
     if(eventList.length > 0){
-      const today = new Date().toDateString();
-      const sortedList = eventList.filter((event) =>  event.type === 'deadline' && event.end.toDateString() >= today)
+      const today = new Date();
+      const sortedList = eventList.filter((event) =>  event.type === 'deadline' && event.end >= today)
       .sort((a, b) => new Date(a.end) - new Date(b.end));
+
       return sortedList
     }
     
