@@ -6,7 +6,7 @@ import loadingAnimation from '../../images/loading-animation.png';
 const LoadingScreen = () => {
     return (
         <motion.div 
-        className="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-30 backdrop-blur-sm"
+        className="fixed absolute inset-0 flex items-center justify-center bg-black z-50 bg-opacity-30 backdrop-blur-sm"
         // initial={{ opacity: 1 }}
         // animate={{ opacity: 0 }}
         // transition={{ duration: 0.5, delay: 2.5 }}
