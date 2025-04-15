@@ -224,7 +224,7 @@ const DungeonBoard = () => {
 
 
     return(
-        <div className={`h-full w-full flex ${onAddDungeon  ? 'z-0' : 'z-50'} ${loading ? 'z-20' : 'z-50'} `}>
+        <div className={`h-full w-full flex ${onAddDungeon  ? 'z-0' : 'z-50'}`}>
             {loading && <LoadingScreen />}
 
                 <div className="flex items-center justify-center" style={{width: '7.5%'}}>
@@ -247,7 +247,7 @@ const DungeonBoard = () => {
                     className="absolute  w-auto left-0 border border-deepPink py-1 px-2 rounded-md bg-deepPink hover:bg-turqoiseGreen hover:border-turqoiseGreen"
                     onClick={handleOnClickAddDungeons}>Post a Dungeon</button>
                 </div>
-                <div className={`relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hidden ${onAddDungeon ? 'z-0' : 'z-50'}`}>
+                <div className={`relative h-85p w-full grid grid-cols-3 gap-4 p-2 overflow-hiddenz z-20`}>
                     <DungeonPage dungeonList={dungeonList} page={page} dungeonPp={dungeonPp} handleRemoveDungeon={handleClickAbandon} />
 
                 </div>

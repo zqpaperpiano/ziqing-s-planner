@@ -154,6 +154,7 @@ const DungeonDetailCard = () => {
             const finalColor= {[gradientStart]: gradientEnd}
 
             const newCompletionStatus = parseFloat(dungeon.completionProgress) === 1 ? true : false;
+            console.log('my new completion status: ', newCompletionStatus)
 
             if(newCompletionStatus){
                 const resp = await fetch(`${config.development.apiURL}dungeon/completed-dungeon`, {
@@ -265,8 +266,7 @@ const DungeonDetailCard = () => {
         initial={{ opacity: 0, rotateY: 90}}
         animate={{ opacity: 1, rotateY: 180}}
         transition={{duration: 0.3}}
-        className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-            {loading && <LoadingScreen />}
+        className={`fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-0`}>
             {
                 !dungeon ? 
                 <CircularProgress /> :
@@ -410,6 +410,7 @@ const DungeonDetailCard = () => {
                     
                 </div>
             }
+            {loading && <LoadingScreen />}
         </motion.div>
     );
 }

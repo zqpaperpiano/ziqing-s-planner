@@ -92,7 +92,6 @@ const Checkpoints = ({ checkpoints, handleSubmit, btnColor, setRightClick, theme
 
     return (
         <div className={`w-full flex flex-col ${theme === 'pixel' ? 'items-center justify-center' : 'items-start'}`}>
-            <ToastContainer />
             {checkpointList && checkpointList.map((checkpoint, index) => {
                 const checked = Object.values(checkpoint)[0].completion ?? false; // Ensure a boolean value for checked
                 return (
